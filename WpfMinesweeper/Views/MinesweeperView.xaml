@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="WpfMinesweeper.Views.MinesweeperView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:WpfMinesweeper.ViewModels"
+             xmlns:vw="clr-namespace:WpfMinesweeper.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+             xmlns:local="clr-namespace:WpfMinesweeper"
+             xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="154">
+    <Grid Name="MainGrid" Background="AliceBlue">        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" VerticalAlignment="Top">
+            <vw:MenuView DataContext="{Binding Path=MenuViewModel}"></vw:MenuView>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Border Name="Lolz"
+                    Margin="5,5,5,5" 
+                    BorderThickness="1"
+                    BorderBrush="DarkGray">
+                <Border Name="BorderDisplayPanel" 
+                    BorderThickness="1"
+                    Margin="0"
+                    BorderBrush="LightGray"
+                    SizeChanged="BorderBoard_SizeChanged">
+                    <vw:DisplayPanelView 
+                        DataContext="{Binding Path=DisplayViewModel}"
+                        Margin="2"></vw:DisplayPanelView>
+                </Border>
+            </Border>
+           
+        </Grid>
+        <Grid Grid.Row="2">
+            <Border Name="BorderBoard" 
+                    BorderThickness="5,0,5,5"                    >
+                <Viewbox Name="BoardViewBox" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" StretchDirection="Both">
+                    <vw:TileBoardView x:Name="Board" DataContext="{Binding Path=TileBoardViewModel}" SizeChanged="Board_SizeChanged">
+                    </vw:TileBoardView>
+                </Viewbox>
+            </Border>
+        </Grid>
+
+    </Grid>
+
+
+
+</UserControl>
