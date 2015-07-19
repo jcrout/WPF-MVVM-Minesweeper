@@ -14,7 +14,9 @@ namespace WpfMinesweeper
         CreateNewBoard,
         GameStarted,
         GameOver,
-        UpdateSmileyIndex
+        UpdateSmileyIndex,
+        LeftMouseUp,
+        RightMouseUp
     }
 
     public sealed class Mediator

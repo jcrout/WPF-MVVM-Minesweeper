@@ -8,7 +8,7 @@
     <Grid>
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
             <MenuItem HorizontalAlignment="Stretch" Header="_File">
-                <MenuItem Header="_New Game" Command="{Binding Path=NewGameCommand}"></MenuItem>
+                <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*"></MenuItem>
                 <MenuItem Header="_Difficulty">
                     <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}" CommandParameter="9,9,10"></MenuItem>
                     <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}" CommandParameter="16,16,40"></MenuItem>

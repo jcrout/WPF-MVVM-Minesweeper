@@ -124,12 +124,13 @@
                 throw new ArgumentException("paramter must contain 3 integer values.");
             }
 
+            
             int width, height, mineCount;
             try
             {
-                width = int.Parse(paramters[0]);
-                height = int.Parse(paramters[1]);
-                mineCount = int.Parse(paramters[2]);
+                width = (paramters[0] == "*") ? this.minesweeper.Tiles.Width : int.Parse(paramters[0]);
+                height = (paramters[1] == "*") ? this.minesweeper.Tiles.Height : int.Parse(paramters[1]);
+                mineCount = (paramters[2] == "*") ? this.minesweeper.MineCount : int.Parse(paramters[2]);
             }
             catch (FormatException ex)
             {

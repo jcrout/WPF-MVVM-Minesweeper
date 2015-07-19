@@ -1,18 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WpfMinesweeper.ViewModels
+﻿namespace WpfMinesweeper.ViewModels
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Text;
+    using System.Threading.Tasks;
+    using JonUtility;
+    using System.Windows.Input;
+
     public class ViewModelBase : IDisposable, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;    
+
         private bool disposed;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private static void OnMouseAction(object sender, System.Windows.Forms.MouseEventArgs e)
+        {         
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+
+            }
+        }
 
         public ViewModelBase()
         {

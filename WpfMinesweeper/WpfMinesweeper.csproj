@@ -37,6 +37,7 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,6 +64,7 @@
     <Compile Include="Controls\TileBoard.cs" />
     <Compile Include="IClosable.cs" />
     <Compile Include="Mediator.cs" />
+    <Compile Include="Models\Minesweeper.cs" />
     <Compile Include="ViewModels\DisplayPanelViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
@@ -171,7 +173,13 @@
   <ItemGroup>
     <Resource Include="Resources\Images\Flag.png" />
     <Resource Include="Resources\Images\Mine.png" />
-    <Resource Include="Resources\Images\QuesitonMark.png" />
+    <Resource Include="Resources\Images\QuestionMark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\JonUtility\JonUtility\JonUtility.csproj">
+      <Project>{afcf9d3a-f066-40d7-8518-f57a4b4600bf}</Project>
+      <Name>JonUtility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
