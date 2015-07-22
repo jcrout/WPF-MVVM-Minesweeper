@@ -17,7 +17,8 @@ namespace WpfMinesweeper
         Victory,
         UpdateSmileyIndex,
         LeftMouseUp,
-        RightMouseUp
+        RightMouseUp,
+        TileColorsChanged
     }
 
     public sealed class Mediator

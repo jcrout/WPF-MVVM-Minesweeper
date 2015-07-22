@@ -10,7 +10,8 @@
              xmlns:local="clr-namespace:WpfMinesweeper"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="154">
+             d:DesignHeight="213" d:DesignWidth="154">
+    
     <Grid Name="MainGrid" Background="AliceBlue">        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -34,8 +35,7 @@
                         DataContext="{Binding Path=DisplayViewModel}"
                         Margin="2"></vw:DisplayPanelView>
                 </Border>
-            </Border>
-           
+            </Border>           
         </Grid>
         <Grid Grid.Row="2">
             <Border Name="BorderBoard" 

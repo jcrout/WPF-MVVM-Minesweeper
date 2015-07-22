@@ -13,9 +13,12 @@
     class DisplayPanelViewModel : MinesweeperComponentViewModel
     {
         private static Dictionary<SmileyState, ImageSource> smileyImages;
+        private static Brush defaultSmileyBorderBrush = Brushes.White;
+
         private ICommand borderSizeCommand;
         private ImageSource smileyImage;
         private ImageSource smileyBackground;
+        private Brush smileyBorderBrush;
         private string repeatAnimation;
 
         static DisplayPanelViewModel()
@@ -32,19 +35,23 @@
         public DisplayPanelViewModel()
         {
             Mediator.Instance.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
+            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateSmileyBackgroundImage((Brush)o));
 
             this.borderSizeCommand = new Command(OnBorderSizeCommand);
+        }
 
-            // temp
+        private void UpdateSmileyBackgroundImage(Brush brush)
+        {
             var target = new RenderTargetBitmap(23, 23, 96, 96, PixelFormats.Pbgra32);
             var newImage = new DrawingVisual();
             using (var dc = newImage.RenderOpen())
             {
-                dc.DrawRectangle(Brushes.LightBlue, null, new System.Windows.Rect(0, 0, 23, 23));
+                dc.DrawRectangle(brush, null, new System.Windows.Rect(0, 0, 23, 23));
             }
 
             target.Render(newImage);
-            this.smileyBackground = target;
+            this.SmileyBorderBrush = brush;
+            this.SmileyBackground = target;
         }
 
         protected override void OnMinesweeperChanged()
@@ -84,6 +91,22 @@
             get
             {
                 return this.Minesweeper != null ? this.Minesweeper.TimeElapsed : 0;
+            }
+        }
+
+        public Brush SmileyBorderBrush
+        {
+            get
+            {
+                return this.smileyBorderBrush;
+            }
+            set
+            {
+                if (this.smileyBorderBrush != value)
+                {
+                    this.smileyBorderBrush = value;
+                    this.OnPropertyChanged();
+                }
             }
         }
 

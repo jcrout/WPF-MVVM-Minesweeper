@@ -20,7 +20,8 @@ namespace WpfMinesweeper.Views
     /// </summary>
     public partial class MinesweeperView : UserControl
     {
-        private int lastTilesWidth = 55;
+        private bool initialized = false;
+
         public MinesweeperView()
         {
             Mediator.Instance.Register(ViewModelMessages.TileBoardInitialized, o => this.OnSizeChanged(o));
@@ -31,12 +32,19 @@ namespace WpfMinesweeper.Views
         {
             if ((this.BoardViewBox.Width == this.BoardView.Board.Width) && (this.BoardViewBox.Height == this.BoardView.Board.Height))
             {
-                return;
+                if (!initialized)
+                {                 
+                    Mediator.Instance.Notify(ViewModelMessages.UpdateContainerSize, parameter);
+                }            
+            }
+            else
+            {
+                this.BoardViewBox.Width = this.BoardView.Board.Width;
+                this.BoardViewBox.Height = this.BoardView.Board.Height;
+                Mediator.Instance.Notify(ViewModelMessages.UpdateContainerSize, parameter);
             }
 
-            this.BoardViewBox.Width = this.BoardView.Board.Width;
-            this.BoardViewBox.Height = this.BoardView.Board.Height;
-            Mediator.Instance.Notify(ViewModelMessages.UpdateContainerSize, parameter);
+            this.initialized = true;        
         }
 
         private void BorderBoard_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -238,6 +238,7 @@
                 if (this.tileBrush != value)
                 {
                     this.tileBrush = value;
+                    Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged, value);
                     this.OnPropertyChanged();
                 }
             }
@@ -565,13 +566,14 @@
                 }
             }
 
-            this.Minesweeper.MinesRemaining = 0;
-            this.IsVictory = true;
+            this.Minesweeper.MinesRemaining = 0;       
 
             if (list.Count > 0)
             {
                 this.TilesToUpdate = AnimatedTilesCollection.Create(list);
             }
+
+            this.IsVictory = true;
             Mediator.Instance.Notify(ViewModelMessages.Victory);
         }
 

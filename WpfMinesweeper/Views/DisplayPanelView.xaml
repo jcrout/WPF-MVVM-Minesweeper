@@ -18,12 +18,15 @@
                     <ControlTemplate TargetType="Button">
                         <Border Name="border" 
                             BorderThickness="1"      
-                            CornerRadius="1">   
-                                                     <Border.Background>
-                                <ImageBrush ImageSource="{Binding Path=SmileyBackground}"></ImageBrush>
+                            CornerRadius="1"
+                            BorderBrush="{Binding Path=SmileyBorderBrush, UpdateSourceTrigger=PropertyChanged}">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding Path=SmileyBackground, UpdateSourceTrigger=PropertyChanged}"
+                                             Stretch="Fill"
+                                             ></ImageBrush>
                             </Border.Background>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>                        
+                        </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" TargetName="border">
@@ -41,8 +44,8 @@
             </Setter>
         </Style>
     </UserControl.Resources>
- 
-    <Grid Name="MainGrid">       
+
+    <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -60,7 +63,7 @@
             <Image Stretch="None" gif:ImageBehavior.AnimatedSource="{Binding Path=SmileyImage, UpdateSourceTrigger=PropertyChanged}" 
                        gif:ImageBehavior.RepeatBehavior="{Binding Path=RepeatAnimation, UpdateSourceTrigger=PropertyChanged}">
             </Image>
-        </Button>       
+        </Button>
         <local:NumberBox Grid.Column="2" x:Name="TimeElapsedBox" Number="{Binding Path=TimeElapsed, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right"></local:NumberBox>
     </Grid>
 </UserControl>

@@ -239,7 +239,7 @@
 
             using (var drawingContext = tileSetVisual.RenderOpen())
             {
-                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(255, 189, 189, 189)), null, new Rect(0, 0, tileWidth, tileHeight));
+                drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(255, 200, 213, 232)), null, new Rect(0, 0, tileWidth, tileHeight));
                 drawingContext.DrawLine(lightPen, new Point(0.5, 0.5), new Point(actualWidth - 0.5, 0.5));
                 drawingContext.DrawLine(lightPen, new Point(0.5, 0.5), new Point(0.5, actualHeight + 0.5));
             }
