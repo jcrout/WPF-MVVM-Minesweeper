@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Runtime.InteropServices;
@@ -12,59 +13,67 @@
     using System.Windows.Controls;
     using System.Windows.Documents;
     using System.Windows.Input;
+    using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Media.Imaging;
     using System.Windows.Threading;
     using WpfMinesweeper.Models;
+    using JonUtility;
 
-    class TileBoard : FrameworkElement
+    [ContentProperty("Content")]
+    public class TileBoard : FrameworkElement
     {
         #region Fields
+        private static IMinesweeper defaultMinesweeper = MinesweeperFactory.Create(9, 9, 10);
         private static Dictionary<TileType, ImageSource> images;
+        private static ImageSource defaultTileUnsetImage;
+        private static ImageSource defaultTileSetImage;
         private static ImageSource flagImage;
         private static ImageSource questionMarkImage;
-        private static IMinesweeper defaultMinesweeper = MinesweeperFactory.Create(9, 9, 10);
         private static Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(100, 255, 150, 150));
         private static Brush defaultSelectionBrush = new SolidColorBrush(Color.FromArgb(100, 50, 50, 255));
+        private static Brush defaultTileBrush = new SolidColorBrush(Color.FromArgb(100, 153, 217, 234));
         private static List<Point> defaultAnimatedTiles = new List<Point>();
-        private static long doubleClickInterval = System.Windows.Forms.SystemInformation.DoubleClickTime * Stopwatch.Frequency / 1000;       
-        private static double defaultTileWidth = 16d;
-        private static double defaultTileHeight = 16d;
+        private static long doubleClickInterval = System.Windows.Forms.SystemInformation.DoubleClickTime * Stopwatch.Frequency / 1000;
+        private static double tileWidth = 16d;
+        private static double tileHeight = 16d;
 
-        private Dictionary<Point, Visual> extraDataTileVisuals = new Dictionary<Point, Visual>();
         private List<Visual> visuals = new List<Visual>();
-        private DrawingVisual boardVisual;
-        private DrawingVisual animationVisual;
+        private DrawingVisual shaderVisual;
         private DrawingVisual mouseHoverVisual;
-        private ImageSource tileUnsetImage;
-        private ImageSource tileSetImage;
         private List<Point> selectedTilePoints;
         private List<Visual> selectedTileVisuals;
+        private ImageSource tileUnsetImage = defaultTileUnsetImage;
+        private ImageSource tileSetImage = defaultTileSetImage;
 
-        private int mouseHoverIndex = -1;
-        private bool initialized;
-        private double tileWidth = 16d;
-        private double tileHeight = 16d;
+        private int boardWidth;
+        private int boardHeight;
+
         private long lastClickTime = -1;
+        private bool applyShadingToRevealedTiles = false;
+
         #endregion
 
         #region Dependency Properties
-        public static readonly RoutedEvent MovePlayedEvent = EventManager.RegisterRoutedEvent(
-            "TileHoverChanged",
-            RoutingStrategy.Bubble,
-            typeof(Action<TileEventArgs>),
-            typeof(TileBoard));
+        public static readonly DependencyProperty ContentProperty =
+            DependencyProperty.Register(
+                "Content",
+                typeof(object),
+                typeof(TileBoard),
+                new FrameworkPropertyMetadata(
+                   null,
+                   ContentChanged));
 
         public static readonly DependencyProperty MinesweeperProperty =
-         DependencyProperty.Register(
-             "Minesweeper",
-             typeof(IMinesweeper),
-             typeof(TileBoard),
-             new FrameworkPropertyMetadata(
-                 defaultMinesweeper,
-                 MinesweeperChanged,
-                 CoerceMinesweeper));
+            DependencyProperty.Register(
+                "Minesweeper",
+                typeof(IMinesweeper),
+                typeof(TileBoard),
+                new FrameworkPropertyMetadata(
+                    defaultMinesweeper,
+                    MinesweeperChanged,
+                    CoerceMinesweeper));
 
         public static readonly DependencyProperty AnimatedTilesProperty =
             DependencyProperty.Register(
@@ -83,14 +92,16 @@
                 new FrameworkPropertyMetadata(
                     new Point(-1, -1),
                     HoverTileChanged));
-        public static readonly DependencyProperty TileColorBrushProperty =
+
+        public static readonly DependencyProperty TileBrushProperty =
             DependencyProperty.Register(
-                "TileColorBrush",
+                "TileBrush",
                 typeof(Brush),
                 typeof(TileBoard),
                 new FrameworkPropertyMetadata(
-                    null,
-                    TileColorBrushChanged));
+                    defaultTileBrush,
+                    TileBrushChanged),
+                ValidateTileBrush);
 
         public static readonly DependencyProperty HoverBrushProperty =
             DependencyProperty.Register(
@@ -133,6 +144,14 @@
                 typeof(TileBoard)
                 );
 
+        public static readonly DependencyProperty TileShadingModeProperty =
+             DependencyProperty.Register(
+                "TileShadingMode",
+                typeof(TileShadingMode),
+                typeof(TileBoard),
+                new PropertyMetadata(TileShadingMode.SingleTile)
+                );
+
         public static readonly DependencyProperty TilesToUpdateProperty =
              DependencyProperty.Register(
                 "TilesToUpdate",
@@ -158,6 +177,10 @@
 
         static TileBoard()
         {
+            var tileImages = CreateTileImage(defaultTileBrush);
+            defaultTileUnsetImage = tileImages.Item1;
+            defaultTileSetImage = tileImages.Item2;
+
             images = new Dictionary<TileType, ImageSource>();
             for (int i = TileType.MineCountMinimum; i < TileType.MineCountMaximum + 1; i++)
             {
@@ -168,16 +191,29 @@
             questionMarkImage = new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/QuestionMark.png", UriKind.Absolute));
         }
 
-        private void CreateTileImage() // 189
+        private static Tuple<ImageSource, ImageSource> CreateTileImage(Brush tileBrush) // 189
         {
-            int horizontalThickness = (int)Math.Floor(tileWidth / defaultTileWidth) + 1;
-            int verticalThickness = (int)Math.Floor(tileHeight / defaultTileHeight) + 1;
+            int horizontalThickness = (int)Math.Floor(tileWidth / tileWidth) + 1;
+            int verticalThickness = (int)Math.Floor(tileHeight / tileHeight) + 1;
             double actualWidth = tileWidth - 1d;
             double actualHeight = tileHeight - 1d;
 
-            var tileBrush = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
-            var lightPen = new Pen(new SolidColorBrush(Color.FromArgb(255, 200, 200, 200)), 1d);
-            var darkPen = new Pen(new SolidColorBrush(Color.FromArgb(255, 100, 100, 100)), 1d);
+            Pen lightPen = null;
+            Pen darkPen = null;
+
+            if (tileBrush.GetType().IsAssignableFrom(typeof(SolidColorBrush)))
+            {
+                var solidColorBrush = tileBrush as SolidColorBrush;
+                var tileColor = solidColorBrush.Color;
+                lightPen = new Pen(new SolidColorBrush(tileColor.GetOffsetColor(50)), 1d);
+                darkPen = new Pen(new SolidColorBrush(tileColor.GetOffsetColor(-50)), 1d);
+            }
+            else
+            {
+                lightPen = new Pen(new SolidColorBrush(Color.FromArgb(255, 200, 200, 200)), 1d);
+                darkPen = new Pen(new SolidColorBrush(Color.FromArgb(255, 100, 100, 100)), 1d);
+            }
+
 
             var tileUnsetTarget = new RenderTargetBitmap((int)tileWidth, (int)tileHeight, 96, 96, PixelFormats.Pbgra32);
             var tileUnsetVisual = new DrawingVisual();
@@ -211,8 +247,12 @@
             tileUnsetTarget.Render(tileUnsetVisual);
             tileSetTarget.Render(tileSetVisual);
 
-            this.tileUnsetImage = tileUnsetTarget;
-            this.tileSetImage = tileSetTarget;
+            return new Tuple<ImageSource, ImageSource>(tileUnsetTarget, tileSetTarget);
+        }
+
+        private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var board = (TileBoard)d;
         }
 
         private static void MinesweeperChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -243,10 +283,21 @@
             board.DrawSelectedTiles();
         }
 
-        private static void TileColorBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void TileBrushChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var board = (TileBoard)d;
-            board.InitializeBoard();
+
+            if (board.TileShadingMode == TileShadingMode.AllTiles)
+            {
+                board.DrawTileShader();
+            }
+            else
+            {
+                var tileImages = CreateTileImage(board.TileBrush);
+                board.tileUnsetImage = tileImages.Item1;
+                board.tileSetImage = tileImages.Item2;
+                board.RedrawBoard();
+            }
         }
 
         private static void TilesToUpdateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -323,9 +374,18 @@
             return baseValue;
         }
 
+        private static bool ValidateTileBrush(object value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public TileBoard()
         {
-            this.CreateTileImage();
             this.InitializeBoard();
         }
 
@@ -338,6 +398,54 @@
             set
             {
                 this.SetValue(MinesweeperProperty, value);
+            }
+        }
+
+        public TileShadingMode TileShadingMode
+        {
+            get
+            {
+                return (TileShadingMode)this.GetValue(TileShadingModeProperty);
+            }
+            set
+            {
+                this.SetValue(TileShadingModeProperty, value);
+            }
+        }
+
+        public ICommand BoardInitializedCommand
+        {
+            get
+            {
+                return (ICommand)this.GetValue(BoardInitializedCommandProperty);
+            }
+            set
+            {
+                this.SetValue(BoardInitializedCommandProperty, value);
+            }
+        }
+
+        public ICommand TileHoverCommand
+        {
+            get
+            {
+                return (ICommand)this.GetValue(TileHoverCommandProperty);
+            }
+            set
+            {
+                this.SetValue(TileHoverCommandProperty, value);
+            }
+        }
+
+        public ICommand TileTapCommand
+        {
+            get
+            {
+                return (ICommand)this.GetValue(TileTapCommandProperty);
+            }
+            set
+            {
+                this.SetValue(TileTapCommandProperty, value);
             }
         }
 
@@ -362,6 +470,18 @@
             set
             {
                 this.SetValue(HoverTileProperty, value);
+            }
+        }
+
+        public Brush TileBrush
+        {
+            get
+            {
+                return (Brush)this.GetValue(TileBrushProperty);
+            }
+            set
+            {
+                this.SetValue(TileBrushProperty, value);
             }
         }
 
@@ -413,39 +533,15 @@
             }
         }
 
-        public ICommand BoardInitializedCommand
+        public object Content
         {
             get
             {
-                return (ICommand)this.GetValue(BoardInitializedCommandProperty);
+                return this.GetValue(ContentProperty);
             }
             set
             {
-                this.SetValue(BoardInitializedCommandProperty, value);
-            }
-        }
-
-        public ICommand TileHoverCommand
-        {
-            get
-            {
-                return (ICommand)this.GetValue(TileHoverCommandProperty);
-            }
-            set
-            {
-                this.SetValue(TileHoverCommandProperty, value);
-            }
-        }
-
-        public ICommand TileTapCommand
-        {
-            get
-            {
-                return (ICommand)this.GetValue(TileTapCommandProperty);
-            }
-            set
-            {
-                this.SetValue(TileTapCommandProperty, value);
+                this.SetValue(ContentProperty, value);
             }
         }
 
@@ -496,7 +592,7 @@
                         tileY));
             }
         }
-        
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonDown(e);
@@ -509,10 +605,15 @@
                 {
                     doubleClicked = true;
                 }
+                this.lastClickTime = -1;
+            }
+            else
+            {
+                this.lastClickTime = Stopwatch.GetTimestamp();
             }
 
             this.RaiseTileTap(e.GetPosition(this), InputButtons.Left, true, doubleClicked, e);
-            this.lastClickTime = Stopwatch.GetTimestamp();       
+
         }
 
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -533,28 +634,50 @@
             this.RaiseTileTap(e.GetPosition(this), InputButtons.Right, false, false, e);
         }
 
-        private void AwaitDoubleClick()
-        {
-
-        }
-
         private void InitializeBoard()
         {
-            if (this.visuals.Count > 0)
+            bool skipRedraw = this.boardWidth == this.Minesweeper.Tiles.Width && this.boardHeight == this.Minesweeper.Tiles.Height;
+            if (skipRedraw)
+            {
+                int lastTileIndex = this.boardWidth * this.boardHeight;
+                int removeEnd = (this.shaderVisual == null) ? lastTileIndex - 1 : lastTileIndex;
+                for (int i = visuals.Count - 1; i > removeEnd; i--)
+                {
+                    this.RemoveVisualChild(this.visuals[i]);
+                    this.visuals.RemoveAt(i);
+                }
+                for (int i = 0; i < lastTileIndex; i++)
+                {
+                    ((DrawingVisual)this.visuals[i]).Children.Clear();
+                }
+            }
+            else
             {
                 this.visuals.ForEach(v => this.RemoveVisualChild(v));
                 this.visuals.Clear();
+                this.boardWidth = this.Minesweeper.Tiles.Width;
+                this.boardHeight = this.Minesweeper.Tiles.Height;
+                this.Width = this.boardWidth * tileWidth;
+                this.Height = this.boardHeight * tileHeight;
+
+                this.DrawBoard();
+                this.DrawTileShader();
+                this.HoverTile = new Point(-1, -1);
             }
 
-            this.Width = this.Minesweeper.Tiles.Width * this.tileWidth;
-            this.Height = this.Minesweeper.Tiles.Height * this.tileHeight;
-
-            this.DrawBoard();
-            this.DrawTileShader();
-            this.DrawMouseHover();
-
-            this.visuals.ForEach(delegate(Visual v) { AddVisualChild(v); });
             this.BoardInitializedCommand.ExecuteIfAbleTo(this.Width);
+        }
+
+        private void RedrawBoard()
+        {
+            this.visuals.ForEach(v => this.RemoveVisualChild(v));
+            this.visuals.Clear();
+            this.DrawBoard();
+        }
+
+        private void DrawBase()
+        {
+
         }
 
         private TileEventArgs GetTileEventArgsFromBoardPoint(Point boardPoint)
@@ -630,8 +753,8 @@
                     using (var drawingContext = animationVisual.RenderOpen())
                     {
                         var image = frame.Image;
-                        double offsetX = Math.Max(0, (this.tileWidth - image.Width) / 2);
-                        double offsetY = Math.Max(0, (this.tileHeight - image.Height) / 2);
+                        double offsetX = Math.Max(0, (tileWidth - image.Width) / 2);
+                        double offsetY = Math.Max(0, (tileHeight - image.Height) / 2);
 
                         foreach (var tilePoint in animatedTilesCollection.Tiles)
                         {
@@ -660,41 +783,21 @@
             }
         }
 
-        private bool ReplaceOldExtraTileVisual(Point tilePoint, Visual tileVisual)
-        {
-            bool replaced = false;
-            if (this.extraDataTileVisuals.ContainsKey(tilePoint))
-            {
-                var visual = this.extraDataTileVisuals[tilePoint];
-                this.visuals.Remove(visual);
-                this.RemoveVisualChild(visual);                
-                this.extraDataTileVisuals.Remove(tilePoint);
-                replaced = true;
-            }
-
-            if (tileVisual != null)
-            {
-                this.extraDataTileVisuals.Add(tilePoint, tileVisual);
-            }
-
-            return replaced;
-        }
-
         private void DrawTiles(List<Point> tileList)
         {
             int startIndex = this.visuals.Count;
             foreach (var tilePoint in tileList)
             {
+                int index = (int)(this.Minesweeper.Tiles.Height * tilePoint.X + tilePoint.Y);
                 var tile = this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y];
+                var tileVisual = (DrawingVisual)this.visuals[index];
                 var tileRect = GetTileRectangleFromTilePoint(new Point(tilePoint.X, tilePoint.Y));
+
                 if (!tile.Shown)
                 {
-                    int index = (int)(this.Minesweeper.Tiles.Height * tilePoint.X + tilePoint.Y);
-                    var tileVisual = (DrawingVisual)this.visuals[index];
                     tileVisual.Children.Clear();
-
                     if (tile.ExtraTileData == ExtraTileData.None)
-                    {           
+                    {
                         continue;
                     }
 
@@ -720,7 +823,7 @@
                     {
                         if (tile.Type != TileType.Mine)
                         {
-                            drawingContext.DrawImage(this.tileSetImage, tileRect);
+                            drawingContext.DrawImage(defaultTileSetImage, tileRect);
                         }
 
                         if (tile.Type != TileType.EmptySpace)
@@ -728,20 +831,29 @@
                             this.DrawImageWithOffsets(drawingContext, images[tile.Type], tileRect);
                         }
                     }
-                    this.visuals.Add(visual);
+
+                    if (applyShadingToRevealedTiles)
+                    {
+                        tileVisual.Children.Add(visual);
+                    }
+                    else
+                    {
+                        this.visuals.Add(visual);
+                        this.AddVisualChild(visual);
+                    }
                 }
             }
 
-            for (int i = startIndex; i < this.visuals.Count; i++)
-            {
-                this.AddVisualChild(this.visuals[i]);
-            }
+            //for (int i = startIndex; i < this.visuals.Count; i++)
+            //{
+            //    this.AddVisualChild(this.visuals[i]);
+            //}
         }
 
         private void DrawImageWithOffsets(DrawingContext drawingContext, ImageSource imageToDraw, Rect tileRect)
         {
-            double offsetX = Math.Max(0, (this.tileWidth - imageToDraw.Width) / 2);
-            double offsetY = Math.Max(0, (this.tileHeight - imageToDraw.Height) / 2);
+            double offsetX = Math.Max(0, (tileWidth - imageToDraw.Width) / 2);
+            double offsetY = Math.Max(0, (tileHeight - imageToDraw.Height) / 2);
             drawingContext.DrawImage(imageToDraw, new Rect(tileRect.X + offsetX, tileRect.Y + offsetY, imageToDraw.Width, imageToDraw.Height));
         }
 
@@ -755,17 +867,17 @@
         private Point GetBoardCoordinatesFromTilePoint(Point tileCoordinates)
         {
             return new Point(
-                tileCoordinates.X * this.tileWidth,
-                tileCoordinates.Y * this.tileHeight);
+                tileCoordinates.X * tileWidth,
+                tileCoordinates.Y * tileHeight);
         }
 
         private Rect GetTileRectangleFromTilePoint(Point tileCoordinates)
         {
             return new Rect(
-                tileCoordinates.X * this.tileWidth,
-                tileCoordinates.Y * this.tileHeight,
-                this.tileWidth,
-                this.tileHeight);
+                tileCoordinates.X * tileWidth,
+                tileCoordinates.Y * tileHeight,
+                tileWidth,
+                tileHeight);
         }
 
         private void RemoveVisualAfterTiles(Visual visual)
@@ -812,7 +924,6 @@
                         tileRect);
                 }
 
-                this.mouseHoverIndex = this.visuals.Count;
                 this.visuals.Add(this.mouseHoverVisual);
                 this.AddVisualChild(this.mouseHoverVisual);
             }
@@ -855,18 +966,20 @@
         {
             var tile = this.Minesweeper.Tiles[tileX, tileY];
             var tileVisual = new DrawingVisual();
+
             using (var drawingContext = tileVisual.RenderOpen())
             {
                 drawingContext.DrawImage(
-                    tile.Shown ? this.tileSetImage : this.tileUnsetImage,
+                    (!tile.Shown || this.TileShadingMode != Controls.TileShadingMode.AllTiles) ? this.tileUnsetImage : this.tileSetImage,
                     new Rect(
-                        tileX * this.tileWidth,
-                        tileY * this.tileHeight,
-                        this.tileWidth,
-                        this.tileHeight));
+                        tileX * tileWidth,
+                        tileY * tileHeight,
+                        tileWidth,
+                        tileHeight));
             }
 
             this.visuals.Add(tileVisual);
+            this.AddVisualChild(tileVisual);
         }
 
         private void DrawBoard()
@@ -883,15 +996,34 @@
 
         private void DrawTileShader()
         {
-            this.boardVisual = new DrawingVisual();
-            var brushz = new LinearGradientBrush(Color.FromArgb(100, 255, 0, 0), Color.FromArgb(100, 0, 0, 255), new Point(0, 0), new Point(.75, .75));
-            using (var drawingContext = boardVisual.RenderOpen())
+            if (this.TileShadingMode != Controls.TileShadingMode.AllTiles)
             {
-                drawingContext.DrawRectangle(brushz, null, new Rect(0, 0, this.Width, this.Height));
+                return;
             }
 
-            this.visuals.Add(boardVisual);
+            if (this.shaderVisual != null)
+            {
+                this.visuals.Remove(this.shaderVisual);
+                this.RemoveVisualChild(this.shaderVisual);
+            }
+
+            this.shaderVisual = new DrawingVisual();
+            //var brushz = new LinearGradientBrush(Color.FromArgb(100, 255, 0, 0), Color.FromArgb(100, 0, 0, 255), new Point(0, 0), new Point(.75, .75));
+            using (var drawingContext = shaderVisual.RenderOpen())
+            {
+                drawingContext.DrawRectangle(this.TileBrush, null, new Rect(0, 0, this.Width, this.Height));
+            }
+
+            this.visuals.Add(this.shaderVisual);
+            this.AddVisualChild(this.shaderVisual);
         }
+
+    }
+
+    public enum TileShadingMode
+    {
+        SingleTile,
+        AllTiles
     }
 
     public class TileEventArgs : EventArgs
@@ -1241,4 +1373,5 @@
         /// </summary>
         XButton2 = 16
     }
+
 }

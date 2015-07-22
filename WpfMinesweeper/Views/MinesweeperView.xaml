@@ -41,7 +41,7 @@
             <Border Name="BorderBoard" 
                     BorderThickness="5,0,5,5"                    >
                 <Viewbox Name="BoardViewBox" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" StretchDirection="Both">
-                    <vw:TileBoardView x:Name="Board" DataContext="{Binding Path=TileBoardViewModel}">
+                    <vw:TileBoardView x:Name="BoardView" DataContext="{Binding Path=TileBoardViewModel}">
                     </vw:TileBoardView>
                 </Viewbox>
             </Border>

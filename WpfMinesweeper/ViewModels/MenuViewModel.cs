@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
@@ -54,6 +55,14 @@
 
         private void OnBoardSizeSelected(object paramter)
         {
+            if (string.Equals(paramter.ToString(), "custom"))
+            {
+                var windowz = new WpfMinesweeper.Controls.ModalDialog();
+                windowz.Content = new WpfMinesweeper.Views.CustomBoardView();
+                windowz.DataContext = new WpfMinesweeper.ViewModels.CustomBoardViewModel();
+                windowz.ShowDialog();
+                return;
+            }
             Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, paramter);
         }
 

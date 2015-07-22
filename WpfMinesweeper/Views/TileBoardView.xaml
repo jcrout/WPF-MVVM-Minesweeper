@@ -7,30 +7,158 @@
              xmlns:vw="clr-namespace:WpfMinesweeper.Views"
              xmlns:local="clr-namespace:WpfMinesweeper"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"          
+             xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+             xmlns:ei2="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d" 
              d:DesignHeight="144" d:DesignWidth="144">
-    <Grid>
+    <UserControl.Resources>
+        <Storyboard x:Key="VictoryAnimation" BeginTime="0" RepeatBehavior="1x">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BoardCanvas" Storyboard.TargetProperty="Visibility" >
+                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Visible}" KeyTime="0"/>
+            </ObjectAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="VictoryTopRectangle">
+                <EasingDoubleKeyFrame KeyTime="0:0:02" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="VictoryBottomRectangle">
+                <EasingDoubleKeyFrame KeyTime="0:0:02" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <StringAnimationUsingKeyFrames Storyboard.TargetProperty="Text" Storyboard.TargetName="VictoryTextBlock">
+                <DiscreteStringKeyFrame Value="V" KeyTime="0"/>
+                <DiscreteStringKeyFrame Value="Vi" KeyTime="0:0:00.25"/>
+                <DiscreteStringKeyFrame Value="Vic" KeyTime="0:0:00.5"/>
+                <DiscreteStringKeyFrame Value="Vict" KeyTime="0:0:00.75"/>
+                <DiscreteStringKeyFrame Value="Victo" KeyTime="0:0:01"/>
+                <DiscreteStringKeyFrame Value="Victor" KeyTime="0:0:01.25"/>
+                <DiscreteStringKeyFrame Value="Victory" KeyTime="0:0:01.5"/>
+            </StringAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="BoardCanvas">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:01.5" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:03" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="BoardCanvas" >
+                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Hidden}" KeyTime="0:0:03"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <Storyboard x:Key="GameOverAnimation" BeginTime="00:00:00.000" RepeatBehavior="1x">
+            <PointAnimation          
+                    Storyboard.TargetName="Board"
+                    Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)"
+                    From="0.5,0.5" To="0.5,0.5" Duration="0"/>
+            <DoubleAnimationUsingKeyFrames
+                    Storyboard.TargetName="Board"
+                    Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
+                <LinearDoubleKeyFrame Value="25" KeyTime="0:0:00.071"/>
+                <LinearDoubleKeyFrame Value="-20.8" KeyTime="0:0:00.214"/>
+                <LinearDoubleKeyFrame Value="16.66" KeyTime="0:0:00.357"/>
+                <LinearDoubleKeyFrame Value="-12.5" KeyTime="0:0:00.500"/>
+                <LinearDoubleKeyFrame Value="8.33" KeyTime="0:0:00.643"/>
+                <LinearDoubleKeyFrame Value="-4.16" KeyTime="0:0:00.786"/>
+                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:00.929"/>
+            </DoubleAnimationUsingKeyFrames>            
+            <local:BrushAnimation 
+                Storyboard.TargetName="MainGrid"
+                Storyboard.TargetProperty="(Grid.Background)" 
+                From="DarkRed" To="PaleTurquoise"
+                Duration="00:00:01">
+            </local:BrushAnimation>
+        </Storyboard>
+    </UserControl.Resources>
+    
+    <Grid x:Name="MainGrid">
         <controls:TileBoard 
                     x:Name="Board"                                               
-                    TileHoverCommand="{Binding Path=TileHoverCommand}"
-                    HoverTile="{Binding Path=HoverTile}"
-                    TileTapCommand="{Binding Path=TileTapCommand}"
-                    TilesToUpdate="{Binding Path=TilesToUpdate}"
-                    SelectedTiles="{Binding Path=SelectedTiles}"
-                    BoardInitializedCommand="{Binding Path=BoardInitializedCommand}"
-                    Minesweeper="{Binding Path=Minesweeper, UpdateSourceTrigger=PropertyChanged}"
-                    HorizontalAlignment="Left"
-                    RenderTransformOrigin="0.5,0.5"                                
-                    >
+                    TileHoverCommand="{Binding Path=TileHoverCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    HoverTile="{Binding Path=HoverTile, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                    HoverBrush="{Binding Path=HoverBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    SelectedTiles="{Binding Path=SelectedTiles, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    SelectionBrush="{Binding Path=SelectionBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    TileShadingMode="{Binding Path=TileShadingMode, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    TileTapCommand="{Binding Path=TileTapCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    TilesToUpdate="{Binding Path=TilesToUpdate, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"               
+                    TileBrush="{Binding Path=TileBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    BoardInitializedCommand="{Binding Path=BoardInitializedCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    Minesweeper="{Binding Path=Minesweeper, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                    HorizontalAlignment="Left">
+            
+            <controls:TileBoard.RenderTransform>
+                <RotateTransform Angle="0"></RotateTransform>
+            </controls:TileBoard.RenderTransform>
 
-            <!--<controls:TileBoard.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform Angle="26.18"/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </controls:TileBoard.RenderTransform>-->
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding IsGameOver}" Value="true">
+                    <ei2:ControlStoryboardAction x:Name="StartGameOverAnimationTrigger" 
+                                                 Storyboard="{StaticResource GameOverAnimation}"
+                                                 ControlStoryboardOption="Play"/>
+                </ei:DataTrigger>
+                <ei:DataTrigger Binding="{Binding IsGameOver}" Value="false">
+                    <ei2:ControlStoryboardAction x:Name="StopGameOverAnimationTrigger" 
+                                                 Storyboard="{StaticResource GameOverAnimation}" 
+                                                 ControlStoryboardOption="Stop"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
         </controls:TileBoard>
+        
+        <!--Used for animation purposes.-->
+        <Canvas x:Name="BoardCanvas" 
+                Width="{Binding Width, ElementName=Board}" 
+                Height="{Binding Height, ElementName=Board}"
+                Visibility="Hidden">
+            <Border BorderBrush="{x:Null}" 
+                    Width="{Binding Width, ElementName=BoardCanvas}" 
+                    Height="{Binding Height, ElementName=BoardCanvas}">
+                <Border Width="{Binding ActualWidth, ElementName=BoardCanvas}" Background="AliceBlue" Height="36">
+                    <Grid>
+                        <Rectangle x:Name="VictoryTopRectangle" 
+                                   Width="{Binding ActualWidth, ElementName=BoardCanvas}" 
+                                   Height="5" 
+                                   HorizontalAlignment="Left" 
+                                   VerticalAlignment="Top">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="Black" Offset="0.0" />
+                                    <GradientStop Color="White" Offset="0.25" />                 
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle x:Name="VictoryBottomRectangle" 
+                                   Width="{Binding ActualWidth, ElementName=BoardCanvas}" 
+                                   Height="5" 
+                                   HorizontalAlignment="Left" 
+                                   VerticalAlignment="Bottom">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="Black" Offset="1" />
+                                    <GradientStop Color="White" Offset="0.75" />
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <TextBlock x:Name="VictoryTextBlock"                           
+                           Text="Victory" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Center"
+                           FontSize="20"
+                           FontFamily="Comic Sans MS"
+                           Foreground="Black"
+                           />
+                    </Grid>                   
+                </Border>              
+            </Border>
+
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding IsVictory}" Value="true">
+                    <ei2:ControlStoryboardAction x:Name="StartVictoryAnimationTrigger" 
+                                                 Storyboard="{StaticResource VictoryAnimation}"
+                                                 ControlStoryboardOption="Play"/>
+                </ei:DataTrigger>
+                <ei:DataTrigger Binding="{Binding IsVictory}" Value="false">
+                    <ei2:ControlStoryboardAction x:Name="StopVictoryAnimationTrigger" 
+                                                 Storyboard="{StaticResource VictoryAnimation}" 
+                                                 ControlStoryboardOption="Stop"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>            
+        </Canvas>
     </Grid>
 </UserControl>

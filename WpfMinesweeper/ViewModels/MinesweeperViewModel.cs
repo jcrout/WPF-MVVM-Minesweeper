@@ -10,11 +10,10 @@
     using System.Windows.Threading;
     using WpfMinesweeper.Models;
 
-    class MinesweeperViewModel : ViewModelBase
+    class MinesweeperViewModel : MinesweeperComponentViewModel
     {
-        private IMinesweeper minesweeper;
-        private ViewModelBase displayViewModel;
-        private ViewModelBase tileBoardViewModel;
+        private MinesweeperComponentViewModel displayViewModel;
+        private MinesweeperComponentViewModel tileBoardViewModel;
         private ViewModelBase menuViewModel;
         private Timer gameTimer;
         private bool gameStarted;
@@ -24,40 +23,11 @@
             Mediator.Instance.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
             Mediator.Instance.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
             Mediator.Instance.Register(ViewModelMessages.GameOver, this.OnGameOver);
+            Mediator.Instance.Register(ViewModelMessages.Victory, this.OnVictory);
 
-            this.CreateNewBoard(MinesweeperFactory.Create(9, 9, 10));
-        }
-
-        public IMinesweeper Minesweeper
-        {
-            get
-            {
-                return this.minesweeper;
-            }
-            set
-            {
-                if (this.minesweeper != value)
-                {
-                    this.minesweeper = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public ViewModelBase DisplayViewModel
-        {
-            get
-            {
-                return this.displayViewModel;
-            }
-            set
-            {
-                if (this.displayViewModel != value)
-                {
-                    this.displayViewModel = value;
-                    this.OnPropertyChanged();
-                }
-            }
+            this.DisplayViewModel = new DisplayPanelViewModel();
+            this.TileBoardViewModel = new TileBoardViewModel();
+            this.Minesweeper = MinesweeperFactory.Create(9, 9, 10);
         }
 
         public ViewModelBase MenuViewModel
@@ -76,7 +46,23 @@
             }
         }
 
-        public ViewModelBase TileBoardViewModel
+        public MinesweeperComponentViewModel DisplayViewModel
+        {
+            get
+            {
+                return this.displayViewModel;
+            }
+            set
+            {
+                if (this.displayViewModel != value)
+                {
+                    this.displayViewModel = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public MinesweeperComponentViewModel TileBoardViewModel
         {
             get
             {
@@ -92,16 +78,15 @@
             }
         }
 
-        private void CreateNewBoard(IMinesweeper minesweeper)
+        protected override void OnMinesweeperChanged()
         {
             if (this.gameStarted)
             {
                 this.ResetGame();
             }
 
-            this.Minesweeper = minesweeper;
-            this.DisplayViewModel = new DisplayPanelViewModel(this.minesweeper);
-            this.TileBoardViewModel = new TileBoardViewModel(this.minesweeper);
+            this.DisplayViewModel.Minesweeper = this.Minesweeper;
+            this.TileBoardViewModel.Minesweeper = this.Minesweeper;
             this.MenuViewModel = new MenuViewModel();
         }
 
@@ -113,8 +98,9 @@
 
         private void OnCreateNewBoard(object paramter)
         {
-            if (!(paramter is string))
+            if (paramter == null || !(paramter is string))
             {
+                this.Minesweeper = MinesweeperFactory.Create(this.Minesweeper);
                 return;
             }
 
@@ -124,33 +110,39 @@
                 throw new ArgumentException("paramter must contain 3 integer values.");
             }
 
-            
             int width, height, mineCount;
             try
             {
-                width = (paramters[0] == "*") ? this.minesweeper.Tiles.Width : int.Parse(paramters[0]);
-                height = (paramters[1] == "*") ? this.minesweeper.Tiles.Height : int.Parse(paramters[1]);
-                mineCount = (paramters[2] == "*") ? this.minesweeper.MineCount : int.Parse(paramters[2]);
+                width = (paramters[0] == "*") ? this.Minesweeper.Tiles.Width : int.Parse(paramters[0]);
+                height = (paramters[1] == "*") ? this.Minesweeper.Tiles.Height : int.Parse(paramters[1]);
+                mineCount = (paramters[2] == "*") ? this.Minesweeper.MineCount : int.Parse(paramters[2]);
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
                 throw new ArgumentException("paramter must contain 3 integer values.");
             }
 
             var newBoard = MinesweeperFactory.Create(width, height, mineCount);
-            this.CreateNewBoard(newBoard);
+             this.Minesweeper = newBoard;
         }
 
         private void OnGameOver(object paramter)
         {
-            this.DisposeGameTimer();         
+            this.DisposeGameTimer();
+            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
+        }
+
+        private void OnVictory(object paramter)
+        {
+            this.DisposeGameTimer();
+            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
         }
 
         private void ResetGame()
         {
             this.DisposeGameTimer();
             this.gameStarted = false;
-            this.minesweeper = null;
+            //this.minesweeper = null;
         }
 
         private void DisposeGameTimer()
@@ -164,7 +156,7 @@
 
         private void TimerProcThread(object state)
         {
-            this.minesweeper.TimeElapsed++;
+            this.Minesweeper.TimeElapsed++;
         }
     }
 }

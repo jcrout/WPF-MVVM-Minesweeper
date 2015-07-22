@@ -10,14 +10,14 @@
     using JonUtility;
     using System.Windows.Input;
 
-    public class ViewModelBase : IDisposable, INotifyPropertyChanged
+    public abstract class ViewModelBase : IDisposable, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;    
-
+        public event PropertyChangedEventHandler PropertyChanged;
+        
         private bool disposed;
 
         private static void OnMouseAction(object sender, System.Windows.Forms.MouseEventArgs e)
-        {         
+        {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
 
@@ -41,8 +41,8 @@
         }
 
         protected virtual void OnDispose(bool disposing)
-        {            
-        }      
+        {
+        }
 
         protected void OnPropertyChanged([CallerMemberName] string prop = "")
         {
@@ -50,7 +50,7 @@
             {
                 return;
             }
-                      
+
             var propChangedEvent = this.PropertyChanged;
             if (propChangedEvent != null)
             {

@@ -40,6 +40,11 @@
         {
             return Minesweeper.Create(width, height, mineCount);
         }
+
+        public static Minesweeper Create(IMinesweeper minesweeper)
+        {
+            return Minesweeper.Create(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
+        }
     }
 
     /// <summary>
@@ -80,7 +85,7 @@
 
             if (mineCount >= (width * height))
             {
-                throw new ArgumentException("mineCount must be less than the total number of spaces.");
+                mineCount = width * height - 1;
             }
 
             var minesweeper = new Minesweeper();

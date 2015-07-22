@@ -5,21 +5,35 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using WpfMinesweeper.Models;
 
-    class DisplayPanelViewModel : ViewModelBase
+    class DisplayPanelViewModel : MinesweeperComponentViewModel
     {
-        private IMinesweeper minesweeper;
+        private static Dictionary<SmileyState, ImageSource> smileyImages;
+        private ICommand borderSizeCommand;
         private ImageSource smileyImage;
         private ImageSource smileyBackground;
+        private string repeatAnimation;
 
-        public DisplayPanelViewModel(IMinesweeper minesweeper)
+        static DisplayPanelViewModel()
         {
-            this.minesweeper = minesweeper;
-            this.minesweeper.PropertyChanged += minesweeper_PropertyChanged;
-            this.smileyImage = new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyDefault.gif", UriKind.Absolute));
+            smileyImages = new Dictionary<SmileyState, ImageSource>
+            {
+                {SmileyState.Default, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyDefault.gif", UriKind.Absolute))},
+                {SmileyState.TapDown, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyDefault.gif", UriKind.Absolute))},
+                {SmileyState.GameOver, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyGameOver.gif", UriKind.Absolute))},
+                {SmileyState.Victory, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyVictory.gif", UriKind.Absolute))}
+            };
+        }
+
+        public DisplayPanelViewModel()
+        {
+            Mediator.Instance.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
+
+            this.borderSizeCommand = new Command(OnBorderSizeCommand);
 
             // temp
             var target = new RenderTargetBitmap(23, 23, 96, 96, PixelFormats.Pbgra32);
@@ -31,24 +45,27 @@
 
             target.Render(newImage);
             this.smileyBackground = target;
-       
         }
 
-        public IMinesweeper Minesweeper
+        protected override void OnMinesweeperChanged()
+        {       
+            this.Minesweeper.PropertyChanged += minesweeper_PropertyChanged;
+            this.OnPropertyChanged("TimeElapsed");
+            this.OnPropertyChanged("MinesRemaining");
+            this.OnUpdateSmileyIndex(SmileyState.Default);
+        }
+
+        public ICommand BoardSizeCommand
         {
             get
             {
-                return this.minesweeper;
+                return this.borderSizeCommand;
             }
             set
             {
-                if (this.minesweeper != value)
+                if (this.borderSizeCommand != value)
                 {
-                    if (this.minesweeper != null)
-                    {
-                        this.minesweeper.PropertyChanged -= minesweeper_PropertyChanged;
-                    }
-                    this.minesweeper = value;
+                    this.borderSizeCommand = value;
                     this.OnPropertyChanged();
                 }
             }
@@ -58,15 +75,15 @@
         {
             get
             {
-                return this.minesweeper != null ? this.minesweeper.MinesRemaining : 0;
-            }
+                return this.Minesweeper != null ? this.Minesweeper.MinesRemaining : 0;
+            }            
         }
 
         public int TimeElapsed
         {
             get
             {
-                return this.minesweeper != null ? this.minesweeper.TimeElapsed : 0;
+                return this.Minesweeper != null ? this.Minesweeper.TimeElapsed : 0;
             }
         }
 
@@ -81,6 +98,22 @@
                 if (this.smileyImage != value)
                 {
                     this.smileyImage = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public string RepeatAnimation
+        {
+            get
+            {
+                return this.repeatAnimation;
+            }
+            set
+            {
+                if (this.repeatAnimation != value)
+                {
+                    this.repeatAnimation = value;
                     this.OnPropertyChanged();
                 }
             }
@@ -112,6 +145,17 @@
             {
                 this.OnPropertyChanged("MinesRemaining");
             }
+        }
+
+        private void OnUpdateSmileyIndex(SmileyState newState)
+        {
+            this.SmileyImage = smileyImages[newState];
+            this.RepeatAnimation = (newState == SmileyState.GameOver) ? "1x" : "Forever";
+        }
+
+        private void OnBorderSizeCommand()
+        {
+            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard);
         }
     }
 }

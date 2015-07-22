@@ -19,17 +19,23 @@ namespace WpfMinesweeper.Views
     /// Interaction logic for MinesweeperView.xaml
     /// </summary>
     public partial class MinesweeperView : UserControl
-    {      
+    {
+        private int lastTilesWidth = 55;
         public MinesweeperView()
         {
-            Mediator.Instance.Register(ViewModelMessages.SizeChanged, o => this.OnSizeChanged(o));
+            Mediator.Instance.Register(ViewModelMessages.TileBoardInitialized, o => this.OnSizeChanged(o));
             InitializeComponent();
         }
 
         private void OnSizeChanged(object parameter)
         {
-            this.BoardViewBox.Width = this.Board.Board.Width;
-            this.BoardViewBox.Height = this.Board.Board.Height; // double.IsNaN(this.Board.Height) ? this.Board.ActualHeight : this.Board.Height;
+            if ((this.BoardViewBox.Width == this.BoardView.Board.Width) && (this.BoardViewBox.Height == this.BoardView.Board.Height))
+            {
+                return;
+            }
+
+            this.BoardViewBox.Width = this.BoardView.Board.Width;
+            this.BoardViewBox.Height = this.BoardView.Board.Height;
             Mediator.Instance.Notify(ViewModelMessages.UpdateContainerSize, parameter);
         }
 

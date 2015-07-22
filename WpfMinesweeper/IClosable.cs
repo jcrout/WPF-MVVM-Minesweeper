@@ -9,5 +9,5 @@ namespace WpfMinesweeper
     public interface IClosable
     {
         void Close();
-    }
+    }    
 }

@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:WpfMinesweeper"
+             xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
+             mc:Ignorable="d"              
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <controls:ModalDialog x:Key="customBoard" x:Name="customBoardDialog5"></controls:ModalDialog>
+    </UserControl.Resources>
     <Grid>
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
             <MenuItem HorizontalAlignment="Stretch" Header="_File">
@@ -13,6 +18,7 @@
                     <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}" CommandParameter="9,9,10"></MenuItem>
                     <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}" CommandParameter="16,16,40"></MenuItem>
                     <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}" CommandParameter="30,16,99"></MenuItem>
+                    <MenuItem Header="_Custom" Command="{Binding Path=BoardSizeCommand}"  CommandParameter="custom"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand, Mode=OneWay}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"></MenuItem>
             </MenuItem>
