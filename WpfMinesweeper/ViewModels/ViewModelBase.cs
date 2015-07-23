@@ -12,6 +12,15 @@
 
     public abstract class ViewModelBase : IDisposable, INotifyPropertyChanged
     {
+        private static ISettingsProvider settings = SettingsProvider.Instance;
+        public static ISettingsProvider Settings
+        {
+            get
+            {
+                return settings;
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         
         private bool disposed;

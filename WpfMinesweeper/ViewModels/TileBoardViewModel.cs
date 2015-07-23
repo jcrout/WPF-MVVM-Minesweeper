@@ -15,9 +15,9 @@
 
     public class TileBoardViewModel : MinesweeperComponentViewModel
     {
-        private static Brush defaultTileBrush = new SolidColorBrush(Color.FromArgb(255, 153, 217, 234));
+        private static Brush defaultTileBrush = Settings.TileBrush;
         private static Brush defaultSelectionBrush = new SolidColorBrush(Color.FromArgb(150, 150, 150, 150));
-        private static Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(110, 255,255,255));
+        private static Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(110, 255, 255, 255));
         private static Brush mineClickBrush = new SolidColorBrush(Color.FromArgb(80, 255, 0, 0));
         private static Random randomGenerator = new Random();
         private static Point emptyPoint = new Point(-1, -1);
@@ -38,6 +38,8 @@
         private bool isVictory;
         private bool areQuestionMarksEnabled = true;
         private bool leftAndRightMouseDown = false;
+        private bool leftMouseDown = false;
+        private bool isTilePressed = false;
         private int minSafeSpotsAroundFirstClick = 1;
         private int maxSafeSpotsAroundFirstClick = 5;
         private int revealedSpaces = 0;
@@ -50,6 +52,9 @@
             this.TileHoverCommand = new Command(o => this.OnTileHover((Controls.TileEventArgs)o), () => this.CanInteractWithBoard());
             this.TileTapCommand = new Command(o => this.OnTileTap((Controls.TileTapEventArgs)o), () => this.CanInteractWithBoard());
             this.boardInitializedCommand = new Command(o => OnTileBoardInitialized(o));
+
+            Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged, defaultTileBrush);
+            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateTileBrush((Brush)o));
         }
 
         /// <summary>
@@ -80,6 +85,7 @@
             this.revealedSpaces = 0;
             this.SelectionBrush = defaultSelectionBrush;
             this.HoverBrush = defaultHoverBrush;
+            this.IsTilePressed = false;
         }
 
         public ICommand BoardInitializedCommand
@@ -238,7 +244,24 @@
                 if (this.tileBrush != value)
                 {
                     this.tileBrush = value;
-                    Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged, value);
+                    Settings.TileBrush = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public bool IsTilePressed
+        {
+            get
+            {
+                return this.isTilePressed;
+            }
+            set
+            {
+                if (this.isTilePressed != value)
+                {
+                    this.isTilePressed = value;
+                    Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, value ? SmileyState.TapDown : SmileyState.Default);
                     this.OnPropertyChanged();
                 }
             }
@@ -276,6 +299,11 @@
             }
         }
 
+        private void UpdateTileBrush(Brush brush)
+        {
+            this.TileBrush = brush;
+        }
+
         private void OnTileBoardInitialized(object parameter)
         {
             Mediator.Instance.Notify(ViewModelMessages.TileBoardInitialized, parameter);
@@ -283,16 +311,27 @@
 
         private void OnTileHover(Controls.TileEventArgs e)
         {
+            if (this.leftMouseDown && Mouse.LeftButton != MouseButtonState.Pressed)
+            {
+                this.IsTilePressed = false;
+            }
+
+            if (e.X < 0 || e.Y < 0)
+            {
+                this.HoverTile = emptyPoint;
+                return;
+            }
+
             if (!e.Tile.Shown)
             {
                 this.SelectedTiles = null;
-                if (e.X > -1 && e.Y > -1)
+                if (this.leftMouseDown && e.Tile.ExtraTileData != ExtraTileData.None)
                 {
-                    this.HoverTile = new Point(e.X, e.Y);
+                    this.HoverTile = emptyPoint;
                 }
                 else
                 {
-                    this.HoverTile = emptyPoint;
+                    this.HoverTile = new Point(e.X, e.Y);
                 }
             }
             else
@@ -307,6 +346,11 @@
 
         private void OnTileTap(Controls.TileTapEventArgs e)
         {
+            if (e.Button == InputButtons.Left && e.PressedDown)
+            {
+                this.leftMouseDown = true;
+            }
+
             if (e.AllButtonStates.HasFlag(InputButtons.Left) && e.AllButtonStates.HasFlag(InputButtons.Right))
             {
                 if (e.TileEventArgs.Tile.Shown)
@@ -317,7 +361,6 @@
                     }
                     else
                     {
-
                     }
                 }
 
@@ -342,7 +385,7 @@
                 }
                 else
                 {
-
+                    this.TileTapLeftDown(e.TileEventArgs);
                 }
             }
             else if (e.Button == InputButtons.Right)
@@ -425,10 +468,22 @@
 
         private void TileTapLeftDown(Controls.TileEventArgs e)
         {
+            this.IsTilePressed = true;
         }
 
         private async void TileTapLeftUp(Controls.TileEventArgs e)
         {
+            this.IsTilePressed = false;
+
+            if (!this.leftMouseDown)
+            {               
+                return;
+            }
+            else
+            {
+                this.leftMouseDown = false;
+            }
+
             if (!this.boardInitialized)
             {
                 await Task.Run(() => this.GenerateMinefield(e.X, e.Y));
@@ -437,6 +492,7 @@
             if (this.leftAndRightMouseDown)
             {
                 this.CheckFlagCountAndSurroundingTiles(e);
+                this.HoverTile = emptyPoint;
                 return;
             }
 
@@ -452,6 +508,7 @@
             else
             {
                 await this.revealSurroundingTiles(e.X, e.Y);
+                this.HoverTile = emptyPoint;
             }
 
             if (!this.boardInitialized && this.CanInteractWithBoard())
@@ -470,7 +527,6 @@
 
         private async Task RevealSurroundingTiles2(int x, int y)
         {
-            long time1 = System.Diagnostics.Stopwatch.GetTimestamp();
             var updateTileList = new List<Point>();
             await Task.Run(() =>
             {
@@ -487,11 +543,6 @@
                 }
                 while (tilesToCheck.Count > 0);
             }).ConfigureAwait(true);
-
-            if (!this.boardInitialized)
-            {
-                App.Tracer.TraceMethodTime(time1);
-            }
 
             this.UpdateTileListAndCheckForVictory(updateTileList);
         }
@@ -550,6 +601,28 @@
             return !this.isGameOver && !this.isVictory;
         }
 
+        private Tile GetTile(Point tilePoint)
+        {
+            return this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y];
+        }
+
+        private void SetTile(Point tilePoint, Tile value)
+        {
+            this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y] = value;
+        }
+
+        protected Tile this[Point tilePoint]
+        {
+            get
+            {
+                return this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y];
+            }
+            set
+            {
+                this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y] = value;
+            }
+        }
+
         private void Victory()
         {
             var list = new List<Point>();
@@ -558,15 +631,23 @@
                 for (int c = 0; c < this.Minesweeper.Tiles.Height; c++)
                 {
                     var tile = this.Minesweeper.Tiles[r, c];
+
                     if (tile.Type == TileType.Mine && tile.ExtraTileData != ExtraTileData.Flag)
                     {
                         this.Minesweeper.Tiles[r, c] = new Tile(TileType.Mine, false, ExtraTileData.Flag);
                         list.Add(new Point(r, c));
                     }
+                    else if (!tile.Shown && tile.Type != TileType.Mine)
+                    {
+                        var surroundingTiles = this.GetSurroundingTiles(r, c);
+                        int mineCount = surroundingTiles.Where(p => this.GetTile(p).Type == TileType.Mine).Count();
+                        this.Minesweeper.Tiles[r, c] = new Tile(TileType.Number(mineCount), true, ExtraTileData.None);
+                        list.Add(new Point(r, c));
+                    }
                 }
             }
 
-            this.Minesweeper.MinesRemaining = 0;       
+            this.Minesweeper.MinesRemaining = 0;
 
             if (list.Count > 0)
             {
@@ -835,7 +916,6 @@
         /// <param name="clickY"></param>
         private void GenerateMinefield(int clickX, int clickY)
         {
-            long initialTime = System.Diagnostics.Stopwatch.GetTimestamp();
             var safeList = this.GetSafeTileIndexes(clickX, clickY);
             int spaceCount = this.Minesweeper.Tiles.Width * this.Minesweeper.Tiles.Height;
             int mineCount = this.Minesweeper.MineCount;
@@ -864,8 +944,6 @@
                 int x = randomSpace % this.Minesweeper.Tiles.Width;
                 this.Minesweeper.Tiles[x, y] = new Tile(TileType.Mine, false);
             }
-
-            App.Tracer.TraceMethodTime(initialTime);
         }
     }
 }

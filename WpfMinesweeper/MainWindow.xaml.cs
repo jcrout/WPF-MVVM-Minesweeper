@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfMinesweeper.Properties;
 
 namespace WpfMinesweeper
 {
@@ -23,11 +24,18 @@ namespace WpfMinesweeper
         public MainWindow()
         {
             Mediator.Instance.Register(ViewModelMessages.UpdateContainerSize, o => this.OnUpdateWindowSize(o));
+
+            this.MinWidth = SettingsProvider.Instance.LastWindowMinWidth;
+            this.MinHeight = SettingsProvider.Instance.LastWindowMinHeight;
+            this.MaxHeight = SystemParameters.FullPrimaryScreenHeight;
+            this.MaxWidth = SystemParameters.FullPrimaryScreenWidth;
             InitializeComponent();
         }
 
         private void OnUpdateWindowSize(object paramter)
         {
+            // temporary solution to resizing problems
+
             this.MaxHeight = SystemParameters.FullPrimaryScreenHeight;
             this.MaxWidth = SystemParameters.FullPrimaryScreenWidth;
             this.MinWidth = 0;
@@ -40,6 +48,9 @@ namespace WpfMinesweeper
             this.Height = height;
             this.MinWidth = width;
             this.MinHeight = height;
+
+            SettingsProvider.Instance.LastWindowMinHeight = height;
+            SettingsProvider.Instance.LastWindowMinWidth = width;
         }
 
         void IClosable.Close()

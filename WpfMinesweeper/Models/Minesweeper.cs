@@ -7,6 +7,7 @@
     using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
+    using WpfMinesweeper.Properties;
 
     /// <summary>
     /// This interface implements the core aspects of the game Minesweeper.
@@ -36,6 +37,16 @@
 
     public class MinesweeperFactory
     {
+        private static ISettingsProvider settings = SettingsProvider.Instance;
+
+        public static Minesweeper GetFromSettings()
+        {     
+            return Minesweeper.Create(
+                settings.LastBoardWidth,
+                settings.LastBoardHeight,
+                settings.LastBoardMineCount);
+        }
+
         public static Minesweeper Create(int width, int height, int mineCount)
         {
             return Minesweeper.Create(width, height, mineCount);

@@ -11,7 +11,7 @@
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="213" d:DesignWidth="154">
-    
+
     <Grid Name="MainGrid" Background="AliceBlue">        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -38,17 +38,20 @@
             </Border>           
         </Grid>
         <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
             <Border Name="BorderBoard" 
-                    BorderThickness="5,0,5,5"                    >
-                <Viewbox Name="BoardViewBox" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="Fill" StretchDirection="Both">
-                    <vw:TileBoardView x:Name="BoardView" DataContext="{Binding Path=TileBoardViewModel}">
-                    </vw:TileBoardView>
+                    BorderThickness="5,0,5,5">
+                <Viewbox Name="BoardViewBox" 
+                         HorizontalAlignment="Left" 
+                         VerticalAlignment="Top" 
+                         Stretch="Fill" 
+                         StretchDirection="Both">
+                    <vw:TileBoardView x:Name="BoardView" 
+                                      DataContext="{Binding Path=TileBoardViewModel}"/>
                 </Viewbox>
             </Border>
         </Grid>
-
     </Grid>
-
-
-
 </UserControl>

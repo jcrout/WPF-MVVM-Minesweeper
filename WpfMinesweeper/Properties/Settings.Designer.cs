@@ -8,22 +8,112 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WpfMinesweeper.Properties
-{
-
-
+namespace WpfMinesweeper.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int LastBoardWidth {
+            get {
+                return ((int)(this["LastBoardWidth"]));
+            }
+            set {
+                this["LastBoardWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int LastBoardHeight {
+            get {
+                return ((int)(this["LastBoardHeight"]));
+            }
+            set {
+                this["LastBoardHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int LastBoardMineCount {
+            get {
+                return ((int)(this["LastBoardMineCount"]));
+            }
+            set {
+                this["LastBoardMineCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LastWindowMinWidth {
+            get {
+                return ((double)(this["LastWindowMinWidth"]));
+            }
+            set {
+                this["LastWindowMinWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double LastWindowMinHeight {
+            get {
+                return ((double)(this["LastWindowMinHeight"]));
+            }
+            set {
+                this["LastWindowMinHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF99D9EA")]
+        public global::System.Windows.Media.Color TileColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["TileColor"]));
+            }
+            set {
+                this["TileColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Windows.Media.SolidColorBrush TileBrushSolid {
+            get {
+                return ((global::System.Windows.Media.SolidColorBrush)(this["TileBrushSolid"]));
+            }
+            set {
+                this["TileBrushSolid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Windows.Media.LinearGradientBrush TileBrushGradient {
+            get {
+                return ((global::System.Windows.Media.LinearGradientBrush)(this["TileBrushGradient"]));
+            }
+            set {
+                this["TileBrushGradient"] = value;
             }
         }
     }

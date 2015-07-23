@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfMinesweeper.Properties;
 using WpfMinesweeper.ViewModels;
 
 namespace WpfMinesweeper
@@ -18,7 +19,8 @@ namespace WpfMinesweeper
         UpdateSmileyIndex,
         LeftMouseUp,
         RightMouseUp,
-        TileColorsChanged
+        TileColorsChanged,
+        TileSizeChanged
     }
 
     public sealed class Mediator

@@ -13,7 +13,6 @@ namespace WpfMinesweeper
         private Action<object> executeWithArgument;
         private Func<bool> canExecute;
         private Func<object, bool> canExecuteWithArgument;
-        private bool lastCanExcute;
 
         public Command(Action<object> executionDelegate, Func<object, bool> canExecuteDelegate)
         {

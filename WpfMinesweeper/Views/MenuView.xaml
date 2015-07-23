@@ -5,10 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfMinesweeper"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"          
+             xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+             xmlns:ei2="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d"              
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <controls:ModalDialog x:Key="customBoard" x:Name="customBoardDialog5"></controls:ModalDialog>
+
     </UserControl.Resources>
     <Grid>
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
@@ -21,6 +27,15 @@
                     <MenuItem Header="_Custom" Command="{Binding Path=BoardSizeCommand}"  CommandParameter="custom"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand, Mode=OneWay}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"></MenuItem>
+            </MenuItem>
+            <MenuItem  Header="_Edit" HorizontalAlignment="Left">
+                <MenuItem Header="_Tile Color">
+                    <xctk:ColorPicker Name="ColorPicker" 
+                                      Width="80"                                     
+                                      UsingAlphaChannel="False"
+                                      SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}">
+                    </xctk:ColorPicker>
+                </MenuItem>                
             </MenuItem>
         </Menu>
     </Grid>

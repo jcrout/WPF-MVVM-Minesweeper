@@ -173,7 +173,6 @@
     /// </summary>
     public struct TileType
     {
-        private static ushort mineCountMinimum = 1;
         private static ushort mineCountMaximum = 8;
 
         private const ushort TYPE_EMPTY = 100;
@@ -186,14 +185,6 @@
             get
             {
                 return (int)mineCountMaximum;
-            }
-        }
-
-        public static int MineCountMinimum
-        {
-            get
-            {
-                return (int)mineCountMinimum;
             }
         }
 
@@ -223,8 +214,13 @@
 
         public static TileType Number(int mineCount)
         {
+            if (mineCount == 0)
+            {
+                return TileType.EmptySpace;
+            }
+
             ushort usmineCount = (ushort)mineCount;
-            if (usmineCount < mineCountMinimum || usmineCount > mineCountMaximum)
+            if (usmineCount > mineCountMaximum || usmineCount < 0)
             {
                 throw new ArgumentOutOfRangeException("mineCount");
             }
@@ -257,7 +253,7 @@
 
         public bool IsNumber()
         {
-            return ((this.value >= mineCountMinimum) && (this.value <= mineCountMaximum));
+            return ((this.value > 0) && (this.value <= mineCountMaximum));
         }
 
         public bool IsUnset()

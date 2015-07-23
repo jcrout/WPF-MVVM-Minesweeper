@@ -9,6 +9,7 @@
     using System.Windows;
     using System.Windows.Threading;
     using WpfMinesweeper.Models;
+    using WpfMinesweeper.Properties;
 
     class MinesweeperViewModel : MinesweeperComponentViewModel
     {
@@ -25,9 +26,11 @@
             Mediator.Instance.Register(ViewModelMessages.GameOver, this.OnGameOver);
             Mediator.Instance.Register(ViewModelMessages.Victory, this.OnVictory);
 
+            this.MenuViewModel = new MenuViewModel();
             this.DisplayViewModel = new DisplayPanelViewModel();
             this.TileBoardViewModel = new TileBoardViewModel();
-            this.Minesweeper = MinesweeperFactory.Create(9, 9, 10);
+
+            this.Minesweeper = MinesweeperFactory.GetFromSettings();
         }
 
         public ViewModelBase MenuViewModel
@@ -85,9 +88,13 @@
                 this.ResetGame();
             }
 
-            this.DisplayViewModel.Minesweeper = this.Minesweeper;
-            this.TileBoardViewModel.Minesweeper = this.Minesweeper;
-            this.MenuViewModel = new MenuViewModel();
+            var minesweeper = this.Minesweeper;
+            Settings.LastBoardWidth = minesweeper.Tiles.Width;
+            Settings.LastBoardHeight = minesweeper.Tiles.Height;
+            Settings.LastBoardMineCount = minesweeper.MineCount;
+
+            this.DisplayViewModel.Minesweeper = minesweeper;
+            this.TileBoardViewModel.Minesweeper = minesweeper;          
         }
 
         private void OnGameStarted(object paramter)

@@ -8,7 +8,7 @@
         MaxWidth="170"
         MaxHeight="261"
        >
-    <Grid>
+    <Grid x:Name="MainGrid">
         <vw:MinesweeperView DataContext="{Binding Path=ViewModel}"></vw:MinesweeperView>
     </Grid>
 </Window>

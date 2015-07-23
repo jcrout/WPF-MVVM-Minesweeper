@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using WpfMinesweeper.Properties;
 
 namespace WpfMinesweeper
 {
@@ -25,6 +27,12 @@ namespace WpfMinesweeper
             var view = new WpfMinesweeper.ViewModels.MainWindowViewModel();
             window.DataContext = view;
             window.Show();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {            
+            base.OnExit(e);
+            SettingsProvider.Instance.Save();
         }
 
         private void InitializeTracer()
