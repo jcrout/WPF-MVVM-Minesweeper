@@ -25,18 +25,6 @@
         
         private bool disposed;
 
-        private static void OnMouseAction(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-            {
-
-            }
-        }
-
-        public ViewModelBase()
-        {
-        }
-
         public void Dispose()
         {
             if (disposed)

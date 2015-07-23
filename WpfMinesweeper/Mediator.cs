@@ -10,8 +10,7 @@ namespace WpfMinesweeper
 {
     public enum ViewModelMessages
     {
-        TileBoardInitialized,
-        UpdateContainerSize,
+        TileBoardSizeChanged,
         CreateNewBoard,
         GameStarted,
         GameOver,

@@ -45,6 +45,8 @@
         private int revealedSpaces = 0;
         private int targetSpaceCount = 0;
         private int maxStackSize = 3000;
+        private int lastBoardWidth = 0;
+        private int lastBoardHeight = 0;
 
         public TileBoardViewModel()
         {
@@ -306,7 +308,13 @@
 
         private void OnTileBoardInitialized(object parameter)
         {
-            Mediator.Instance.Notify(ViewModelMessages.TileBoardInitialized, parameter);
+            if (this.Minesweeper.Tiles.Width != this.lastBoardWidth || this.Minesweeper.Tiles.Height != this.lastBoardHeight)
+            {
+                Mediator.Instance.Notify(ViewModelMessages.TileBoardSizeChanged, parameter);
+
+                this.lastBoardWidth = this.Minesweeper.Tiles.Width;
+                this.lastBoardHeight = this.Minesweeper.Tiles.Height;
+            }       
         }
 
         private void OnTileHover(Controls.TileEventArgs e)

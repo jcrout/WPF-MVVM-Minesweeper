@@ -98,11 +98,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands.cs" />
+    <Compile Include="Controls\AutosizeWindow.xaml.cs">
+      <DependentUpon>AutosizeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ModalDialog.xaml.cs">
       <DependentUpon>ModalDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NumberBox.cs" />
     <Compile Include="Controls\TileBoard.cs" />
+    <Compile Include="Controls\ViewBoxAutosize.cs" />
     <Compile Include="IClosable.cs" />
     <Compile Include="Mediator.cs" />
     <Compile Include="Miscellanious\BrushAnimation.cs" />
@@ -132,6 +136,10 @@
     <Compile Include="Views\TileBoardView.xaml.cs">
       <DependentUpon>TileBoardView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\AutosizeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ModalDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

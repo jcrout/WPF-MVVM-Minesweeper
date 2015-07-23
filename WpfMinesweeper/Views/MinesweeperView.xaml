@@ -9,14 +9,15 @@
              xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
              xmlns:local="clr-namespace:WpfMinesweeper"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
              mc:Ignorable="d" 
              d:DesignHeight="213" d:DesignWidth="154">
 
-    <Grid Name="MainGrid" Background="AliceBlue">        
+    <Grid Name="MainGrid" Background="AliceBlue">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" VerticalAlignment="Top">
             <vw:MenuView DataContext="{Binding Path=MenuViewModel}"></vw:MenuView>
@@ -29,28 +30,28 @@
                 <Border Name="BorderDisplayPanel" 
                     BorderThickness="1"
                     Margin="0"
-                    BorderBrush="LightGray"
-                    SizeChanged="BorderBoard_SizeChanged">
+                    BorderBrush="LightGray">
                     <vw:DisplayPanelView 
                         DataContext="{Binding Path=DisplayViewModel}"
                         Margin="2"></vw:DisplayPanelView>
                 </Border>
-            </Border>           
+            </Border>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Background="Orange">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Border Name="BorderBoard" 
-                    BorderThickness="5,0,5,5">
-                <Viewbox Name="BoardViewBox" 
+                    BorderThickness="5,0,5,5" 
+                    BorderBrush="Aqua">
+                <controls:ViewBoxAutosize x:Name="BoardViewBox" 
                          HorizontalAlignment="Left" 
                          VerticalAlignment="Top" 
                          Stretch="Fill" 
                          StretchDirection="Both">
-                    <vw:TileBoardView x:Name="BoardView" 
-                                      DataContext="{Binding Path=TileBoardViewModel}"/>
-                </Viewbox>
+                    <vw:TileBoardView x:Name="BoardView" Grid.Row="0" Grid.Column="0"
+                                          DataContext="{Binding Path=TileBoardViewModel}"/>                        
+                </controls:ViewBoxAutosize>
             </Border>
         </Grid>
     </Grid>

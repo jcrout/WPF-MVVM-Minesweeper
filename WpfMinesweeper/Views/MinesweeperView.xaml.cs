@@ -20,40 +20,9 @@ namespace WpfMinesweeper.Views
     /// </summary>
     public partial class MinesweeperView : UserControl
     {
-        private bool initialized = false;
-
         public MinesweeperView()
         {
-            Mediator.Instance.Register(ViewModelMessages.TileBoardInitialized, o => this.OnSizeChanged(o));
             InitializeComponent();
-        }
-
-        private void OnSizeChanged(object parameter)
-        {
-            if ((this.BoardViewBox.Width == this.BoardView.Board.Width) && (this.BoardViewBox.Height == this.BoardView.Board.Height))
-            {
-                if (!initialized)
-                {                 
-                    Mediator.Instance.Notify(ViewModelMessages.UpdateContainerSize, parameter);
-                }            
-            }
-            else
-            {
-                this.BoardViewBox.Width = this.BoardView.Board.Width;
-                this.BoardViewBox.Height = this.BoardView.Board.Height;
-                Mediator.Instance.Notify(ViewModelMessages.UpdateContainerSize, parameter);
-            }
-
-            this.initialized = true;        
-        }
-
-        private void BorderBoard_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (!double.IsNaN(this.BorderBoard.ActualWidth))
-            {
-                this.BoardViewBox.Width = this.BorderBoard.ActualWidth - (this.BorderBoard.BorderThickness.Right * 2);
-                this.BoardViewBox.Height = this.BorderBoard.ActualHeight - this.BorderBoard.BorderThickness.Bottom;
-            }
         }
     }
 }

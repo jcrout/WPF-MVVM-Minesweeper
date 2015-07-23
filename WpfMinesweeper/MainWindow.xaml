@@ -5,8 +5,11 @@
         xmlns:vw="clr-namespace:WpfMinesweeper.Views"
         Name="Main"
         Title="Minesweeper" 
-        MaxWidth="170"
-        MaxHeight="261"
+        Width="{Binding Path=Width, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        Height="{Binding Path=Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        MinWidth="{Binding Path=MinWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        MinHeight="{Binding Path=MinHeight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        SizeToContent="{Binding Path=SizeToContentMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
        >
     <Grid x:Name="MainGrid">
         <vw:MinesweeperView DataContext="{Binding Path=ViewModel}"></vw:MinesweeperView>

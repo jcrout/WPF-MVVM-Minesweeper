@@ -10,27 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WpfMinesweeper.Properties;
 
-namespace WpfMinesweeper
+namespace WpfMinesweeper.Controls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AutosizeWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IClosable
+    public partial class AutosizeWindow : Window
     {
-        private bool windowSizeInitialized = false;
-
-        public MainWindow()
+        public AutosizeWindow()
         {
-            InitializeComponent();          
-        }
-
-        void IClosable.Close()
-        {
-            this.Close();
+            InitializeComponent();
         }
     }
 }

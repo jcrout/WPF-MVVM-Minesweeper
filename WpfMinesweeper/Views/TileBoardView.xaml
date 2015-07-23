@@ -66,9 +66,9 @@
             </local:BrushAnimation>
         </Storyboard>
     </UserControl.Resources>
-    
-    <Grid x:Name="MainGrid">
-        <controls:TileBoard 
+
+    <Grid x:Name="MainGrid" >
+        <controls:TileBoard
                     x:Name="Board"                                               
                     TileHoverCommand="{Binding Path=TileHoverCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                     HoverTile="{Binding Path=HoverTile, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
