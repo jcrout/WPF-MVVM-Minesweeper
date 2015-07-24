@@ -19,18 +19,11 @@ namespace WpfMinesweeper
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IClosable
+    public partial class MainWindow : Window
     {
-        private bool windowSizeInitialized = false;
-
         public MainWindow()
         {
             InitializeComponent();          
-        }
-
-        void IClosable.Close()
-        {
-            this.Close();
         }
     }
 }

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Media;
     using WpfMinesweeper.Properties;
 
@@ -17,8 +18,10 @@
         double LastWindowMinWidth { get; set; }
         double LastWindowMinHeight { get; set; }
 
+        Point LastLocation { get; set; }
         Color TileColor { get; set; }
         Brush TileBrush { get; set; }
+
         void Save();
     }
 
@@ -105,6 +108,18 @@
             set
             {
                 userSettings.TileColor = value;
+            }
+        }
+
+        public Point LastLocation
+        {
+            get
+            {
+                return userSettings.LastLocation;
+            }
+            set
+            {
+                userSettings.LastLocation = value;
             }
         }
 

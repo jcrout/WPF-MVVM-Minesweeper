@@ -33,7 +33,7 @@
         private static ImageSource questionMarkImage;
         private static Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(100, 255, 150, 150));
         private static Brush defaultSelectionBrush = new SolidColorBrush(Color.FromArgb(100, 50, 50, 255));
-        private static Brush defaultTileBrush = new SolidColorBrush(Color.FromArgb(100, 153, 217, 234));
+        private static Brush defaultTileBrush = new SolidColorBrush(Color.FromArgb(255, 153, 217, 234));
         private static Size defaultTileSize = new Size(16d, 16d);
         private static List<Point> defaultAnimatedTiles = new List<Point>();
         private static long doubleClickInterval = System.Windows.Forms.SystemInformation.DoubleClickTime * Stopwatch.Frequency / 1000;
@@ -418,7 +418,7 @@
 
         public TileBoard()
         {
-            this.InitializeBoard();
+            //this.InitializeBoard();
         }
 
         public IMinesweeper Minesweeper
@@ -615,7 +615,7 @@
             {
                 throw new ArgumentOutOfRangeException("index");
             }
-
+     
             return visuals[index];
         }
 
@@ -715,14 +715,14 @@
                 this.boardHeight = this.Minesweeper.Tiles.Height;
                 this.Width = this.boardWidth * this.TileSize.Width;
                 this.Height = this.boardHeight * this.TileSize.Height;
-                this.RenderSize = new Size(this.Width, this.Height);
+                //this.RenderSize = new Size(this.Width, this.Height);
 
                 this.DrawBoard();
                 this.DrawTileShader();
                 this.HoverTile = new Point(-1, -1);
             }
 
-            this.BoardInitializedCommand.ExecuteIfAbleTo(this.Width);
+            this.BoardInitializedCommand.ExecuteIfAbleTo(new Size(this.Width, this.Height));
         }
 
         private void RedrawBoard()

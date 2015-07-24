@@ -44,7 +44,7 @@
         private int maxSafeSpotsAroundFirstClick = 5;
         private int revealedSpaces = 0;
         private int targetSpaceCount = 0;
-        private int maxStackSize = 3000;
+        private int maxStackSize = 2000;
         private int lastBoardWidth = 0;
         private int lastBoardHeight = 0;
 

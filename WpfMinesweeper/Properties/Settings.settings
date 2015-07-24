@@ -12,19 +12,22 @@
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="LastWindowMinWidth" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">170</Value>
     </Setting>
     <Setting Name="LastWindowMinHeight" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">261</Value>
     </Setting>
     <Setting Name="TileColor" Type="System.Windows.Media.Color" Scope="User">
-      <Value Profile="(Default)">#FF99D9EA</Value>
+      <Value Profile="(Default)">#FF5F9EA0</Value>
     </Setting>
     <Setting Name="TileBrushSolid" Type="System.Windows.Media.SolidColorBrush" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">#FF5F9EA0</Value>
     </Setting>
     <Setting Name="TileBrushGradient" Type="System.Windows.Media.LinearGradientBrush" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastLocation" Type="System.Windows.Point" Scope="User">
+      <Value Profile="(Default)">-300,-300</Value>
     </Setting>
   </Settings>
 </SettingsFile>

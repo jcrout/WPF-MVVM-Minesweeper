@@ -104,6 +104,7 @@
     <Compile Include="Controls\ModalDialog.xaml.cs">
       <DependentUpon>ModalDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ModalWindowCreator.cs" />
     <Compile Include="Controls\NumberBox.cs" />
     <Compile Include="Controls\TileBoard.cs" />
     <Compile Include="Controls\ViewBoxAutosize.cs" />
@@ -132,6 +133,9 @@
     </Compile>
     <Compile Include="Views\MinesweeperView.xaml.cs">
       <DependentUpon>MinesweeperView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\StatisticsView.xaml.cs">
+      <DependentUpon>StatisticsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TileBoardView.xaml.cs">
       <DependentUpon>TileBoardView.xaml</DependentUpon>
@@ -169,6 +173,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MinesweeperView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StatisticsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,18 +16,20 @@
     {
         private static Color defaultSelectedColor = Settings.TileColor;
 
+        private ViewModelBase customBoardViewModel;
         private Color selectedColor;
         private ICommand exitCommand;
         private ICommand boardSizeCommand;
         private ICommand tileColorCommand;
-        private double tileSize = 1.00d;
 
         public MenuViewModel()
-        {    
+        {
+     
             this.exitCommand = new Command(o => this.OnExit((IClosable)o));
             this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(o));
             this.tileColorCommand = new Command(o => this.OnTileColorChange(o));
             this.selectedColor = defaultSelectedColor;
+            this.CustomBoardViewModel = new CustomBoardViewModel();
         }
 
         public ICommand ExitCommand
@@ -97,18 +99,17 @@
             }
         }
 
-        public double TileSize
+        public ViewModelBase CustomBoardViewModel
         {
             get
             {
-                return this.tileSize;
+                return this.customBoardViewModel;
             }
             set
             {
-                if (this.tileSize != value)
+                if (this.customBoardViewModel != value)
                 {
-                    this.tileSize = value;
-                    Mediator.Instance.Notify(ViewModelMessages.TileSizeChanged, value);
+                    this.customBoardViewModel = value;
                     this.OnPropertyChanged();
                 }
             }

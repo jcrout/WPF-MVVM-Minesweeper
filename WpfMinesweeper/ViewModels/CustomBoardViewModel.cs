@@ -23,7 +23,7 @@
             this.height = height;
             this.mines = mines;
             this.validator = MinesweeperBoardValidator.Create();
-            this.saveCustomBoardCommand = new Command(o => this.OnSaveCustomBoard((IClosable)o), () => this.IsValid);
+            this.saveCustomBoardCommand = new Command(o => this.OnSaveCustomBoard(o), () => this.IsValid);
         }
 
         public int Width
@@ -130,12 +130,12 @@
             }
         }
 
-        private void OnSaveCustomBoard(IClosable closable)
+        private void OnSaveCustomBoard(object paramter)
         {
-            if (closable != null)
-            {
-                closable.Close();
-            }
+            //if (closable != null)
+            //{
+            //    closable.Close();
+            //}
 
             string customBoard = this.width.ToString() + ',' + this.height.ToString() + ',' + this.mines.ToString();
             Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, customBoard);

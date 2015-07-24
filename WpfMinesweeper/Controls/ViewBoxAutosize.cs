@@ -11,10 +11,29 @@
 
     public class ViewBoxAutosize : Viewbox
     {
+        private static DependencyProperty KeepExpandedRatioProperty = DependencyProperty.Register(
+            "KeepExpandedRatio",
+            typeof(bool),
+            typeof(ViewBoxAutosize),
+            new PropertyMetadata(
+                false));
+
         private FrameworkElement parent;
         private FrameworkElement child;
         private bool updatedSize = false;
- 
+        
+        public bool KeepExpandedRatio
+        {
+            get
+            {
+                return (bool)this.GetValue(KeepExpandedRatioProperty);
+            }
+            set
+            {
+                this.SetValue(KeepExpandedRatioProperty, value);
+            }
+        }
+
         public ViewBoxAutosize()
         {
         }
@@ -69,8 +88,18 @@
         private void child_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             this.updatedSize = true;
-            this.Width = e.NewSize.Width;
-            this.Height = e.NewSize.Height;  
+            if (this.KeepExpandedRatio && !double.IsNaN(this.Width) && !double.IsNaN(this.Height))
+            {
+                double widthRatio = Math.Max(1d, this.Width / e.PreviousSize.Width);
+                double heightRatio = Math.Max(1d, this.Height / e.PreviousSize.Height);
+                this.Width = e.NewSize.Width * widthRatio;
+                this.Height = e.NewSize.Height * heightRatio; 
+            }
+            else
+            {
+                this.Width = e.NewSize.Width;
+                this.Height = e.NewSize.Height; 
+            } 
         }
 
         private void parent_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              FocusManager.FocusedElement="{Binding ElementName=txtWidth}"
              d:DesignHeight="300" d:DesignWidth="300">
+    
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBox}">
             <Style.Triggers>
@@ -19,6 +20,7 @@
             </Style.Triggers>
         </Style>        
     </UserControl.Resources>
+    
     <Grid>
         <StackPanel Orientation="Vertical">
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="5">
@@ -39,7 +41,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Name="btnOK" 
-                        Content="OK"
+                        Content="OK"                        
                         IsDefault="True" 
                         Width="80" 
                         Height="22"  

@@ -17,7 +17,7 @@ namespace WpfMinesweeper.Controls
     /// <summary>
     /// Interaction logic for ModalDialog.xaml
     /// </summary>
-    public partial class ModalDialog : Window, IClosable
+    public partial class ModalDialog : Window
     {
         public static DependencyProperty ReturnValueProperty = DependencyProperty.Register(
             "ReturnValue",
@@ -26,6 +26,7 @@ namespace WpfMinesweeper.Controls
 
         public ModalDialog()
         {
+            this.ShowInTaskbar = false;          
             this.SizeToContent = System.Windows.SizeToContent.WidthAndHeight;
             InitializeComponent();
         }
@@ -40,6 +41,11 @@ namespace WpfMinesweeper.Controls
             {
                 this.SetValue(ReturnValueProperty, value);
             }
+        }
+
+        public void ShowAsModal()
+        {            
+            this.ShowDialog();
         }
     }
 }

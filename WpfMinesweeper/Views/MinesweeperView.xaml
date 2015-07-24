@@ -20,7 +20,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" VerticalAlignment="Top">
-            <vw:MenuView DataContext="{Binding Path=MenuViewModel}"></vw:MenuView>
+            <vw:MenuView DataContext="{Binding Path=MenuViewModel, UpdateSourceTrigger=PropertyChanged}"></vw:MenuView>
         </Grid>
         <Grid Grid.Row="1">
             <Border Name="Lolz"
@@ -37,13 +37,10 @@
                 </Border>
             </Border>
         </Grid>
-        <Grid Grid.Row="2" Background="Orange">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Row="2">      
             <Border Name="BorderBoard" 
                     BorderThickness="5,0,5,5" 
-                    BorderBrush="Aqua">
+                    BorderBrush="AliceBlue">
                 <controls:ViewBoxAutosize x:Name="BoardViewBox" 
                          HorizontalAlignment="Left" 
                          VerticalAlignment="Top" 

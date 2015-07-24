@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfMinesweeper"
+             xmlns:vw="clr-namespace:WpfMinesweeper.Views"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"          
@@ -11,22 +12,35 @@
              xmlns:ei2="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d"              
              d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-        <controls:ModalDialog x:Key="customBoard" x:Name="customBoardDialog5"></controls:ModalDialog>
 
-    </UserControl.Resources>
     <Grid>
+        <controls:ModalWindowCreator x:Name="customBoardWindow">
+            <vw:CustomBoardView DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged}"/>
+        </controls:ModalWindowCreator>
+        
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
-            <MenuItem HorizontalAlignment="Stretch" Header="_File">
+            <MenuItem  Header="_Game" HorizontalAlignment="Stretch">
                 <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*"></MenuItem>
                 <MenuItem Header="_Difficulty">
                     <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}" CommandParameter="9,9,10"></MenuItem>
                     <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}" CommandParameter="16,16,40"></MenuItem>
                     <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}" CommandParameter="30,16,99"></MenuItem>
-                    <MenuItem Header="_Custom" Command="{Binding Path=BoardSizeCommand}"  CommandParameter="custom"></MenuItem>
+                    <MenuItem Header="_Custom">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">                             
+                                <ei:CallMethodAction TargetObject="{Binding ElementName=customBoardWindow}"                                                     
+                                                     MethodName="Show"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </MenuItem>
                 </MenuItem>
-                <MenuItem Header="E_xit" Command="{Binding Path=ExitCommand, Mode=OneWay}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"></MenuItem>
+                <MenuItem Header="E_xit">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:CallMethodAction MethodName="Close" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"></ei:CallMethodAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </MenuItem>
             </MenuItem>
             <MenuItem  Header="_Edit" HorizontalAlignment="Left">
                 <MenuItem Header="_Tile Color">
@@ -36,6 +50,14 @@
                                       SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}">
                     </xctk:ColorPicker>
                 </MenuItem>                
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Statistics">
+                    <i:Interaction.Behaviors>
+                        
+                    </i:Interaction.Behaviors>
+         
+                </MenuItem>
             </MenuItem>
         </Menu>
     </Grid>

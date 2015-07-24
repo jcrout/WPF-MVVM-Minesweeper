@@ -4,13 +4,15 @@
         xmlns:vm="clr-namespace:WpfMinesweeper.ViewModels"
         xmlns:vw="clr-namespace:WpfMinesweeper.Views"
         Name="Main"
-        Title="Minesweeper" 
+        Title="Minesweeper"  
+        Left="{Binding Path=Left, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        Top="{Binding Path=Top, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"        
         Width="{Binding Path=Width, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
         Height="{Binding Path=Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        MinWidth="{Binding Path=MinWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        MinHeight="{Binding Path=MinHeight, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-        SizeToContent="{Binding Path=SizeToContentMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-       >
+        MinWidth="{Binding Path=MinWidth, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+        MinHeight="{Binding Path=MinHeight, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+        SizeToContent="{Binding Path=SizeToContentMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+    
     <Grid x:Name="MainGrid">
         <vw:MinesweeperView DataContext="{Binding Path=ViewModel}"></vw:MinesweeperView>
     </Grid>

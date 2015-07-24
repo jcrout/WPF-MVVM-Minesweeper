@@ -12,26 +12,67 @@ namespace WpfMinesweeper.ViewModels
     {
         private SizeToContent sizeToContentMode = SizeToContent.WidthAndHeight;
         private ViewModelBase viewModel;
-        private double minWidth = 144;
-        private double minHeight = 200;
-        private double height = 144;
-        private double width = 200;
+        private double minWidth = 0;
+        private double minHeight = 0;
+        private double height = 0;
+        private double width = 0;
+        private double left = 0;
+        private double top = 0;
+        private bool initialized = false;
 
         public MainWindowViewModel()
         {
             Mediator.Instance.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized(o));
-            this.viewModel = new WpfMinesweeper.ViewModels.MinesweeperViewModel();            
+
+            this.minWidth = Settings.LastWindowMinWidth;
+            this.width = this.minWidth;
+            //this.minHeight = Settings.LastWindowMinHeight;
+            //this.height = this.height;
+
+            this.ViewModel = new WpfMinesweeper.ViewModels.MinesweeperViewModel();
+            this.PositionWindow();
         }
 
-        private async void OnTileBoardInitialized(object paramter)
-        {    
-            await Task.Delay(1);
+        private void OnTileBoardInitialized(object paramter)
+        {
+            if (!initialized)
+            {
+                this.initialized = true;
+                this.MinWidth = Settings.LastWindowMinWidth;
+                this.MinHeight = Settings.LastWindowMinHeight;
+                this.SizeToContentMode = SizeToContent.Manual;            
+                return;
+            }
+
             this.MinWidth = 0;
             this.MinHeight = 0;
             this.SizeToContentMode = SizeToContent.WidthAndHeight;
             this.MinWidth = this.width;
             this.MinHeight = this.height;
             this.SizeToContentMode = SizeToContent.Manual;
+
+            Settings.LastWindowMinWidth = this.width;
+            Settings.LastWindowMinHeight = this.height;
+        }
+
+        private void PositionWindow()
+        {
+            if (Settings.LastLocation.X < 0 || Settings.LastLocation.Y < 0)
+            {
+                this.CenterWindow();
+            }
+            else
+            {
+                var point = Settings.LastLocation;
+                this.Left = point.X;
+                this.Top = point.Y;
+            }
+        }
+
+        private void CenterWindow()
+        {
+            this.Left = (SystemParameters.FullPrimaryScreenWidth - this.width) / 2;
+            this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height) / 2;
         }
 
         public ViewModelBase ViewModel
@@ -39,6 +80,14 @@ namespace WpfMinesweeper.ViewModels
             get
             {
                 return this.viewModel;
+            }
+            private set
+            {
+                if (this.viewModel != value)
+                {
+                    this.viewModel = value;
+                    this.OnPropertyChanged();
+                }
             }
         }
 
@@ -117,6 +166,40 @@ namespace WpfMinesweeper.ViewModels
                 if (this.height != value)
                 {
                     this.height = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public double Left
+        {
+            get
+            {
+                return this.left;
+            }
+            set
+            {
+                if (this.left != value)
+                {
+                    this.left = value;
+                    Settings.LastLocation = new Point(this.left, this.top);
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public double Top
+        {
+            get
+            {
+                return this.top;
+            }
+            set
+            {
+                if (this.top != value)
+                {
+                    this.top = value;
+                    Settings.LastLocation = new Point(this.left, this.top);
                     this.OnPropertyChanged();
                 }
             }

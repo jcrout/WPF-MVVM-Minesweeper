@@ -12,24 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Xceed.Wpf.Toolkit;
 
 namespace WpfMinesweeper.Views
 {
     /// <summary>
-    /// Interaction logic for MenuView.xaml
+    /// Interaction logic for StatisticsView.xaml
     /// </summary>
-    public partial class MenuView : UserControl
+    public partial class StatisticsView : UserControl
     {
-        public MenuView()
+        public StatisticsView()
         {
             InitializeComponent();
         }
-
-        //private void MenuItem_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var lolz = (Window)this.Resources["customBoardWindow"];
-        //    lolz.ShowDialog();
-        //}
     }
 }
