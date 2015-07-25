@@ -13,11 +13,54 @@
              mc:Ignorable="d"              
              d:DesignHeight="300" d:DesignWidth="300">
 
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
-        <controls:ModalWindowCreator x:Name="customBoardWindow">
-            <vw:CustomBoardView DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged}"/>
-        </controls:ModalWindowCreator>
-        
+        <controls:PromptBox  x:Name="customBoardWindow" 
+                             DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                             IsModal="True"
+                             Title="Custom Board Size">                             
+            <controls:PromptBox.OKButton>
+                <controls:MessageButton>
+                    <Button Content="OK"
+                            Width="80"
+                            Height="22"
+                            Command="{Binding Path=SaveCustomBoardCommand}">                        
+                    </Button>
+                </controls:MessageButton>
+            </controls:PromptBox.OKButton>
+            
+            <Grid>
+                <StackPanel HorizontalAlignment="Left" 
+                            VerticalAlignment="Top" 
+                            Orientation="Horizontal" 
+                            Margin="15">
+                    <Label Content="Width:"></Label>
+                    <TextBox Name="txtWidth" 
+                         Width="35" 
+                         Text="{Binding Path=Width,ValidatesOnDataErrors=True}"/>
+                    <Label Content="Height:"></Label>
+                    <TextBox 
+                        Name="txtHeight" 
+                        Width="35"
+                        Text="{Binding Path=Height,ValidatesOnDataErrors=True}"/>
+                    <Label Content="Mines:"></Label>
+                    <TextBox Name="txtMines" 
+                        Width="35"
+                        Text="{Binding Path=Mines,ValidatesOnDataErrors=True}"/>
+                </StackPanel>
+            </Grid>
+        </controls:PromptBox>
+
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
             <MenuItem  Header="_Game" HorizontalAlignment="Stretch">
                 <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*"></MenuItem>
@@ -27,7 +70,7 @@
                     <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}" CommandParameter="30,16,99"></MenuItem>
                     <MenuItem Header="_Custom">
                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Click">                             
+                            <i:EventTrigger EventName="Click">
                                 <ei:CallMethodAction TargetObject="{Binding ElementName=customBoardWindow}"                                                     
                                                      MethodName="Show"/>
                             </i:EventTrigger>
@@ -49,14 +92,14 @@
                                       UsingAlphaChannel="False"
                                       SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}">
                     </xctk:ColorPicker>
-                </MenuItem>                
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Statistics">
                     <i:Interaction.Behaviors>
-                        
+
                     </i:Interaction.Behaviors>
-         
+
                 </MenuItem>
             </MenuItem>
         </Menu>

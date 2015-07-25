@@ -21,7 +21,7 @@ namespace WpfMinesweeper
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            this.InitializeTracer();
+            //this.InitializeTracer();
 
             var window = new MainWindow();
             var view = new WpfMinesweeper.ViewModels.MainWindowViewModel();

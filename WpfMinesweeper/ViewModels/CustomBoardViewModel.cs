@@ -132,11 +132,6 @@
 
         private void OnSaveCustomBoard(object paramter)
         {
-            //if (closable != null)
-            //{
-            //    closable.Close();
-            //}
-
             string customBoard = this.width.ToString() + ',' + this.height.ToString() + ',' + this.mines.ToString();
             Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, customBoard);
         }
