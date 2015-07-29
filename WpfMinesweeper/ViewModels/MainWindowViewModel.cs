@@ -10,6 +10,7 @@ namespace WpfMinesweeper.ViewModels
 {
     class MainWindowViewModel : ViewModelBase
     {
+        private WindowState windowState = WindowState.Normal;
         private SizeToContent sizeToContentMode = SizeToContent.WidthAndHeight;
         private ViewModelBase viewModel;
         private double minWidth = 0;
@@ -26,10 +27,8 @@ namespace WpfMinesweeper.ViewModels
 
             this.minWidth = Settings.LastWindowMinWidth;
             this.width = this.minWidth;
-            //this.minHeight = Settings.LastWindowMinHeight;
-            //this.height = this.height;
-
             this.ViewModel = new WpfMinesweeper.ViewModels.MinesweeperViewModel();
+
             this.PositionWindow();
         }
 
@@ -102,6 +101,23 @@ namespace WpfMinesweeper.ViewModels
                 if (this.sizeToContentMode != value)
                 {
                     this.sizeToContentMode = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public WindowState WindowState
+        {
+            get
+            {
+                return this.windowState;
+            }
+            set
+            {
+                if (this.windowState != value)
+                {
+                    this.windowState = value;
+                    Mediator.Instance.Notify(ViewModelMessages.GameWindowStateChanged, value);
                     this.OnPropertyChanged();
                 }
             }

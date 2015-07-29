@@ -501,22 +501,26 @@
 
         private void InvokeCommands(MessageButton button, MessageResult result)
         {
+            object buttonResult = (button != null) 
+                ? button.Result ?? result
+                : result;
+
             switch (result)
             {
                 case MessageResult.OK:
-                    this.ResultOKCommand.ExecuteIfAbleTo(button.Result ?? result);
+                    this.ResultOKCommand.ExecuteIfAbleTo(buttonResult);
                     break;
                 case MessageResult.Cancel:
-                    this.ResultCancelCommand.ExecuteIfAbleTo(button.Result ?? result);
+                    this.ResultCancelCommand.ExecuteIfAbleTo(buttonResult);
                     break;
                 case MessageResult.Other:
-                    this.ResultOtherCommand.ExecuteIfAbleTo(button.Result ?? result);
+                    this.ResultOtherCommand.ExecuteIfAbleTo(buttonResult);
                     break;
                 default:
                     break;
             }
 
-            this.ResultCommand.ExecuteIfAbleTo(button.Result);
+            this.ResultCommand.ExecuteIfAbleTo(buttonResult);
         }
 
         private void window_Closing(object sender, CancelEventArgs e)

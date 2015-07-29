@@ -28,17 +28,18 @@
         <controls:PromptBox  x:Name="customBoardWindow" 
                              DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                              IsModal="True"
-                             Title="Custom Board Size">                             
+                             Title="Custom Board Size"
+                             CancelButton="Cancel;1">
             <controls:PromptBox.OKButton>
-                <controls:MessageButton>
+                <controls:MessageButton RightToLeftIndex="0">
                     <Button Content="OK"
                             Width="80"
                             Height="22"
-                            Command="{Binding Path=SaveCustomBoardCommand}">                        
+                            Command="{Binding Path=SaveCustomBoardCommand}">
                     </Button>
                 </controls:MessageButton>
             </controls:PromptBox.OKButton>
-            
+
             <Grid>
                 <StackPanel HorizontalAlignment="Left" 
                             VerticalAlignment="Top" 
@@ -59,6 +60,13 @@
                         Text="{Binding Path=Mines,ValidatesOnDataErrors=True}"/>
                 </StackPanel>
             </Grid>
+        </controls:PromptBox>
+
+        <controls:PromptBox x:Name="statisticsWindow"
+                            Title="Statistics"
+                            IsModal="false" 
+                            CancelButton="{x:Null}">
+            <vw:StatisticsView DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </controls:PromptBox>
 
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
@@ -96,10 +104,12 @@
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Statistics">
-                    <i:Interaction.Behaviors>
-
-                    </i:Interaction.Behaviors>
-
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <ei:CallMethodAction TargetObject="{Binding ElementName=statisticsWindow}"                                                     
+                                                 MethodName="Show"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </MenuItem>
             </MenuItem>
         </Menu>

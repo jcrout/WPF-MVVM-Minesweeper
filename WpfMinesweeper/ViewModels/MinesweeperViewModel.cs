@@ -10,26 +10,31 @@
     using System.Windows.Media;
     using System.Windows.Threading;
     using WpfMinesweeper.Models;
+    using JonUtility;
 
     class MinesweeperViewModel : MinesweeperComponentViewModel
     {
         private MinesweeperComponentViewModel displayViewModel;
         private MinesweeperComponentViewModel tileBoardViewModel;
         private ViewModelBase menuViewModel;
-        private Timer gameTimer;
+        private WinTimer gameTimer;
+        private bool minimized;
         private bool gameStarted;
 
         public MinesweeperViewModel()
         {
+            Mediator.Instance.Register(ViewModelMessages.GameWindowStateChanged, o => this.OnWindowStateChanged((WindowState)o));
             Mediator.Instance.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
             Mediator.Instance.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
             Mediator.Instance.Register(ViewModelMessages.GameOver, this.OnGameOver);
             Mediator.Instance.Register(ViewModelMessages.Victory, this.OnVictory);
 
+            this.gameTimer = new WinTimer(TimerProc, 1000);
+
             this.MenuViewModel = new MenuViewModel();
             this.DisplayViewModel = new DisplayPanelViewModel();
             this.TileBoardViewModel = new TileBoardViewModel();
-
+   
             this.Minesweeper = MinesweeperFactory.GetFromSettings();
         }
 
@@ -88,19 +93,46 @@
                 this.ResetGame();
             }
 
+            var gameStatistics = StatisticsModule.Create();
             var minesweeper = this.Minesweeper;
+
             Settings.LastBoardWidth = minesweeper.Tiles.Width;
             Settings.LastBoardHeight = minesweeper.Tiles.Height;
             Settings.LastBoardMineCount = minesweeper.MineCount;
 
+            gameStatistics[Statistic.BoardSize] = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
+      
             this.DisplayViewModel.Minesweeper = minesweeper;
-            this.TileBoardViewModel.Minesweeper = minesweeper;          
+            this.TileBoardViewModel.Minesweeper = minesweeper;
+
+            this.GameStatistics = gameStatistics;
+            this.DisplayViewModel.GameStatistics = gameStatistics;
+            this.TileBoardViewModel.GameStatistics = gameStatistics;
+        }
+               
+        private void OnWindowStateChanged(WindowState state)
+        {
+            if (!this.gameStarted)
+            {
+                return;
+            }
+
+            if (state == WindowState.Minimized)
+            {
+                this.gameTimer.Stop();
+                this.minimized = true;
+            }
+            else if (this.minimized)
+            {
+                this.gameTimer.Start();
+                this.minimized = false;
+            }
         }
 
         private void OnGameStarted(object paramter)
         {
             this.gameStarted = true;
-            this.gameTimer = new Timer(TimerProcThread, null, 1000, 1000);
+            this.gameTimer.Start();
         }
 
         private void OnCreateNewBoard(object paramter)
@@ -130,19 +162,29 @@
             }
 
             var newBoard = MinesweeperFactory.Create(width, height, mineCount);
-             this.Minesweeper = newBoard;
+            this.Minesweeper = newBoard;
         }
 
         private void OnGameOver(object paramter)
         {
-            this.DisposeGameTimer();
+            this.EndGame(GameState.GameOver);
             Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
         }
 
         private void OnVictory(object paramter)
         {
-            this.DisposeGameTimer();
+            this.EndGame(GameState.Victory);
             Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
+        }
+
+        private void EndGame(GameState finalState)
+        {
+            this.gameTimer.Stop();
+            this.GameStatistics[Statistic.GameState] = finalState;
+            this.GameStatistics[Statistic.MinesRemaining] = Minesweeper.MinesRemaining;
+            this.GameStatistics[Statistic.TimeElapsed] = Minesweeper.TimeElapsed;
+            this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
+            GlobalStatistics.AddStatisticsModule(this.GameStatistics);
         }
 
         private void ResetGame()
@@ -154,14 +196,14 @@
 
         private void DisposeGameTimer()
         {
-            if (this.gameTimer != null)
-            {
-                this.gameTimer.Dispose();
-                this.gameTimer = null;
-            }
+            //if (this.gameTimer != null)
+            //{
+            //    this.gameTimer.Stop();
+            //    this.gameTimer = null;
+            //}
         }
-
-        private void TimerProcThread(object state)
+        
+        private void TimerProc()
         {
             this.Minesweeper.TimeElapsed++;
         }

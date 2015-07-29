@@ -19,7 +19,8 @@ namespace WpfMinesweeper
         LeftMouseUp,
         RightMouseUp,
         TileColorsChanged,
-        TileSizeChanged
+        TileSizeChanged,
+        GameWindowStateChanged
     }
 
     public sealed class Mediator

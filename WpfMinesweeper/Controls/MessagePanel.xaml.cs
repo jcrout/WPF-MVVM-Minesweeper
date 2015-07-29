@@ -131,8 +131,13 @@
                 return;
             }
 
-            bool useCustomMargins = this.UseCustomButtonMargins;
             var buttonList = (ObservableCollection<MessageButton>)paramter;
+            if (buttonList.Count == 0)
+            {
+                return;
+            }            
+
+            bool useCustomMargins = this.UseCustomButtonMargins; 
             var buttons = buttonList.ToList();
             buttons.Sort((b1, b2) => b1.RightToLeftIndex > b2.RightToLeftIndex ? 1 : b1.RightToLeftIndex < b2.RightToLeftIndex ? -1 : 0);
 

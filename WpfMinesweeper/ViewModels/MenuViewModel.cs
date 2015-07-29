@@ -17,35 +17,17 @@
         private static Color defaultSelectedColor = Settings.TileColor;
 
         private ViewModelBase customBoardViewModel;
+        private ViewModelBase statisticsViewModel;
         private Color selectedColor;
-        private ICommand exitCommand;
         private ICommand boardSizeCommand;
         private ICommand tileColorCommand;
 
         public MenuViewModel()
-        {
-     
-            this.exitCommand = new Command(o => this.OnExit((IClosable)o));
+        {     
             this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(o));
-            this.tileColorCommand = new Command(o => this.OnTileColorChange(o));
             this.selectedColor = defaultSelectedColor;
             this.CustomBoardViewModel = new CustomBoardViewModel();
-        }
-
-        public ICommand ExitCommand
-        {
-            get
-            {
-                return this.exitCommand;
-            }
-            set
-            {
-                if (this.exitCommand != value)
-                {
-                    this.exitCommand = value;
-                    this.OnPropertyChanged();
-                }
-            }
+            this.StatisticsViewModel = new StatisticsViewModel();
         }
 
         public ICommand BoardSizeCommand
@@ -115,12 +97,20 @@
             }
         }
 
-        private void OnTileColorChange(object paramter)
+        public ViewModelBase StatisticsViewModel
         {
-           // var windowz = new WpfMinesweeper.Views.ColorPickerView();
-           // windowz.ShowDialog();
-          
-           //// this.ShowTileColorPicker = true;
+            get
+            {
+                return this.statisticsViewModel;
+            }
+            set
+            {
+                if (this.statisticsViewModel != value)
+                {
+                    this.statisticsViewModel = value;
+                    this.OnPropertyChanged();
+                }
+            }
         }
 
         private void OnBoardSizeSelected(object paramter)
@@ -134,11 +124,6 @@
                 return;
             }
             Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, paramter);
-        }
-
-        private void OnExit(IClosable paramter)
-        {
-            paramter.Close();
         }
     }
 }

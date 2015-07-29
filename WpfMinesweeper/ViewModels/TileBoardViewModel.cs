@@ -431,7 +431,7 @@
             int mineCount = e.Tile.Type.Value;
 
             if (flaggedTiles.Count == mineCount)
-            {
+            {            
                 foreach (var tile in flaggedTiles)
                 {
                     if (this.Minesweeper.Tiles[(int)tile.X, (int)tile.Y].Type != TileType.Mine)
@@ -454,6 +454,7 @@
 
         private void UpdateTileListAndCheckForVictory(List<Point> updateTileList)
         {
+            this.GameStatistics[Statistic.Moves] = (int)this.GameStatistics[Statistic.Moves] + 1;
             this.revealedSpaces += updateTileList.Count;
             this.TilesToUpdate = AnimatedTilesCollection.Create(updateTileList);
 
@@ -495,6 +496,7 @@
             if (!this.boardInitialized)
             {
                 await Task.Run(() => this.GenerateMinefield(e.X, e.Y));
+                this.GameStatistics[Statistic.GameStartTime] = DateTime.Now;
             }
 
             if (this.leftAndRightMouseDown)
@@ -571,6 +573,7 @@
                         e.Tile.Shown,
                         ExtraTileData.Flag);
                     this.Minesweeper.MinesRemaining--;
+                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] + 1;  
                 }
                 else if (e.Tile.ExtraTileData == ExtraTileData.Flag)
                 {
@@ -579,6 +582,7 @@
                         e.Tile.Shown,
                         (this.areQuestionMarksEnabled) ? ExtraTileData.QuestionMark : ExtraTileData.None);
                     this.Minesweeper.MinesRemaining++;
+                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] - 1;   
                 }
                 else // ExtraTileData.QuestionMark
                 {
