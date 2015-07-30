@@ -56,7 +56,7 @@
             }
         }
 
-        private void OnBoardSizeSelectionChanged(object paramter)
+        private void OnBoardSizeSelectionChanged()
         {
 
         }

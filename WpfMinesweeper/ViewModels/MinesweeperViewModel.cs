@@ -96,9 +96,7 @@
             var gameStatistics = StatisticsModule.Create();
             var minesweeper = this.Minesweeper;
 
-            Settings.LastBoardWidth = minesweeper.Tiles.Width;
-            Settings.LastBoardHeight = minesweeper.Tiles.Height;
-            Settings.LastBoardMineCount = minesweeper.MineCount;
+            Settings.LastBoardSize = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
 
             gameStatistics[Statistic.BoardSize] = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
       
@@ -184,25 +182,16 @@
             this.GameStatistics[Statistic.MinesRemaining] = Minesweeper.MinesRemaining;
             this.GameStatistics[Statistic.TimeElapsed] = Minesweeper.TimeElapsed;
             this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
-            GlobalStatistics.AddStatisticsModule(this.GameStatistics);
+
+            Settings.Statistics.Add(this.GameStatistics);
         }
 
         private void ResetGame()
         {
-            this.DisposeGameTimer();
+            this.gameTimer.Stop();
             this.gameStarted = false;
-            //this.minesweeper = null;
         }
 
-        private void DisposeGameTimer()
-        {
-            //if (this.gameTimer != null)
-            //{
-            //    this.gameTimer.Stop();
-            //    this.gameTimer = null;
-            //}
-        }
-        
         private void TimerProc()
         {
             this.Minesweeper.TimeElapsed++;

@@ -30,8 +30,9 @@ namespace WpfMinesweeper
         }
 
         protected override void OnExit(ExitEventArgs e)
-        {            
+        {
             base.OnExit(e);
+         
             SettingsProvider.Instance.Save();
         }
 
@@ -40,12 +41,34 @@ namespace WpfMinesweeper
             Trace.Listeners.Clear();
             Trace.AutoFlush = true;
 
-            Tracer = new TraceSource("Tracer", SourceLevels.All);           
+            Tracer = new TraceSource("Tracer", SourceLevels.All);
             Tracer.Listeners.Clear();
 
             var fs = new FileStream(System.AppDomain.CurrentDomain.BaseDirectory + @"Log.txt", FileMode.Create, FileAccess.Write, FileShare.None);
             var listener = new TextWriterTraceListener(fs);
             Tracer.Listeners.Add(listener);
         }
+    }
+
+}
+
+namespace WpfMinesweeper.Properties
+{
+    internal sealed partial class Settings
+    {
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9,9,10")]
+        public WpfMinesweeper.Models.BoardSize LastBoardSize
+        {
+            get
+            {
+                return ((WpfMinesweeper.Models.BoardSize)(this["LastBoardSize"]));
+            }
+            set
+            {
+                this["LastBoardSize"] = value;
+            }
+        }
+
     }
 }

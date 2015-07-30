@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,25 +10,8 @@ namespace WpfMinesweeper.ViewModels
 {
     public abstract class MinesweeperComponentViewModel : ViewModelBase
     {
-        private static IStatisticsModule globalStatistics = StatisticsModule.Create();
-
         private IStatisticsModule gameStatistics;
         private IMinesweeper minesweeper;
-        
-        public static IStatisticsModule GlobalStatistics
-        {
-            get
-            {
-                return globalStatistics;
-            }
-            set
-            {
-                if (globalStatistics != value)
-                {
-                    globalStatistics = value; 
-                }
-            }
-        }
 
         public IStatisticsModule GameStatistics
         {

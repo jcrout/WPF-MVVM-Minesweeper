@@ -25,73 +25,24 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9")]
-        public int LastBoardWidth {
+        [global::System.Configuration.DefaultSettingValueAttribute("-300,-300")]
+        public global::System.Windows.Point LastLocation {
             get {
-                return ((int)(this["LastBoardWidth"]));
+                return ((global::System.Windows.Point)(this["LastLocation"]));
             }
             set {
-                this["LastBoardWidth"] = value;
+                this["LastLocation"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9")]
-        public int LastBoardHeight {
+        public global::System.Windows.Media.LinearGradientBrush TileBrushGradient {
             get {
-                return ((int)(this["LastBoardHeight"]));
+                return ((global::System.Windows.Media.LinearGradientBrush)(this["TileBrushGradient"]));
             }
             set {
-                this["LastBoardHeight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int LastBoardMineCount {
-            get {
-                return ((int)(this["LastBoardMineCount"]));
-            }
-            set {
-                this["LastBoardMineCount"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("170")]
-        public double LastWindowMinWidth {
-            get {
-                return ((double)(this["LastWindowMinWidth"]));
-            }
-            set {
-                this["LastWindowMinWidth"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("261")]
-        public double LastWindowMinHeight {
-            get {
-                return ((double)(this["LastWindowMinHeight"]));
-            }
-            set {
-                this["LastWindowMinHeight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FF5F9EA0")]
-        public global::System.Windows.Media.Color TileColor {
-            get {
-                return ((global::System.Windows.Media.Color)(this["TileColor"]));
-            }
-            set {
-                this["TileColor"] = value;
+                this["TileBrushGradient"] = value;
             }
         }
         
@@ -109,24 +60,37 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Windows.Media.LinearGradientBrush TileBrushGradient {
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF5F9EA0")]
+        public global::System.Windows.Media.Color TileColor {
             get {
-                return ((global::System.Windows.Media.LinearGradientBrush)(this["TileBrushGradient"]));
+                return ((global::System.Windows.Media.Color)(this["TileColor"]));
             }
             set {
-                this["TileBrushGradient"] = value;
+                this["TileColor"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-300,-300")]
-        public global::System.Windows.Point LastLocation {
+        [global::System.Configuration.DefaultSettingValueAttribute("261")]
+        public double LastWindowMinHeight {
             get {
-                return ((global::System.Windows.Point)(this["LastLocation"]));
+                return ((double)(this["LastWindowMinHeight"]));
             }
             set {
-                this["LastLocation"] = value;
+                this["LastWindowMinHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("170")]
+        public double LastWindowMinWidth {
+            get {
+                return ((double)(this["LastWindowMinWidth"]));
+            }
+            set {
+                this["LastWindowMinWidth"] = value;
             }
         }
     }

@@ -42,14 +42,19 @@
         public static Minesweeper GetFromSettings()
         {     
             return Minesweeper.Create(
-                settings.LastBoardWidth,
-                settings.LastBoardHeight,
-                settings.LastBoardMineCount);
+                settings.LastBoardSize.Width,
+                settings.LastBoardSize.Height,
+                settings.LastBoardSize.MineCount);
         }
 
         public static Minesweeper Create(int width, int height, int mineCount)
         {
             return Minesweeper.Create(width, height, mineCount);
+        }
+
+        public static Minesweeper Create(BoardSize board)
+        {
+            return Minesweeper.Create(board.Width, board.Height, board.MineCount);
         }
 
         public static Minesweeper Create(IMinesweeper minesweeper)

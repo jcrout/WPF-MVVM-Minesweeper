@@ -256,12 +256,14 @@
 
             var tileSetTarget = new RenderTargetBitmap((int)tileWidth, (int)tileHeight, 96, 96, PixelFormats.Pbgra32);
             var tileSetVisual = new DrawingVisual();
+            //lightPen = new Pen(new SolidColorBrush(Color.FromArgb(255, 35, 35, 35)), 1.0);
 
             using (var drawingContext = tileSetVisual.RenderOpen())
             {
                 drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(255, 200, 213, 232)), null, new Rect(0, 0, tileWidth, tileHeight));
-                drawingContext.DrawLine(lightPen, new Point(0.5, 0.5), new Point(actualWidth - 0.5, 0.5));
-                drawingContext.DrawLine(lightPen, new Point(0.5, 0.5), new Point(0.5, actualHeight + 0.5));
+                drawingContext.DrawRectangle(null, new Pen(new SolidColorBrush(Color.FromArgb(255, 223, 230, 235)), 1d), new Rect(1.5, 1.5, tileWidth - 2, tileHeight - 2));
+                drawingContext.DrawLine(darkPen, new Point(0.5, 0.5), new Point(actualWidth + 1.5, 0.5));
+                drawingContext.DrawLine(darkPen, new Point(0.5, 0.5), new Point(0.5, actualHeight + 1.5));
             }
 
             tileUnsetTarget.Render(tileUnsetVisual);
@@ -615,7 +617,7 @@
             {
                 throw new ArgumentOutOfRangeException("index");
             }
-     
+
             return visuals[index];
         }
 
@@ -886,7 +888,7 @@
                     {
                         if (tile.Type != TileType.Mine)
                         {
-                            drawingContext.DrawImage(defaultTileSetImage, tileRect);
+                            drawingContext.DrawImage(this.tileSetImage, tileRect);
                         }
 
                         if (tile.Type != TileType.EmptySpace)

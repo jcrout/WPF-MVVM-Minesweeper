@@ -1,16 +1,7 @@
 ﻿<Application x:Class="WpfMinesweeper.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                  xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">     
-    <Application.Resources>
-        <xctk:WindowContainer x:Key="windowContainer5">
-            <xctk:ChildWindow x:Name="customBoardWindow"
-                              IsModal="True"
-                              WindowState="Closed"                              
-                               >
-
-            </xctk:ChildWindow>
-        </xctk:WindowContainer>
-
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">     
+    <Application.Resources>      
     </Application.Resources>
 </Application>
