@@ -42,71 +42,6 @@
         GameEndTime = 8
     }
 
-    public sealed class StatisticHelper
-    {
-        private static Dictionary<Statistic, Tuple<Type, string, string>> statData;
-
-        static StatisticHelper()
-        {
-            var fields = typeof(Statistic).GetFields().Skip(1);
-            statData = new Dictionary<Statistic, Tuple<Type, string, string>>();
-
-            foreach (var field in fields)
-            {
-                var statEnum = (Statistic)Enum.Parse(typeof(Statistic), field.Name);
-                var statType = typeof(object);
-                var statDescription = string.Empty;
-                var statDisplayText = string.Empty;
-
-                foreach (var customAttribute in field.CustomAttributes)
-                {
-                    if (customAttribute.AttributeType != typeof(StatisticsAttribute))
-                    {
-                        continue;
-                    }
-
-                    statType = (Type)customAttribute.ConstructorArguments[0].Value;
-                    foreach (var namedArgument in customAttribute.NamedArguments)
-                    {
-                        if (namedArgument.MemberName == "Description")
-                        {
-                            statDescription = namedArgument.TypedValue.Value.ToString();
-                        }
-                        else if (namedArgument.MemberName == "DisplayText")
-                        {
-                            statDisplayText = namedArgument.TypedValue.Value.ToString();
-                        }
-                    }
-                }
-
-                statData.Add(statEnum, new Tuple<Type, string, string>(statType, statDescription, statDisplayText));
-            }
-        }
-
-        public static Type GetStatType(Statistic stat)
-        {
-            return statData[stat].Item1;
-        }
-
-        public static string GetStatDescription(Statistic stat)
-        {
-            return statData[stat].Item2;
-        }
-
-        public static string GetStatDisplayText(Statistic stat)
-        {
-            return statData[stat].Item3;
-        }
-
-        public static IEnumerable<KeyValuePair<Statistic, object>> GetDefaultValues()
-        {
-            foreach (var pair in statData)
-            {
-                yield return new KeyValuePair<Statistic, object>(pair.Key, pair.Value.Item1.GetDefaultValue());
-            }
-        }
-    }
-
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
     public sealed class StatisticsAttribute : Attribute
     {
@@ -170,80 +105,69 @@
             }
         }
     }
-
-    [Serializable, DataContract(Name = "GameState")]
-    public enum GameState
+    
+    public sealed class StatisticHelper
     {
-        Unfinished,
-        Victory,
-        GameOver
-    }
+        private static Dictionary<Statistic, Tuple<Type, string, string>> statData;
 
-    public interface IStatisticsModule : IEnumerable<KeyValuePair<Statistic, object>>
-    {
-        object this[Statistic statistic] { get; set; }
-
-        string GetDescription(Statistic statistic);
-
-    }
-
-    [DataContract]
-    public class StatisticsModule : IStatisticsModule
-    {      
-        [DataMember(Name = "Stats")]
-        private Dictionary<Statistic, object> stats;
-
-        public static IStatisticsModule Create()
+        static StatisticHelper()
         {
-            return new StatisticsModule();
-        }
+            var fields = typeof(Statistic).GetFields().Skip(1);
+            statData = new Dictionary<Statistic, Tuple<Type, string, string>>();
 
-        public StatisticsModule()
-        {
-            var defaultValues = StatisticHelper.GetDefaultValues();
-            this.stats = new Dictionary<Statistic, object>(defaultValues.Count());
+            foreach (var field in fields)
+            {
+                var statEnum = (Statistic)Enum.Parse(typeof(Statistic), field.Name);
+                var statType = typeof(object);
+                var statDescription = string.Empty;
+                var statDisplayText = string.Empty;
 
-            foreach (var pair in  StatisticHelper.GetDefaultValues())
-            {
-                this.stats.Add(pair.Key, pair.Value);
-            }
-        }
-
-        public object this[Statistic statistic]
-        {
-            get
-            {
-                return this.stats[statistic];
-            }
-            set
-            {
-                if (this.stats.ContainsKey(statistic))
+                foreach (var customAttribute in field.CustomAttributes)
                 {
-                    this.stats[statistic] = value;
+                    if (customAttribute.AttributeType != typeof(StatisticsAttribute))
+                    {
+                        continue;
+                    }
+
+                    statType = (Type)customAttribute.ConstructorArguments[0].Value;
+                    foreach (var namedArgument in customAttribute.NamedArguments)
+                    {
+                        if (namedArgument.MemberName == "Description")
+                        {
+                            statDescription = namedArgument.TypedValue.Value.ToString();
+                        }
+                        else if (namedArgument.MemberName == "DisplayText")
+                        {
+                            statDisplayText = namedArgument.TypedValue.Value.ToString();
+                        }
+                    }
                 }
-                else
-                {
-                    this.stats.Add(statistic, value);
-                }
+
+                statData.Add(statEnum, new Tuple<Type, string, string>(statType, statDescription, statDisplayText));
             }
         }
 
-        public string GetDescription(Statistic statistic)
+        public static Type GetStatType(Statistic stat)
         {
-            return StatisticHelper.GetStatDescription(statistic);
+            return statData[stat].Item1;
         }
 
-        public IEnumerator<KeyValuePair<Statistic, object>> GetEnumerator()
+        public static string GetStatDescription(Statistic stat)
         {
-            foreach (var pair in this.stats)
+            return statData[stat].Item2;
+        }
+
+        public static string GetStatDisplayText(Statistic stat)
+        {
+            return statData[stat].Item3;
+        }
+
+        public static IEnumerable<KeyValuePair<Statistic, object>> GetDefaultValues()
+        {
+            foreach (var pair in statData)
             {
-                yield return pair;
+                yield return new KeyValuePair<Statistic, object>(pair.Key, pair.Value.Item1.GetDefaultValue());
             }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
         }
     }
 }

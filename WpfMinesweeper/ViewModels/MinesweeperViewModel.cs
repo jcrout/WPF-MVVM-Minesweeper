@@ -12,7 +12,7 @@
     using WpfMinesweeper.Models;
     using JonUtility;
 
-    class MinesweeperViewModel : MinesweeperComponentViewModel
+    public class MinesweeperViewModel : MinesweeperComponentViewModel
     {
         private MinesweeperComponentViewModel displayViewModel;
         private MinesweeperComponentViewModel tileBoardViewModel;

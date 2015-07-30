@@ -314,7 +314,7 @@
 
                 this.lastBoardWidth = this.Minesweeper.Tiles.Width;
                 this.lastBoardHeight = this.Minesweeper.Tiles.Height;
-            }       
+            }
         }
 
         private void OnTileHover(Controls.TileEventArgs e)
@@ -431,7 +431,7 @@
             int mineCount = e.Tile.Type.Value;
 
             if (flaggedTiles.Count == mineCount)
-            {            
+            {
                 foreach (var tile in flaggedTiles)
                 {
                     if (this.Minesweeper.Tiles[(int)tile.X, (int)tile.Y].Type != TileType.Mine)
@@ -455,9 +455,8 @@
         private void UpdateTileListAndCheckForVictory(List<Point> updateTileList)
         {
             this.GameStatistics[Statistic.Moves] = (int)this.GameStatistics[Statistic.Moves] + 1;
-            this.revealedSpaces += updateTileList.Count;
             this.TilesToUpdate = AnimatedTilesCollection.Create(updateTileList);
-
+                     
             if (revealedSpaces == this.targetSpaceCount)
             {
                 Victory();
@@ -485,7 +484,7 @@
             this.IsTilePressed = false;
 
             if (!this.leftMouseDown)
-            {               
+            {
                 return;
             }
             else
@@ -528,6 +527,57 @@
             }
         }
 
+        private void TileTapRightDown(Controls.TileEventArgs e)
+        {
+            if (!this.boardInitialized)
+            {
+                return;
+            }
+
+            if (!e.Tile.Shown)
+            {
+                if (e.Tile.ExtraTileData == ExtraTileData.None)
+                {
+                    this.SetTile(e.X,e.Y, new Tile(
+                        e.Tile.Type,
+                        e.Tile.Shown,
+                        ExtraTileData.Flag));
+                    this.Minesweeper.MinesRemaining--;
+                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] + 1;
+                }
+                else if (e.Tile.ExtraTileData == ExtraTileData.Flag)
+                {
+                    this.SetTile(e.X, e.Y, new Tile(
+                        e.Tile.Type,
+                        e.Tile.Shown,
+                        (this.areQuestionMarksEnabled) ? ExtraTileData.QuestionMark : ExtraTileData.None));
+                    this.Minesweeper.MinesRemaining++;
+                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] - 1;
+                }
+                else // ExtraTileData.QuestionMark
+                {
+                    this.SetTile(e.X,e.Y,  new Tile(
+                        e.Tile.Type,
+                        e.Tile.Shown,
+                        ExtraTileData.None));
+                }
+
+                this.TilesToUpdate = AnimatedTilesCollection.Create(
+                    new List<Point>(1) { 
+                        new Point(e.X, e.Y) 
+                    });
+            }
+        }
+
+        private void TileTapRightUp(Controls.TileEventArgs e)
+        {
+            if (this.leftAndRightMouseDown)
+            {
+                this.CheckFlagCountAndSurroundingTiles(e);
+                return;
+            }
+        }
+
         private async Task RevealSurroundingTiles(int x, int y)
         {
             var updateTileList = new List<Point>();
@@ -557,57 +607,6 @@
             this.UpdateTileListAndCheckForVictory(updateTileList);
         }
 
-        private void TileTapRightDown(Controls.TileEventArgs e)
-        {
-            if (!this.boardInitialized)
-            {
-                return;
-            }
-
-            if (!e.Tile.Shown)
-            {
-                if (e.Tile.ExtraTileData == ExtraTileData.None)
-                {
-                    this.Minesweeper.Tiles[e.X, e.Y] = new Tile(
-                        e.Tile.Type,
-                        e.Tile.Shown,
-                        ExtraTileData.Flag);
-                    this.Minesweeper.MinesRemaining--;
-                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] + 1;  
-                }
-                else if (e.Tile.ExtraTileData == ExtraTileData.Flag)
-                {
-                    this.Minesweeper.Tiles[e.X, e.Y] = new Tile(
-                        e.Tile.Type,
-                        e.Tile.Shown,
-                        (this.areQuestionMarksEnabled) ? ExtraTileData.QuestionMark : ExtraTileData.None);
-                    this.Minesweeper.MinesRemaining++;
-                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] - 1;   
-                }
-                else // ExtraTileData.QuestionMark
-                {
-                    this.Minesweeper.Tiles[e.X, e.Y] = new Tile(
-                        e.Tile.Type,
-                        e.Tile.Shown,
-                        ExtraTileData.None);
-                }
-
-                this.TilesToUpdate = AnimatedTilesCollection.Create(
-                    new List<Point>(1) { 
-                        new Point(e.X, e.Y) 
-                    });
-            }
-        }
-
-        private void TileTapRightUp(Controls.TileEventArgs e)
-        {
-            if (this.leftAndRightMouseDown)
-            {
-                this.CheckFlagCountAndSurroundingTiles(e);
-                return;
-            }
-        }
-
         private bool CanInteractWithBoard()
         {
             return !this.isGameOver && !this.isVictory;
@@ -620,19 +619,17 @@
 
         private void SetTile(Point tilePoint, Tile value)
         {
-            this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y] = value;
+            this.SetTile((int)tilePoint.X, (int)tilePoint.Y, value);
         }
 
-        protected Tile this[Point tilePoint]
+        private void SetTile(int tileX, int tileY, Tile value)
         {
-            get
+            if (value.Shown && !this.Minesweeper.Tiles[tileX,tileY].Shown && (value.Type == TileType.EmptySpace || value.Type.IsNumber()))
             {
-                return this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y];
+                this.revealedSpaces++;
             }
-            set
-            {
-                this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y] = value;
-            }
+
+            this.Minesweeper.Tiles[tileX, tileY] = value;
         }
 
         private void Victory()
@@ -646,14 +643,7 @@
 
                     if (tile.Type == TileType.Mine && tile.ExtraTileData != ExtraTileData.Flag)
                     {
-                        this.Minesweeper.Tiles[r, c] = new Tile(TileType.Mine, false, ExtraTileData.Flag);
-                        list.Add(new Point(r, c));
-                    }
-                    else if (!tile.Shown && tile.Type != TileType.Mine)
-                    {
-                        var surroundingTiles = this.GetSurroundingTiles(r, c);
-                        int mineCount = surroundingTiles.Where(p => this.GetTile(p).Type == TileType.Mine).Count();
-                        this.Minesweeper.Tiles[r, c] = new Tile(TileType.Number(mineCount), true, ExtraTileData.None);
+                        this.SetTile(r,c, new Tile(TileType.Mine, false, ExtraTileData.Flag));
                         list.Add(new Point(r, c));
                     }
                 }
@@ -684,7 +674,7 @@
                     var tile = this.Minesweeper.Tiles[r, c];
                     if (tile.Type == TileType.Mine)
                     {
-                        this.Minesweeper.Tiles[r, c] = new Tile(tile.Type, true);
+                        this.SetTile(r, c, new Tile(tile.Type, true));
                         list.Add(new Point(r, c));
                     }
                 }
@@ -751,11 +741,11 @@
             tiles.Add(new Point(x, y));
             if (count > 0)
             {
-                this.Minesweeper.Tiles[x, y] = new Tile(TileType.Number(count), true);
+                this.SetTile(x, y, new Tile(TileType.Number(count), true));
             }
             else
             {
-                this.Minesweeper.Tiles[x, y] = new Tile(TileType.EmptySpace, true);
+                this.SetTile(x, y, new Tile(TileType.EmptySpace, true));
                 for (int r = left; r <= right; r++)
                 {
                     for (int c = top; c <= bottom; c++)
@@ -763,8 +753,12 @@
                         if (r != x || c != y)
                         {
                             var tile = this.Minesweeper.Tiles[r, c];
-                            if (tile.Type == TileType.Unset)
+                            if (tile.Type == TileType.Unset && tile.ExtraTileData != ExtraTileData.Flag)
                             {
+                                if (tile.Shown)
+                                {
+                                    Console.WriteLine("ee");
+                                }
                                 this.CheckSurroundingTiles(tiles, r, c);
                             }
                         }
@@ -812,11 +806,11 @@
 
             if (count > 0)
             {
-                this.Minesweeper.Tiles[x, y] = new Tile(TileType.Number(count), true);
+                this.SetTile(x, y, new Tile(TileType.Number(count), true));
             }
             else
             {
-                this.Minesweeper.Tiles[x, y] = new Tile(TileType.EmptySpace, true);
+                this.SetTile(x, y, new Tile(TileType.EmptySpace, true));
                 for (int r = left; r <= right; r++)
                 {
                     for (int c = top; c <= bottom; c++)
@@ -824,9 +818,9 @@
                         if (r != x || c != y)
                         {
                             var tile = this.Minesweeper.Tiles[r, c];
-                            if (tile.Type == TileType.Unset && !tile.Shown)
+                            if (tile.Type == TileType.Unset && !tile.Shown && tile.ExtraTileData != ExtraTileData.Flag)
                             {
-                                this.Minesweeper.Tiles[r, c] = new Tile(TileType.Unset, true);
+                                this.SetTile(x,y, new Tile(TileType.Unset, true));
                                 tilesToCheck.Add(new Point(r, c));
                             }
                         }
@@ -954,7 +948,7 @@
                 spaceList.RemoveAt(randomIndex);
                 int y = (int)Math.Floor((double)randomSpace / this.Minesweeper.Tiles.Width);
                 int x = randomSpace % this.Minesweeper.Tiles.Width;
-                this.Minesweeper.Tiles[x, y] = new Tile(TileType.Mine, false);
+                this.SetTile(x,y, new Tile(TileType.Mine, false));
             }
         }
     }

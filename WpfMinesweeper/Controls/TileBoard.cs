@@ -724,11 +724,17 @@
                 this.HoverTile = new Point(-1, -1);
             }
 
+            this.moveCounter = 0;
             this.BoardInitializedCommand.ExecuteIfAbleTo(new Size(this.Width, this.Height));
         }
 
         private void RedrawBoard()
         {
+            if (this.visuals.Count == 0)
+            {
+                return;
+            }
+
             this.visuals.ForEach(v => this.RemoveVisualChild(v));
             this.visuals.Clear();
             this.DrawBoard();
@@ -848,6 +854,7 @@
             }
         }
 
+        private int moveCounter = 0;
         private void DrawTiles(List<Point> tileList)
         {
             int startIndex = this.visuals.Count;
@@ -873,7 +880,7 @@
                         {
                             this.DrawImageWithOffsets(drawingContext, flagImage, tileRect);
                         }
-                        else //if (tile.ExtraTileData == ExtraTileData.QuestionMark)
+                        else
                         {
                             this.DrawImageWithOffsets(drawingContext, questionMarkImage, tileRect);
                         }
@@ -909,11 +916,10 @@
                 }
             }
 
-            //for (int i = startIndex; i < this.visuals.Count; i++)
-            //{
-            //    this.AddVisualChild(this.visuals[i]);
-            //}
+            moveCounter++;
+            JonUtility.WpfExtensionMethods.ConvertToJpeg(this, @"Y:\Downloads\Minesweeper_" + moveCounter.ToString() + ".jpeg", 96d);
         }
+
 
         private void DrawImageWithOffsets(DrawingContext drawingContext, ImageSource imageToDraw, Rect tileRect)
         {
