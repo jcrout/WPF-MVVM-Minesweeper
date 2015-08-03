@@ -23,7 +23,7 @@
         private ICommand tileColorCommand;
 
         public MenuViewModel()
-        {     
+        {
             this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(o));
             this.selectedColor = defaultSelectedColor;
             this.CustomBoardViewModel = new CustomBoardViewModel();
@@ -115,14 +115,6 @@
 
         private void OnBoardSizeSelected(object paramter)
         {
-            if (string.Equals(paramter.ToString(), "custom"))
-            {
-                var windowz = new WpfMinesweeper.Controls.ModalDialog();
-                windowz.Content = new WpfMinesweeper.Views.CustomBoardView();
-                windowz.DataContext = new WpfMinesweeper.ViewModels.CustomBoardViewModel();
-                windowz.ShowDialog();
-                return;
-            }
             Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, paramter);
         }
     }

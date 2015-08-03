@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Xceed.Wpf.Toolkit;
 
 namespace WpfMinesweeper.Views
 {
@@ -25,11 +24,5 @@ namespace WpfMinesweeper.Views
         {
             InitializeComponent();
         }
-
-        //private void MenuItem_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var lolz = (Window)this.Resources["customBoardWindow"];
-        //    lolz.ShowDialog();
-        //}
     }
 }

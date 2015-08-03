@@ -8,7 +8,7 @@
     /// This class encapsulates extension methods for the ICommand interface.
     /// </summary>
     [DebuggerStepThrough]
-    public static class ICommandExtensionMethods
+    public static class CommandExtensionMethods
     {
         /// <summary>
         /// Executes the target ICommand only if the ICommand instance is not null and if the CanExecute(parameter) method returns true.

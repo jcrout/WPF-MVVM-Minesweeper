@@ -10,7 +10,7 @@
     using System.Windows.Media.Imaging;
     using System.Windows.Threading;
 
-    class NumberBox : FrameworkElement
+    public class NumberBox : FrameworkElement
     {
         private static ImageSource[] bitmaps;
         private int minNumber = -99;
@@ -23,6 +23,7 @@
             {
                 bitmaps[i] = new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/N" + i.ToString() + ".png", UriKind.Absolute));
             }
+
             bitmaps[10] = new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/NMinus.png", UriKind.Absolute));
         }
 
@@ -82,36 +83,6 @@
             return current;
         }
 
-        private static bool ValidateDigitsCallback(object value)
-        {
-            int number = (int)value;
-            if (number > 999)
-            {
-                return false;
-            }
-            else if (number < -99)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool ValidateNumberCallback(object value)
-        {
-            int number = (int)value;
-            if (number > 999)
-            {
-                return false;
-            }
-            else if (number < -99)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         private static void OnNumberChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {                    
         }
@@ -167,7 +138,7 @@
 
             int digits = this.Digits;
             int number = this.Number;
-            double imgWidth = (this.Width / digits);
+            double imgWidth = bitmaps[0].Width;
             double imgHeight = bitmaps[0].Height;
 
             var numberText = number < 0 ? number.ToString("0".PadRight(digits - 1, '0')) : number.ToString("0".PadRight(digits, '0'));

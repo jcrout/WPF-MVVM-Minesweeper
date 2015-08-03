@@ -57,7 +57,7 @@
                 <LinearDoubleKeyFrame Value="8.33" KeyTime="0:0:00.643"/>
                 <LinearDoubleKeyFrame Value="-4.16" KeyTime="0:0:00.786"/>
                 <LinearDoubleKeyFrame Value="0" KeyTime="0:0:00.929"/>
-            </DoubleAnimationUsingKeyFrames>            
+            </DoubleAnimationUsingKeyFrames>
             <local:BrushAnimation 
                 Storyboard.TargetName="MainGrid"
                 Storyboard.TargetProperty="(Grid.Background)" 
@@ -83,7 +83,7 @@
                     BoardInitializedCommand="{Binding Path=BoardInitializedCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                     Minesweeper="{Binding Path=Minesweeper, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                     HorizontalAlignment="Left">
-            
+
             <controls:TileBoard.RenderTransform>
                 <RotateTransform Angle="0"></RotateTransform>
             </controls:TileBoard.RenderTransform>
@@ -101,7 +101,7 @@
                 </ei:DataTrigger>
             </i:Interaction.Triggers>
         </controls:TileBoard>
-        
+
         <!--Used for animation purposes.-->
         <Canvas x:Name="BoardCanvas" 
                 Width="{Binding Width, ElementName=Board}" 
@@ -120,7 +120,7 @@
                             <Rectangle.Fill>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                     <GradientStop Color="Black" Offset="0.0" />
-                                    <GradientStop Color="White" Offset="0.25" />                 
+                                    <GradientStop Color="White" Offset="0.25" />
                                 </LinearGradientBrush>
                             </Rectangle.Fill>
                         </Rectangle>
@@ -144,8 +144,8 @@
                            FontFamily="Comic Sans MS"
                            Foreground="Black"
                            />
-                    </Grid>                   
-                </Border>              
+                    </Grid>
+                </Border>
             </Border>
 
             <i:Interaction.Triggers>
@@ -159,7 +159,7 @@
                                                  Storyboard="{StaticResource VictoryAnimation}" 
                                                  ControlStoryboardOption="Stop"/>
                 </ei:DataTrigger>
-            </i:Interaction.Triggers>            
+            </i:Interaction.Triggers>
         </Canvas>
     </Grid>
 </UserControl>

@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WpfMinesweeper.Properties;
 
-namespace WpfMinesweeper
+namespace WpfMinesweeper.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -37,7 +37,7 @@
                 </Border>
             </Border>
         </Grid>
-        <Grid Grid.Row="2">      
+        <Grid Grid.Row="2">
             <Border Name="BorderBoard" 
                     BorderThickness="5,0,5,5" 
                     BorderBrush="AliceBlue">
@@ -47,7 +47,7 @@
                          Stretch="Fill" 
                          StretchDirection="Both">
                     <vw:TileBoardView x:Name="BoardView" Grid.Row="0" Grid.Column="0"
-                                          DataContext="{Binding Path=TileBoardViewModel}"/>                        
+                                          DataContext="{Binding Path=TileBoardViewModel}"/>
                 </controls:ViewBoxAutosize>
             </Border>
         </Grid>

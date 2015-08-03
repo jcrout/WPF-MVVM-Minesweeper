@@ -8,6 +8,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using WpfMinesweeper.Properties;
+    using JonUtility;
 
     /// <summary>
     /// This interface implements the core aspects of the game Minesweeper.
@@ -186,7 +187,7 @@
             var propertyChanged = this.PropertyChanged;
             if (propertyChanged != null)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(prop));
+                propertyChanged(this, new PropertyChangedEventArgs(prop));
             }
         }
     }

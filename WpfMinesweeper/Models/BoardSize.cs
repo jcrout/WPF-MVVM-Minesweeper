@@ -7,6 +7,7 @@
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Windows.Data;
 
     [Serializable, DataContract(Name="BoardSize", IsReference=false), TypeConverter(typeof(BoardSizeConverter))]
     public struct BoardSize : IComparable<BoardSize>
@@ -113,7 +114,11 @@
 
         public static BoardSize Parse(string text)
         {
-            if (string.Equals(text, beginner.ToString()))
+            if (text == null)
+            {
+                throw new ArgumentNullException("text");
+            }
+            else if (string.Equals(text, beginner.ToString()))
             {
                 return beginner;
             }
@@ -128,6 +133,10 @@
             else
             {
                 var parts = text.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length != 3)
+                {
+                    throw new FormatException("text must either be equal to the value of one of the static BoardSize properties or include width, height, and mine count delineated by commas between the numbers.");
+                }
                 return new BoardSize(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]));
             }
         }
@@ -192,6 +201,11 @@
 
         public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
             if (value.GetType() == typeof(string))
             {
                 return BoardSize.Parse(value.ToString());

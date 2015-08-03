@@ -60,7 +60,7 @@
             var listBox2 = (ListBox2)d;
             var newList = (IEnumerable)e.NewValue;
 
-            if (listBox2.SelectedItems != newList)
+            if (!ReferenceEquals(listBox2.SelectedItems,newList))
             {
                 listBox2.SetSelectedItems(newList);
             }

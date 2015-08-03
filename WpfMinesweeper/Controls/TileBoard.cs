@@ -210,6 +210,11 @@
 
         private static Tuple<ImageSource, ImageSource> CreateTileImage(Brush tileBrush, Size tileSize) // 189
         {
+            if (tileBrush == null)
+            {
+                throw new ArgumentNullException("tileBrush");
+            }
+
             double tileWidth = tileSize.Width;
             double tileHeight = tileSize.Height;
             double actualWidth = tileWidth - 1d;
@@ -962,7 +967,7 @@
             int index = this.Minesweeper.Tiles.Width * this.Minesweeper.Tiles.Height;
             for (int i = index; i < this.visuals.Count; i++)
             {
-                if (this.visuals[i] == visual)
+                if (ReferenceEquals(this.visuals[i], visual))
                 {
                     this.visuals.RemoveAt(i);
                     this.RemoveVisualChild(visual);
@@ -1316,20 +1321,6 @@
             {
                 return this.frames;
             }
-        }
-
-        public static AnimatedTilesCollection GetXPattern(ITileCollection tiles, int thickness, TileAnimation animation = null)
-        {
-            double slope = tiles.Height / tiles.Width;
-
-            for (int r = 0; r < tiles.Width; r++)
-            {
-                int c = (int)(slope * (double)r);
-
-            }
-
-            var result = AnimatedTilesCollection.Create(null, animation);
-            return null;
         }
     }
 

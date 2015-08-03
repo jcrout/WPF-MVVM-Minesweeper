@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfMinesweeper"
+             xmlns:models="clr-namespace:WpfMinesweeper.Models"
              xmlns:vw="clr-namespace:WpfMinesweeper.Views"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -73,9 +74,9 @@
             <MenuItem  Header="_Game" HorizontalAlignment="Stretch">
                 <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*"></MenuItem>
                 <MenuItem Header="_Difficulty">
-                    <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}" CommandParameter="9,9,10"></MenuItem>
-                    <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}" CommandParameter="16,16,40"></MenuItem>
-                    <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}" CommandParameter="30,16,99"></MenuItem>
+                    <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}" CommandParameter="{Binding Source={x:Static models:BoardSize.Beginner}}"></MenuItem>
+                    <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}" CommandParameter="{Binding Source={x:Static models:BoardSize.Intermediate}}"></MenuItem>
+                    <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}" CommandParameter="{Binding Source={x:Static models:BoardSize.Expert}}"></MenuItem>
                     <MenuItem Header="_Custom">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">

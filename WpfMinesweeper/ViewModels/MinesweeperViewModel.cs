@@ -135,32 +135,27 @@
 
         private void OnCreateNewBoard(object paramter)
         {
-            if (paramter == null || !(paramter is string))
+            if (paramter == null)
             {
                 this.Minesweeper = MinesweeperFactory.Create(this.Minesweeper);
                 return;
             }
 
-            var paramters = paramter.ToString().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (paramters.Length != 3)
+            if (paramter.GetType() == typeof(BoardSize))
             {
-                throw new ArgumentException("paramter must contain 3 integer values.");
+                this.Minesweeper = MinesweeperFactory.Create((BoardSize)paramter);
+                return;
             }
-
-            int width, height, mineCount;
-            try
+            else if (paramter is string)
             {
-                width = (paramters[0] == "*") ? this.Minesweeper.Tiles.Width : int.Parse(paramters[0]);
-                height = (paramters[1] == "*") ? this.Minesweeper.Tiles.Height : int.Parse(paramters[1]);
-                mineCount = (paramters[2] == "*") ? this.Minesweeper.MineCount : int.Parse(paramters[2]);
+                var boardSize = BoardSize.Parse(paramter.ToString());
+                this.Minesweeper = MinesweeperFactory.Create(boardSize);
+                return;
             }
-            catch (FormatException)
+            else
             {
-                throw new ArgumentException("paramter must contain 3 integer values.");
-            }
-
-            var newBoard = MinesweeperFactory.Create(width, height, mineCount);
-            this.Minesweeper = newBoard;
+                throw new ArgumentException("paramter must either be of type String or BoardSize.");
+            }            
         }
 
         private void OnGameOver(object paramter)
