@@ -1,117 +1,14 @@
 ﻿namespace WpfMinesweeper.Models
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Windows.Media;
-
-    public interface IEnumerable2D<T> : IEnumerable<T>
-    {
-        T this[int x, int y] { get; set; }
-    }
 
     /// <summary>
-    /// Represents a collection of tiles, including the width and height of the board.
-    /// </summary>
-    public interface ITileCollection : IEnumerable2D<Tile>, ICloneable
-    {
-        int Width { get; }
-
-        int Height { get; }
-    }
-
-    public class TileCollection : ITileCollection
-    {
-        private Tile[][] tiles;
-        private int width;
-        private int height;
-
-        public static ITileCollection Create(int width, int height)
-        {
-            return new TileCollection(width, height);
-        }
-
-        protected TileCollection(int width, int height)
-        {
-            this.width = width;
-            this.height = height;
-            this.tiles = new Tile[height][];
-
-            for (int c = 0; c < height; c++)
-            {
-                this.tiles[c] = new Tile[width];
-            }
-        }
-
-        public Tile this[int x, int y]
-        {
-            get
-            {
-                return this.tiles[y][x];
-            }
-            set
-            {
-                this.tiles[y][x] = value;
-            }
-        }
-
-        public int Width
-        {
-            get { return this.width; }
-        }
-
-        public int Height
-        {
-            get { return this.height; }
-        }
-
-        public IEnumerator<Tile> GetEnumerator()
-        {
-            for (int r = 0; r < this.Width; r++)
-            {
-                for (int c = 0; c < this.Height; c++)
-                {
-                    yield return this[r, c];
-                }
-            }
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
-
-        public object Clone()
-        {
-            var newCollection = new TileCollection(this.width, this.height);
-            for (int r = 0; r < this.Width; r++)
-            {
-                for (int c = 0; c < this.Height; c++)
-                {
-                    newCollection.tiles[r][c] = this.tiles[r][c];
-                }
-            }
-
-            return newCollection;
-        }
-    }
-
-    /// <summary>
-    /// Represents a single tile on the board. This struct contains a TileType property that
-    /// indicates the type of the tile including number, mine, empty space. This struct also
-    /// contains a boolean indicating if the tile has been shown.
+    /// Represents a single tile on a Minesweeper tile board.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
     public struct Tile
-    {
-        private static Tile empty = new Tile();
-
+    {  
         private TileType type;
         private ExtraTileData extraTileData;
         private bool shown;
@@ -123,23 +20,11 @@
             this.extraTileData = extraTileData;
         }
 
-        public static Tile Empty
-        {
-            get
-            {
-                return empty;
-            }
-        }
-
         public bool Shown
         {
             get
             {
                 return this.shown;
-            }
-            set
-            {
-                this.shown = value;
             }
         }
 
@@ -149,10 +34,6 @@
             {
                 return this.type;
             }
-            set
-            {
-                this.type = value;
-            }
         }
 
         public ExtraTileData ExtraTileData
@@ -161,20 +42,15 @@
             {
                 return this.extraTileData;
             }
-            set
-            {
-                this.extraTileData = value;
-            }
         }
     }
 
     /// <summary>
-    /// This struct represents a type of Tile, such as a Mine or a Flag or a Number.
+    /// Represents the type of a tile, including EmptySpace, Mine, Number, or Unset
     /// </summary>
     public struct TileType
     {
         private static ushort mineCountMaximum = 8;
-
         private const ushort TYPE_EMPTY = 100;
         private const ushort TYPE_MINE = 200;
 
@@ -187,7 +63,7 @@
                 return (int)mineCountMaximum;
             }
         }
-
+        
         public static TileType Unset
         {
             get
@@ -290,19 +166,14 @@
             return "UNSET";
         }
     }
-
+    
+    /// <summary>
+    /// Specifies the extra data associated with a Tile, including whether or not the Tile is flagged or contains a question mark.
+    /// </summary>
     public enum ExtraTileData
     {
         None,
         Flag,
         QuestionMark
-    }
-
-    public enum SmileyState
-    {
-        Default,
-        TapDown,
-        Victory,
-        GameOver
     }
 }

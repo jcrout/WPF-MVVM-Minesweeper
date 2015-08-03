@@ -112,6 +112,7 @@
     <Compile Include="Controls\AutosizeWindow.xaml.cs">
       <DependentUpon>AutosizeWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ListBox2.cs" />
     <Compile Include="Controls\MessagePanel.xaml.cs">
       <DependentUpon>MessagePanel.xaml</DependentUpon>
     </Compile>
@@ -125,14 +126,17 @@
     <Compile Include="Controls\ViewBoxAutosize.cs" />
     <Compile Include="Mediator.cs" />
     <Compile Include="Miscellanious\BrushAnimation.cs" />
-    <Compile Include="Miscellanious\PeriodicUpdater.cs" />
     <Compile Include="Miscellanious\SettingsProvider.cs" />
+    <Compile Include="Miscellanious\ThicknessBindingConverter.cs" />
     <Compile Include="Models\BoardSize.cs" />
     <Compile Include="Models\GameState.cs" />
     <Compile Include="Models\Minesweeper.cs" />
     <Compile Include="Models\MinesweeperBoardValidator.cs" />
+    <Compile Include="Models\SmileyState.cs" />
+    <Compile Include="Models\StatDisplay.cs" />
     <Compile Include="Models\StatisticModule.cs" />
     <Compile Include="Models\Statistics.cs" />
+    <Compile Include="Models\TileCollection.cs" />
     <Compile Include="ViewModels\CustomBoardViewModel.cs" />
     <Compile Include="ViewModels\DisplayPanelViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />

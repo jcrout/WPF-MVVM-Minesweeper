@@ -9,7 +9,7 @@
     using System.Threading.Tasks;
 
     [Serializable, DataContract(Name="BoardSize", IsReference=false), TypeConverter(typeof(BoardSizeConverter))]
-    public struct BoardSize
+    public struct BoardSize : IComparable<BoardSize>
     {
         private static BoardSize beginner = new BoardSize(9, 9, 10);
         private static BoardSize intermediate = new BoardSize(16, 16, 40);
@@ -139,6 +139,11 @@
 
         public override bool Equals(object obj)
         {
+            if (!(obj is BoardSize))
+            {
+                return false;
+            }
+
             var board = (BoardSize)obj;
             return this == board;
         }
@@ -156,7 +161,21 @@
                     bs1.height != bs2.height ||
                     bs1.mineCount != bs2.mineCount);
         }
+        
+        public int CompareTo(BoardSize other)
+        {
+            int thisTotal = this.width * this.height;
+            int otherTotal = other.width * other.height;
 
+            if (thisTotal == otherTotal)
+            {
+                return this.mineCount > other.mineCount ? 1 : this.mineCount < other.mineCount ? -1 : 0;
+            }
+            else
+            {
+                return thisTotal > otherTotal ? 1 : -1;
+            }
+        }
     }
 
     public class BoardSizeConverter : TypeConverter

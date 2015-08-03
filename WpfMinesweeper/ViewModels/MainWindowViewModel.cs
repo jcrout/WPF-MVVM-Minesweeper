@@ -25,7 +25,7 @@ namespace WpfMinesweeper.ViewModels
         {
             Mediator.Instance.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized(o));
 
-            this.minWidth = Settings.LastWindowMinWidth;
+            this.minWidth = Settings.LastWindowMinSize.Width;
             this.width = this.minWidth;
             this.ViewModel = new WpfMinesweeper.ViewModels.MinesweeperViewModel();
 
@@ -37,8 +37,8 @@ namespace WpfMinesweeper.ViewModels
             if (!initialized)
             {
                 this.initialized = true;
-                this.MinWidth = Settings.LastWindowMinWidth;
-                this.MinHeight = Settings.LastWindowMinHeight;
+                this.MinWidth = Settings.LastWindowMinSize.Width;
+                this.MinHeight = Settings.LastWindowMinSize.Height;
                 this.SizeToContentMode = SizeToContent.Manual;            
                 return;
             }
@@ -50,8 +50,7 @@ namespace WpfMinesweeper.ViewModels
             this.MinHeight = this.height;
             this.SizeToContentMode = SizeToContent.Manual;
 
-            Settings.LastWindowMinWidth = this.width;
-            Settings.LastWindowMinHeight = this.height;
+            Settings.LastWindowMinSize = new Size(this.width, this.height);
         }
 
         private void PositionWindow()

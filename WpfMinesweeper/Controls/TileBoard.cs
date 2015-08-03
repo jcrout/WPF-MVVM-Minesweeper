@@ -626,7 +626,7 @@
             base.OnMouseLeave(e);
             this.TileHoverCommand.ExecuteIfAbleTo(
                 new TileEventArgs(
-                    Tile.Empty,
+                    new Tile(),
                     -1,
                     -1));
         }

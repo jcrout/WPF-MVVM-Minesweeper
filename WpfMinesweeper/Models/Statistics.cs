@@ -39,7 +39,10 @@
         GameStartTime = 7,
 
         [Statistics(typeof(DateTime), Description = "The time that the game ended.", DisplayText = "Game End Time")]
-        GameEndTime = 8
+        GameEndTime = 8,
+
+        [Statistics(typeof(int), Description = "The total number of matches.", DisplayText = "Count", IsSingleGameStatistic = false)]
+        MatchCount = 9
     }
 
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
@@ -50,13 +53,11 @@
         private readonly Type statType;
         private string description = string.Empty;
         private string displayText = string.Empty;
+        private bool isSingleGameStatistic = true;
 
         public StatisticsAttribute(Type statType)
         {
             this.statType = statType;
-
-            // TODO: Implement code here
-            throw new NotImplementedException();
         }
 
         public Type Type
@@ -104,16 +105,27 @@
                 }
             }
         }
-    }
-    
-    public sealed class StatisticHelper
-    {
-        private static Dictionary<Statistic, Tuple<Type, string, string>> statData;
 
+        public bool IsSingleGameStatistic
+        {
+            get
+            {
+                return this.isSingleGameStatistic;
+            }
+            set
+            {
+                this.isSingleGameStatistic = value;
+            }
+        }
+    }
+
+    public static class StatisticHelper
+    {
+        private static Dictionary<Statistic, StatisticsAttribute> statData;
         static StatisticHelper()
         {
             var fields = typeof(Statistic).GetFields().Skip(1);
-            statData = new Dictionary<Statistic, Tuple<Type, string, string>>();
+            statData = new Dictionary<Statistic, StatisticsAttribute>();
 
             foreach (var field in fields)
             {
@@ -121,6 +133,7 @@
                 var statType = typeof(object);
                 var statDescription = string.Empty;
                 var statDisplayText = string.Empty;
+                var statIsSingleGame = true;
 
                 foreach (var customAttribute in field.CustomAttributes)
                 {
@@ -140,34 +153,127 @@
                         {
                             statDisplayText = namedArgument.TypedValue.Value.ToString();
                         }
+                        else if (namedArgument.MemberName == "IsSingleGameStatistic")
+                        {
+                            statIsSingleGame = (bool)namedArgument.TypedValue.Value;
+                        }
                     }
                 }
 
-                statData.Add(statEnum, new Tuple<Type, string, string>(statType, statDescription, statDisplayText));
+                statData.Add(
+                     statEnum,
+                     new StatisticsAttribute(statType)
+                     {
+                         Description = statDescription,
+                         DisplayText = statDisplayText,
+                         IsSingleGameStatistic = statIsSingleGame
+                     });
             }
         }
 
-        public static Type GetStatType(Statistic stat)
+        public static StatisticsAttribute GetAttribute(Statistic stat)
         {
-            return statData[stat].Item1;
+            var attribute = statData[stat];
+            return new StatisticsAttribute(attribute.Type) 
+            { 
+                Description = attribute.Description,
+                DisplayText = attribute.DisplayText,        
+                IsSingleGameStatistic = attribute.IsSingleGameStatistic
+            };
         }
 
-        public static string GetStatDescription(Statistic stat)
+        public static Statistic FromDisplayText(string displayText)
         {
-            return statData[stat].Item2;
+            foreach (var pair in statData)
+            {
+                if (String.Equals(pair.Value.DisplayText, displayText))
+                {
+                    return pair.Key;
+                }
+            }
+
+            return default(Statistic);
         }
 
-        public static string GetStatDisplayText(Statistic stat)
+        public static Type GetType(Statistic stat)
         {
-            return statData[stat].Item3;
+            return statData[stat].Type;
+        }
+
+        public static string GetDescription(Statistic stat)
+        {
+            return statData[stat].Description;
+        }
+
+        public static string GetDisplayText(Statistic stat)
+        {
+            return statData[stat].DisplayText;
         }
 
         public static IEnumerable<KeyValuePair<Statistic, object>> GetDefaultValues()
         {
             foreach (var pair in statData)
             {
-                yield return new KeyValuePair<Statistic, object>(pair.Key, pair.Value.Item1.GetDefaultValue());
+                yield return new KeyValuePair<Statistic, object>(pair.Key, pair.Value.Type.GetDefaultValue());
             }
+        }
+
+        public static IEnumerable<Statistic> GetGameStatistics()
+        {
+            foreach (var pair in statData)
+            {
+                if (pair.Value.IsSingleGameStatistic)
+                {
+                    yield return pair.Key;
+                }
+            }
+        }
+
+        public static IEnumerable<Statistic> GetGlobalStatistics()
+        {
+            foreach (var pair in statData)
+            {
+                if (!pair.Value.IsSingleGameStatistic)
+                {
+                    yield return pair.Key;
+                }
+            }
+        }
+    }
+
+    public class StatisticComparer : IComparer<object>
+    {
+        private static StatisticComparer defaultComparer = new StatisticComparer();
+
+        public static StatisticComparer Default
+        {
+            get
+            {
+                return defaultComparer;
+            }
+        }
+
+        public int Compare(object x, object y)
+        {
+            var objType = x.GetType();
+            if (objType.IsPrimitive)
+            {
+                double d1 = (double)Convert.ChangeType(x, typeof(double));
+                double d2 = (double)Convert.ChangeType(y, typeof(double));
+                return (d1 > d2 ? 1 : d1 < d2 ? -1 : 0);
+            }
+            else if (objType == typeof(BoardSize))
+            {
+                return ((BoardSize)x).CompareTo((BoardSize)y);
+            }
+            else if (objType.IsEnum)
+            {
+                string value1 = x.ToString();
+                string value2 = y.ToString();
+
+                return value1.CompareTo(value2);
+            }
+            return 0;
         }
     }
 }

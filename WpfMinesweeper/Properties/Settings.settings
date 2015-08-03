@@ -20,5 +20,8 @@
     <Setting Name="LastWindowMinWidth" Type="System.Double" Scope="User">
       <Value Profile="(Default)">170</Value>
     </Setting>
+    <Setting Name="LastWindowMinSize" Type="System.Windows.Size" Scope="User">
+      <Value Profile="(Default)">261,170</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

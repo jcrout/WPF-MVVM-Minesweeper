@@ -17,27 +17,54 @@
 
     public interface ISettingsProvider
     {
-        double LastWindowMinWidth { get; set; }
-        double LastWindowMinHeight { get; set; }
+        /// <summary>
+        /// Gets or sets the last main window size.
+        /// </summary>
+        Size LastWindowMinSize { get; set; }
 
-        BoardSize LastBoardSize { get; set; }
+        /// <summary>
+        /// Gets or sets the last main window location.
+        /// </summary>
         Point LastLocation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the most recent board size used.
+        /// </summary>
+        BoardSize LastBoardSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the tiles on a Minesweeper tile board.
+        /// </summary>
         Color TileColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the brush used to paint the tiles on a Minesweeper tile board.
+        /// </summary>
         Brush TileBrush { get; set; }
 
+        /// <summary>
+        /// Gets or sets the list of individual game statistics. Additionally, the user can directly modify the list itself using standard operations such as Add and Remove.
+        /// </summary>
         ObservableCollection<IStatisticsModule> Statistics { get; set; }
 
+        /// <summary>
+        /// Saves all settings.
+        /// </summary>
         void Save();
     }
 
     public class SettingsProvider : ISettingsProvider
     {
+        private const char settingsDelimiter = (char)20;
+
         private static ISettingsProvider instance = new SettingsProvider();
         private static string statisticsFileName = "statistics.txt";
 
         private Settings userSettings = new Settings();
         private ObservableCollection<IStatisticsModule> statistics = new ObservableCollection<IStatisticsModule>();
-        private object syncLock = new object();
+        private List<IStatisticsModule> newModules = new List<IStatisticsModule>();
+        private object statisticsSyncLock = new object();
+        private bool saveAllModules = false;
 
         static SettingsProvider()
         {
@@ -64,27 +91,15 @@
             }
         }
 
-        public double LastWindowMinWidth
+        public Size LastWindowMinSize 
         {
             get
             {
-                return userSettings.LastWindowMinWidth;
+                return userSettings.LastWindowMinSize;
             }
             set
             {
-                this.userSettings.LastWindowMinWidth = value;
-            }
-        }
-
-        public double LastWindowMinHeight
-        {
-            get
-            {
-                return userSettings.LastWindowMinHeight;
-            }
-            set
-            {
-                this.userSettings.LastWindowMinHeight = value;
+                this.userSettings.LastWindowMinSize = value;
             }
         }
 
@@ -144,10 +159,10 @@
         {
             get
             {
-                lock (this.syncLock)
+                lock (this.statisticsSyncLock)
                 {
                     return this.statistics;
-                }   
+                }
             }
             set
             {
@@ -156,64 +171,63 @@
                     return;
                 }
 
-                lock (this.syncLock)
+                lock (this.statisticsSyncLock)
                 {
                     this.statistics = value;
                 }
             }
         }
 
-        public void Save()
+        public async void Save()
         {
-            userSettings.Save();
-            this.SaveStatistics();
+            this.userSettings.Save(); 
+            await Task.Run(() => this.SaveStatistics()).ConfigureAwait(false);
         }
 
-        private const char settingsDelimiter = (char)20;
+        private SettingsProvider()
+        {
+            this.statistics.CollectionChanged += statistics_CollectionChanged;
+            this.LoadStatistics();
+        }
+
         private void SaveStatistics()
         {
-            long time1 = 0, time2 = 0, time3 = 0, time4 = 0;
-            JonUtility.Diagnostics.QueryPerformanceCounter(ref time1);
-
-            if (this.newModules.Count == 0 && !this.saveAllModules)
+            lock (this.statisticsSyncLock)
             {
-                return;
-            }
-
-            using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null))
-            {               
-                using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(statisticsFileName, this.saveAllModules ? FileMode.Create : FileMode.Append, isoStore))
+                if (this.newModules.Count == 0 && !this.saveAllModules)
                 {
-                    using (var writer = new StreamWriter(isoStream))
-                    {               
-                        lock(this.syncLock)
-                        {
-                            var serializer = new JsonSerializer();
-                            JonUtility.Diagnostics.QueryPerformanceCounter(ref time2);
-                            foreach (var module in this.GetStatModulesToSave())
-                            {
-                                foreach (var pair in module)
-                                {
-                                    using (var sw = new StringWriter())
-                                    {
-                                        serializer.Serialize(sw, pair.Value);
-                                        writer.Write(((int)pair.Key).ToString() + ';' + sw.ToString() + settingsDelimiter);
-                                    }
-                                }
+                    return;
+                }
 
-                                writer.Write(Environment.NewLine);
+                using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null))
+                {
+                    using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(statisticsFileName, this.saveAllModules ? FileMode.Create : FileMode.Append, isoStore))
+                    {
+                        using (var writer = new StreamWriter(isoStream))
+                        {
+                            lock (this.statisticsSyncLock)
+                            {
+                                var serializer = new JsonSerializer();
+                                foreach (var module in this.GetStatModulesToSave())
+                                {
+                                    foreach (var pair in module)
+                                    {
+                                        using (var sw = new StringWriter())
+                                        {
+                                            serializer.Serialize(sw, pair.Value);
+                                            writer.Write(((int)pair.Key).ToString() + ';' + sw.ToString() + settingsDelimiter);
+                                        }
+                                    }
+
+                                    writer.Write(Environment.NewLine);
+                                }
                             }
                         }
-                        JonUtility.Diagnostics.QueryPerformanceCounter(ref time3);
-                    }             
+                    }
                 }
+
+                this.newModules.Clear();
             }
-         
-            JonUtility.Diagnostics.QueryPerformanceCounter(ref time4);
-            Console.WriteLine(JonUtility.StringFunctions.TicksToMS(time2 - time1, 4));
-            Console.WriteLine(JonUtility.StringFunctions.TicksToMS(time3 - time2, 4));
-            Console.WriteLine(JonUtility.StringFunctions.TicksToMS(time4 - time3, 4));
-            Console.WriteLine();
         }
 
         private IEnumerable<IStatisticsModule> GetStatModulesToSave()
@@ -228,7 +242,52 @@
             }
         }
 
-        private async Task<string[]> GetStatText()
+        private async void LoadStatistics()
+        {
+            if (statisticsFileName == null)
+            {
+                statisticsFileName = "statistics.txt";
+            }
+
+            long time1 = 0, time2 = 0;
+            JonUtility.Diagnostics.QueryPerformanceCounter(ref time1);
+            string[] statLines = await this.LoadStatText();
+
+            if (statLines.Length == 0)
+            {
+                Mediator.Instance.Notify(ViewModelMessages.StatisticsLoaded);
+                return;
+            }
+
+            var loadedStatModules = await Task.Factory.StartNew(st => this.LoadStatLines((string[])st), statLines).ConfigureAwait(true);
+            var statisticsList = new ObservableCollection<IStatisticsModule>(loadedStatModules);
+            var oldStatList = this.statistics;
+
+            if (loadedStatModules.Count > 0)
+            {
+                lock (this.statisticsSyncLock)
+                {
+
+                    this.statistics.CollectionChanged -= statistics_CollectionChanged;
+                    if (this.statistics.Count > 0)
+                    {
+
+                        foreach (var statModule in this.statistics)
+                        {
+                            statisticsList.Add(statModule);
+                        }
+                    }
+
+                    this.statistics = statisticsList;
+                    this.statistics.CollectionChanged += statistics_CollectionChanged;
+                }
+            }
+
+            Mediator.Instance.Notify(ViewModelMessages.StatisticsLoaded);
+            JonUtility.Diagnostics.QueryPerformanceCounter(ref time2);
+        }
+
+        private async Task<string[]> LoadStatText()
         {
             using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null))
             {
@@ -249,53 +308,6 @@
             }
         }
 
-        private List<IStatisticsModule> newModules = new List<IStatisticsModule>();
-        private bool saveAllModules = false;
-
-        private async void LoadStatistics()
-        {
-            if (statisticsFileName == null)
-            {
-                statisticsFileName = "statistics.txt";
-            }
-            long time1 = 0, time2 = 0;
-            JonUtility.Diagnostics.QueryPerformanceCounter(ref time1);
-            string[] statLines = await this.GetStatText();
-
-            if (statLines.Length == 0)
-            {
-                return;
-            }
-
-            var loadedStatModules = await Task.Factory.StartNew(st => this.LoadStatLines((string[])st), statLines).ConfigureAwait(true);
-            var statisticsList = new ObservableCollection<IStatisticsModule>(loadedStatModules);
-            var oldStatList = this.statistics;
-
-            if (loadedStatModules.Count == 0)
-            {
-                return;
-            }
-
-            lock(this.syncLock)
-            {
-                this.statistics.CollectionChanged -= statistics_CollectionChanged;
-                if (this.statistics.Count > 0)   
-                {
-                 
-                    foreach (var statModule in this.statistics)
-                    {
-                        statisticsList.Add(statModule);
-                    }
-                }
-
-                this.statistics = statisticsList;
-                this.statistics.CollectionChanged += statistics_CollectionChanged;
-            }
-
-            JonUtility.Diagnostics.QueryPerformanceCounter(ref time2);
-            //App.Current.Dispatcher.Invoke(new Action(() => App.Current.MainWindow.Title = JonUtility.StringFunctions.TicksToMS(time2 - time1, 2) + " (" + loadedStatModules.Count.ToString() + ")"));
-        }
-
         private List<IStatisticsModule> LoadStatLines(string[] statLines)
         {
             var list = new List<IStatisticsModule>(statLines.Length);
@@ -310,7 +322,7 @@
                     int index = part.IndexOf(';');
                     var key = (Statistic)int.Parse(part.Substring(0, index));
                     var valueString = part.Substring(index + 1);
-                    var conversionType = StatisticHelper.GetStatType(key);
+                    var conversionType = StatisticHelper.GetType(key);
 
                     using (var reader = new StringReader(part.Substring(index + 1)))
                     {
@@ -326,23 +338,20 @@
             return list;
         }
 
-        private SettingsProvider()
-        {
-            this.statistics.CollectionChanged += statistics_CollectionChanged;
-            this.LoadStatistics();
-        }
-
-        void statistics_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void statistics_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {        
-                foreach (var newModule in e.NewItems)
+            {
+                lock (this.statisticsSyncLock)
                 {
-                   if (newModule != null)
-                   {
-                       newModules.Add((IStatisticsModule)newModule);
-                   }
-                }    
+                    foreach (var newModule in e.NewItems)
+                    {
+                        if (newModule != null)
+                        {
+                            newModules.Add((IStatisticsModule)newModule);
+                        }
+                    }
+                }
             }
             else
             {

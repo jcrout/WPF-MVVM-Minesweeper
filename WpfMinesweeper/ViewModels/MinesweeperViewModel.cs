@@ -178,12 +178,14 @@
         private void EndGame(GameState finalState)
         {
             this.gameTimer.Stop();
+
+            this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
             this.GameStatistics[Statistic.GameState] = finalState;
             this.GameStatistics[Statistic.MinesRemaining] = Minesweeper.MinesRemaining;
             this.GameStatistics[Statistic.TimeElapsed] = Minesweeper.TimeElapsed;
-            this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
 
             Settings.Statistics.Add(this.GameStatistics);
+            Settings.Save();           
         }
 
         private void ResetGame()

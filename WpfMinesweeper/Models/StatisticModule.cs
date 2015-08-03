@@ -7,6 +7,7 @@
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
+    using JonUtility;
 
     public interface IStatisticsModule : IEnumerable<KeyValuePair<Statistic, object>>
     {
@@ -16,7 +17,7 @@
 
     }
 
-    [DataContract]
+    [Serializable, DataContract]
     public class StatisticsModule : IStatisticsModule
     {
         [DataMember(Name = "Stats")]
@@ -29,12 +30,12 @@
 
         public StatisticsModule()
         {
-            var defaultValues = StatisticHelper.GetDefaultValues();
+            var defaultValues = StatisticHelper.GetGameStatistics();
             this.stats = new Dictionary<Statistic, object>(defaultValues.Count());
 
-            foreach (var pair in StatisticHelper.GetDefaultValues())
+            foreach (var stat in StatisticHelper.GetGameStatistics())
             {
-                this.stats.Add(pair.Key, pair.Value);
+                this.stats.Add(stat, StatisticHelper.GetType(stat).GetDefaultValue());
             }
         }
 
@@ -59,7 +60,7 @@
 
         public string GetDescription(Statistic statistic)
         {
-            return StatisticHelper.GetStatDescription(statistic);
+            return StatisticHelper.GetDescription(statistic);
         }
 
         public IEnumerator<KeyValuePair<Statistic, object>> GetEnumerator()

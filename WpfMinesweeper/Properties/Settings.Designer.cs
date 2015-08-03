@@ -93,5 +93,17 @@ namespace WpfMinesweeper.Properties {
                 this["LastWindowMinWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("261,170")]
+        public global::System.Windows.Size LastWindowMinSize {
+            get {
+                return ((global::System.Windows.Size)(this["LastWindowMinSize"]));
+            }
+            set {
+                this["LastWindowMinSize"] = value;
+            }
+        }
     }
 }

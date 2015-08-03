@@ -6,17 +6,96 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"          
              xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
              xmlns:ei2="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
+             xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
+             xmlns:local="clr-namespace:WpfMinesweeper"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <ListBox x:Name="BoardSizeListBox"
-                 HorizontalAlignment="Left" 
-                 Height="165" 
-                 Width="124"
-                 Margin="10,20,0,0" 
-                 VerticalAlignment="Top"  
-                 ItemsSource="{Binding Path=BoardSizeItems, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"         
-                 SelectedItem="{Binding Path=SelectedBoardSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-        </ListBox>
+    <UserControl.Resources>
+        <Style x:Key="StatisticsStyle" TargetType="ItemsControl">
+            <Setter Property="Background" Value="Azure"></Setter>
+        </Style>
+        <local:ThicknessBindingConverter x:Key="ThicknessConverter"/>
+    </UserControl.Resources>
+
+    <Grid Margin="0,0,0,0">
+        <StackPanel Orientation="Vertical" Margin="5">
+            <StackPanel Orientation="Horizontal" Margin="0">
+                <controls:ListBox2 x:Name="StatNameListBox"                                   
+                                   Height="165"                  
+                                   Margin="0,0,5,5" 
+                                   HorizontalAlignment="Left" 
+                                   VerticalAlignment="Top"
+                                   SelectionMode="Extended"
+                                   ItemsSource="{Binding Path=StatisticNameList, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
+                                   SelectedItemsBinding="{Binding Path=StatisticNameSelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="0,0,2,0"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </controls:ListBox2>
+
+                <TabControl x:Name="StatisticValueTabControl"
+                            HorizontalAlignment="Left" 
+                            Height="165" 
+                            Margin="0" 
+                            VerticalAlignment="Top"
+                            MinWidth="155"
+                            ItemsSource="{Binding Path=Pages, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                            SelectedItem="{Binding Path=SelectedPage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock x:Name="HeaderTextBlock" 
+                                       Text="{Binding Path=Name}"/>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="ValuesGrid">
+                                <ListBox x:Name="ValuesListBox"
+                                         Width="{Binding Path=ActualWidth, ElementName=ValuesGrid}"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         HorizontalAlignment="Left" 
+                                         VerticalAlignment="Top"
+                                         ItemsSource="{Binding Path=StatisticValues, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                         SelectedItem="{Binding Path=SelectedValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                </ListBox>
+                            </Grid>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </StackPanel>
+
+            <ListView ItemsSource="{Binding StatisticList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                      Margin="0,5,0,0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="ToolTip" 
+                                Value="{Binding .Description}"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="{Binding Path=StatHeader, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=Stat}" 
+                                        Width="{Binding Path=ColumnWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding .Label}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="{Binding Path=ValueHeader, UpdateSourceTrigger=PropertyChanged, Mode=OneWay, FallbackValue=Value}" 
+                                        Width="{Binding Path=ColumnWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding .Value}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
     </Grid>
 </UserControl>
