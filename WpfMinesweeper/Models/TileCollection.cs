@@ -81,8 +81,8 @@
         /// <summary>
         ///     Returns a new <see cref="ITileCollection" /> with the specified width and height.
         /// </summary>
-        /// <param name="width">The number of <see cref="tiles" /> per row.</param>
-        /// <param name="height">The number of <see cref="tiles" /> per column.</param>
+        /// <param name="width">The number of <see cref="WpfMinesweeper.Models.TileCollection.tiles" /> per row.</param>
+        /// <param name="height">The number of <see cref="WpfMinesweeper.Models.TileCollection.tiles" /> per column.</param>
         /// <returns></returns>
         public static ITileCollection Create(int width, int height)
         {

@@ -48,7 +48,7 @@
         private int minesLeft;
 
         /// <summary>
-        ///     The collection of <see cref="tiles" /> that make up the board.
+        ///     The collection of <see cref="WpfMinesweeper.Models.Minesweeper.tiles" /> that make up the board.
         /// </summary>
         private ITileCollection tiles;
 

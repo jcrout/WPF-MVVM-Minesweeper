@@ -8,7 +8,7 @@
     [ContentProperty("Content"), DefaultProperty("Content"), Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
     public class ModalWindowCreator : FrameworkElement
     {
-        public static DependencyProperty ContentProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
             typeof(object),
             typeof(ModalWindowCreator),

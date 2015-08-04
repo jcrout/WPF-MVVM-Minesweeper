@@ -13,7 +13,7 @@
     [ContentProperty("Content"), DefaultProperty("Content"), Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
     public class PromptBox : FrameworkElement
     {
-        public static DependencyProperty ButtonBorderBackgroundProperty = DependencyProperty.RegisterAttached(
+        public static readonly DependencyProperty ButtonBorderBackgroundProperty = DependencyProperty.RegisterAttached(
             "ButtonBorderBackground",
             typeof(Brush),
             typeof(PromptBox),
@@ -21,7 +21,7 @@
                 null,
                 PromptBox.ButtonBorderBackgroundChanged));
 
-        public static DependencyProperty ContentProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
             typeof(object),
             typeof(PromptBox),
@@ -29,7 +29,7 @@
                 null,
                 PromptBox.ContentChanged));
 
-        public static DependencyProperty OKButtonProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty OKButtonProperty = DependencyProperty.Register(
             "OKButton",
             typeof(MessageButton),
             typeof(PromptBox),
@@ -37,7 +37,7 @@
                 null,
                 PromptBox.OKButtonChanged));
 
-        public static DependencyProperty CancelButtonProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty CancelButtonProperty = DependencyProperty.Register(
             "CancelButton",
             typeof(MessageButton),
             typeof(PromptBox),
@@ -45,7 +45,7 @@
                 null,
                 PromptBox.CancelButtonChanged));
 
-        public static DependencyProperty OtherButtonsProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty OtherButtonsProperty = DependencyProperty.Register(
             "OtherButtons",
             typeof(ObservableCollection<MessageButton>),
             typeof(PromptBox),
@@ -53,32 +53,32 @@
                 new ObservableCollection<MessageButton>(),
                 PromptBox.OtherButtonsChanged));
 
-        public static DependencyProperty IsModalProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty IsModalProperty = DependencyProperty.Register(
             "IsModal",
             typeof(bool),
             typeof(PromptBox));
 
-        public static DependencyProperty ResultCancelCommandProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ResultCancelCommandProperty = DependencyProperty.Register(
             "ResultCancelCommand",
             typeof(ICommand),
             typeof(PromptBox));
 
-        public static DependencyProperty ResultCommandProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ResultCommandProperty = DependencyProperty.Register(
             "ResultCommand",
             typeof(ICommand),
             typeof(PromptBox));
 
-        public static DependencyProperty ResultOKCommandProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ResultOKCommandProperty = DependencyProperty.Register(
             "ResultOKCommand",
             typeof(ICommand),
             typeof(PromptBox));
 
-        public static DependencyProperty ResultOtherCommandProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ResultOtherCommandProperty = DependencyProperty.Register(
             "ResultOtherCommand",
             typeof(ICommand),
             typeof(PromptBox));
 
-        public static DependencyProperty TitleProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title",
             typeof(string),
             typeof(PromptBox),
@@ -86,7 +86,7 @@
                 string.Empty,
                 PromptBox.TitleChanged));
 
-        public static DependencyProperty WindowStyleProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty WindowStyleProperty = DependencyProperty.Register(
             "WindowStyle",
             typeof(WindowStyle),
             typeof(PromptBox),
@@ -510,13 +510,13 @@
 
         private Window GetNewWindow()
         {
-            var window = new Window();
+            var newWindow = new Window();
             object contentContext = null;
-            window.WindowStyle = this.WindowStyle;
-            window.SizeToContent = SizeToContent.WidthAndHeight;
-            window.ResizeMode = ResizeMode.NoResize;
-            window.ShowInTaskbar = false;
-            window.Title = this.Title ?? string.Empty;
+            newWindow.WindowStyle = this.WindowStyle;
+            newWindow.SizeToContent = SizeToContent.WidthAndHeight;
+            newWindow.ResizeMode = ResizeMode.NoResize;
+            newWindow.ShowInTaskbar = false;
+            newWindow.Title = this.Title ?? string.Empty;
 
             this.panel = new MessagePanel();
             if (this.Content != null)
@@ -537,27 +537,27 @@
                 this.panel.ButtonPanelBorder.Background = this.ButtonBorderBackground;
             }
 
-            window.Content = this.panel;
-            window.DataContext = contentContext;
-            window.Closing += this.window_Closing;
+            newWindow.Content = this.panel;
+            newWindow.DataContext = contentContext;
+            newWindow.Closing += this.window_Closing;
 
             if (this.WindowStyle == WindowStyle.None)
             {
-                window.AllowsTransparency = true;
+                newWindow.AllowsTransparency = true;
             }
 
             if (this.Parent != null)
             {
-                window.Owner = Window.GetWindow(
+                newWindow.Owner = Window.GetWindow(
                     this.Parent);
-                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                newWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
             else
             {
-                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                newWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             }
 
-            return window;
+            return newWindow;
         }
 
         private void InvokeCommands(MessageButton button, MessageResult result)

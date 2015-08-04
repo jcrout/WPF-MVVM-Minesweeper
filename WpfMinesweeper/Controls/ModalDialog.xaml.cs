@@ -7,7 +7,7 @@
     /// </summary>
     public partial class ModalDialog : Window
     {
-        public static DependencyProperty ReturnValueProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ReturnValueProperty = DependencyProperty.Register(
             "ReturnValue",
             typeof(object),
             typeof(ModalDialog));

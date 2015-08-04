@@ -15,7 +15,7 @@
         /// <summary>
         ///     This property is a proxy to SelectedItems and updates any bindings.
         /// </summary>
-        public static DependencyProperty SelectedItemsBindingProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty SelectedItemsBindingProperty = DependencyProperty.Register(
             "SelectedItemsBinding",
             typeof(IList),
             typeof(ListBox2),
@@ -42,8 +42,8 @@
         }
 
         /// <summary>
-        ///     This method updates the <see cref="SelectedItemsBinding" /> property after any changes to the ListBox's
-        ///     SelectedItems property.
+        ///     This method updates the <see cref="WpfMinesweeper.Controls.ListBox2.SelectedItemsBinding" /> property after any
+        ///     changes to the ListBox's SelectedItems property.
         /// </summary>
         /// <param name="e">The SelectionChanged EventArgs.</param>
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)

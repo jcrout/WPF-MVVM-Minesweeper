@@ -33,10 +33,9 @@
                     this.child = null;
                 }
 
-                if (typeof(FrameworkElement).IsAssignableFrom(
-                    value.GetType()))
+                if (value is FrameworkElement)
                 {
-                    this.child = value as FrameworkElement;
+                    this.child = (FrameworkElement)value;
                     this.child.SizeChanged += this.child_SizeChanged;
                 }
             }

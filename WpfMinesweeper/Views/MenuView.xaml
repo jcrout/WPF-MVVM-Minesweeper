@@ -26,7 +26,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <controls:PromptBox x:Name="customBoardWindow"
+        <controls:PromptBox x:Name="CustomBoardWindow"
                             DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                             IsModal="True"
                             Title="Custom Board Size"
@@ -46,23 +46,23 @@
                             Orientation="Horizontal"
                             Margin="15">
                     <Label Content="Width:" />
-                    <TextBox Name="txtWidth"
+                    <TextBox Name="TxtWidth"
                              Width="35"
                              Text="{Binding Path=Width,ValidatesOnDataErrors=True}" />
                     <Label Content="Height:" />
                     <TextBox
-                        Name="txtHeight"
+                        Name="TxtHeight"
                         Width="35"
                         Text="{Binding Path=Height,ValidatesOnDataErrors=True}" />
                     <Label Content="Mines:" />
-                    <TextBox Name="txtMines"
+                    <TextBox Name="TxtMines"
                              Width="35"
                              Text="{Binding Path=Mines,ValidatesOnDataErrors=True}" />
                 </StackPanel>
             </Grid>
         </controls:PromptBox>
 
-        <controls:PromptBox x:Name="statisticsWindow"
+        <controls:PromptBox x:Name="StatisticsWindow"
                             Title="Statistics"
                             IsModal="false"
                             CancelButton="{x:Null}">
@@ -83,7 +83,7 @@
                     <MenuItem Header="_Custom">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
-                                <ei:CallMethodAction TargetObject="{Binding ElementName=customBoardWindow}"
+                                <ei:CallMethodAction TargetObject="{Binding ElementName=CustomBoardWindow}"
                                                      MethodName="Show" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
@@ -110,7 +110,7 @@
                 <MenuItem Header="_Statistics">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <ei:CallMethodAction TargetObject="{Binding ElementName=statisticsWindow}"
+                            <ei:CallMethodAction TargetObject="{Binding ElementName=StatisticsWindow}"
                                                  MethodName="Show" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>

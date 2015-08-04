@@ -1573,183 +1573,64 @@
 
     public class TileEventArgs : EventArgs
     {
-        /// <summary>
-        ///     Targeted Tile.
-        /// </summary>
-        private Tile tile;
-
-        /// <summary>
-        ///     <see cref="Tile" /> X.
-        /// </summary>
-        private int x;
-
-        /// <summary>
-        ///     <see cref="Tile" /> Y.
-        /// </summary>
-        private int y;
-
         public TileEventArgs(Tile tile, int x, int y)
         {
-            this.tile = tile;
-            this.x = x;
-            this.y = y;
+            this.Tile = tile;
+            this.X = x;
+            this.Y = y;
         }
 
         /// <summary>
-        ///     Gets the Tile.
+        ///     Gets the <see cref="Tile" /> associated with the event.
         /// </summary>
-        public Tile Tile
-        {
-            get
-            {
-                return this.tile;
-            }
-            private set
-            {
-                this.tile = value;
-            }
-        }
+        public Tile Tile { get; private set; }
 
         /// <summary>
         ///     Gets the Tile's <see cref="X" /> coordinate.
         /// </summary>
-        public int X
-        {
-            get
-            {
-                return this.x;
-            }
-            private set
-            {
-                this.x = value;
-            }
-        }
+        public int X { get; private set; }
 
         /// <summary>
         ///     Gets the Tile's <see cref="Y" /> coordinate.
         /// </summary>
-        public int Y
-        {
-            get
-            {
-                return this.y;
-            }
-            private set
-            {
-                this.y = value;
-            }
-        }
+        public int Y { get; private set; }
     }
 
     public class TileTapEventArgs
     {
-        /// <summary>
-        ///     Backing field for Button.
-        /// </summary>
-        private InputButtons allButtons;
-
-        /// <summary>
-        ///     Backing field for Button.
-        /// </summary>
-        private InputButtons button;
-
-        /// <summary>
-        ///     Backing field for DoubleClicked.
-        /// </summary>
-        private bool doubleClicked;
-
-        /// <summary>
-        ///     Backing field for PressedDown.
-        /// </summary>
-        private bool pressedDown;
-
-        /// <summary>
-        ///     Backing field for TileEventArgs.
-        /// </summary>
-        private TileEventArgs tileEventArgs;
-
         public TileTapEventArgs(TileEventArgs tileEventArgs, InputButtons button, bool doubleClicked, bool pressedDown, InputButtons allButtons = InputButtons.None)
         {
-            this.tileEventArgs = tileEventArgs;
-            this.button = button;
-            this.doubleClicked = doubleClicked;
-            this.pressedDown = pressedDown;
-            this.allButtons = allButtons;
+            this.TileEventArgs = tileEventArgs;
+            this.Button = button;
+            this.DoubleClicked = doubleClicked;
+            this.PressedDown = pressedDown;
+            this.AllButtonStates = allButtons;
         }
 
         /// <summary>
-        ///     Gets the state of all mouse buttons. Inclusion means that the <see cref="button" /> is currently pressed down.
+        ///     Gets the state of all mouse buttons. Inclusion means that the
+        ///     <see cref="WpfMinesweeper.Controls.TileTapEventArgs.Button" /> is currently pressed down.
         /// </summary>
-        public InputButtons AllButtonStates
-        {
-            get
-            {
-                return this.allButtons;
-            }
-            private set
-            {
-                this.allButtons = value;
-            }
-        }
+        public InputButtons AllButtonStates { get; private set; }
 
         /// <summary>
         ///     Gets the input tap button.
         /// </summary>
-        public InputButtons Button
-        {
-            get
-            {
-                return this.button;
-            }
-            private set
-            {
-                this.button = value;
-            }
-        }
+        public InputButtons Button { get; private set; }
 
         /// <summary>
         ///     Gets a value indicating whether input was double-tapped.
         /// </summary>
-        public bool DoubleClicked
-        {
-            get
-            {
-                return this.doubleClicked;
-            }
-            private set
-            {
-                this.doubleClicked = value;
-            }
-        }
+        public bool DoubleClicked { get; private set; }
 
         /// <summary>
         ///     Gets a value indicating whether input was pressed down or released.
         /// </summary>
-        public bool PressedDown
-        {
-            get
-            {
-                return this.pressedDown;
-            }
-            private set
-            {
-                this.pressedDown = value;
-            }
-        }
+        public bool PressedDown { get; private set; }
 
         /// <summary>
         ///     Gets the associated TileEventArgs.
         /// </summary>
-        public TileEventArgs TileEventArgs
-        {
-            get
-            {
-                return this.tileEventArgs;
-            }
-            private set
-            {
-                this.tileEventArgs = value;
-            }
-        }
+        public TileEventArgs TileEventArgs { get; private set; }
     }
 }

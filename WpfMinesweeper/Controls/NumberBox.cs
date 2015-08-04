@@ -99,18 +99,11 @@
                         "0".PadRight(
                             digits,
                             '0'));
-            var numIndex = 0;
 
             for (var i = 0; i < digits; i++)
             {
-                if (numberText[i] == '-')
-                {
-                    numIndex = 10;
-                }
-                else
-                {
-                    numIndex = numberText[i] - 48;
-                }
+                var numIndex = numberText[i] == '-' ? 10 : numberText[i] - 48;
+
                 drawingContext.DrawImage(
                     NumberBox.bitmaps[numIndex],
                     new Rect((imgWidth * i),

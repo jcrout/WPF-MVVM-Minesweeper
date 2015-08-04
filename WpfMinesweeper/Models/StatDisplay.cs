@@ -6,19 +6,8 @@
     /// </summary>
     public class StatDisplay
     {
-        /// <summary>
-        ///     Backing field for the <see cref="Description" /> property.
-        /// </summary>
         private readonly string description;
-
-        /// <summary>
-        ///     Backing field for the <see cref="Label" /> property.
-        /// </summary>
         private readonly string label;
-
-        /// <summary>
-        ///     Backing field for the <see cref="Value" /> property.
-        /// </summary>
         private readonly string value;
 
         /// <summary>
@@ -57,7 +46,7 @@
         }
 
         /// <summary>
-        ///     Gets the <see cref="value" /> for the specific stat.
+        ///     Gets the <see cref="WpfMinesweeper.Models.StatDisplay.value" /> for the specific stat.
         /// </summary>
         public string Value
         {

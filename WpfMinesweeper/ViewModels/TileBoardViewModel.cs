@@ -599,7 +599,7 @@
         ///     This method randomly determines the location of each mine on the board. The first tile clicked is excluded. An
         ///     additional set of tiles may be added to the exclusion list depending on the minimum/maximum number of safe spots
         ///     around the clicked tile and also on the number of non-mine spaces available by calling the
-        ///     <see cref="GetSafeTileIndexes" /> method.
+        ///     <see cref="TileBoardViewModel.GetSafeTileIndexes" /> method.
         /// </remarks>
         /// <param name="clickX"></param>
         /// <param name="clickY"></param>
@@ -616,13 +616,11 @@
             var currentIndex = 0;
             safeList.Add(
                 this.Minesweeper.Tiles.Width * this.Minesweeper.Tiles.Height);
-            for (var i = 0; i < safeList.Count; i++)
+            foreach (var targetIndex in safeList)
             {
-                var targetIndex = safeList[i];
-                for (var i2 = currentIndex; i2 < targetIndex; i2++)
+                for (var i = currentIndex; i < targetIndex; i++)
                 {
-                    spaceList.Add(
-                        i2);
+                    spaceList.Add(i);
                 }
 
                 currentIndex = targetIndex + 1;
@@ -630,20 +628,12 @@
 
             for (var i = 0; i < mineCount; i++)
             {
-                var randomIndex = TileBoardViewModel.randomGenerator.Next(
-                    0,
-                    spaceList.Count);
+                var randomIndex = TileBoardViewModel.randomGenerator.Next(0, spaceList.Count);
                 var randomSpace = spaceList[randomIndex];
-                spaceList.RemoveAt(
-                    randomIndex);
-                var y = (int)Math.Floor(
-                    (double)randomSpace / this.Minesweeper.Tiles.Width);
+                spaceList.RemoveAt(randomIndex);
+                var y = (int)Math.Floor((double)randomSpace / this.Minesweeper.Tiles.Width);
                 var x = randomSpace % this.Minesweeper.Tiles.Width;
-                this.SetTile(
-                    x,
-                    y,
-                    new Tile(TileType.Mine,
-                        false));
+                this.SetTile(x, y, new Tile(TileType.Mine, false));
             }
         }
 
@@ -674,10 +664,10 @@
                 nonMineCount - 1);
             if (safeSpotCount == 0)
             {
-                return new List<int>(1) {(clickY * this.Minesweeper.Tiles.Width) + clickX};
+                return new List<int>(1) { (clickY * this.Minesweeper.Tiles.Width) + clickX };
             }
 
-            var safeList = new List<int>(safeSpotCount) {(clickY * this.Minesweeper.Tiles.Width) + clickX};
+            var safeList = new List<int>(safeSpotCount) { (clickY * this.Minesweeper.Tiles.Width) + clickX };
             var surroundingTiles = this.GetSurroundingTiles(
                 clickX,
                 clickY,
@@ -818,9 +808,7 @@
                 this.leftMouseDown = true;
             }
 
-            if (e.AllButtonStates.HasFlag(
-                InputButtons.Left) && e.AllButtonStates.HasFlag(
-                    InputButtons.Right))
+            if (e.AllButtonStates.HasFlag(InputButtons.Left) && e.AllButtonStates.HasFlag(InputButtons.Right))
             {
                 if (e.TileEventArgs.Tile.Shown)
                 {
@@ -934,9 +922,9 @@
         }
 
         /// <summary>
-        ///     Sets the <see cref="revealSurroundingTiles" /> delegate, depending on the board size. If a stackoverflow exception
-        ///     is a possiblity due to a large number of tiles, then a non-recursive method is used. If it is not a possibility,
-        ///     then the faster recursive method is used.
+        ///     Sets the <see cref="WpfMinesweeper.ViewModels.TileBoardViewModel.revealSurroundingTiles" /> delegate, depending on
+        ///     the board size. If a stackoverflow exception is a possiblity due to a large number of tiles, then a non-recursive
+        ///     method is used. If it is not a possibility, then the faster recursive method is used.
         /// </summary>
         private void SetRevealTileMethod()
         {

@@ -1,8 +1,11 @@
 ﻿namespace WpfMinesweeper.Models
 {
     /// <summary>
-    ///     Defines a set of methods for validating a <see cref="Minesweeper" />
-    ///     board by width, height, and mine count.
+    ///     <para>
+    ///         Defines a set of methods for validating a
+    ///         <see cref="Minesweeper" />
+    ///     </para>
+    ///     <para>board by width, height, and mine count.</para>
     /// </summary>
     public interface IMinesweeperBoardValidator
     {

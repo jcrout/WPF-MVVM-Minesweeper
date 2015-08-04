@@ -62,8 +62,8 @@
     /// </summary>
     public struct TileType
     {
-        private const ushort TYPE_EMPTY = 100;
-        private const ushort TYPE_MINE = 200;
+        private const ushort TypeEmpty = 100;
+        private const ushort TypeMine = 200;
         private static readonly ushort mineCountMaximum = 8;
         private readonly ushort value;
 
@@ -92,7 +92,7 @@
         {
             get
             {
-                return new TileType(TileType.TYPE_EMPTY);
+                return new TileType(TileType.TypeEmpty);
             }
         }
 
@@ -100,7 +100,7 @@
         {
             get
             {
-                return new TileType(TileType.TYPE_MINE);
+                return new TileType(TileType.TypeMine);
             }
         }
 
@@ -119,13 +119,12 @@
                 return TileType.EmptySpace;
             }
 
-            var usmineCount = (ushort)mineCount;
-            if (usmineCount > TileType.mineCountMaximum || usmineCount < 0)
+            if (mineCount > TileType.mineCountMaximum || mineCount < 0)
             {
                 throw new ArgumentOutOfRangeException("mineCount");
             }
 
-            return new TileType(usmineCount);
+            return new TileType((ushort)mineCount);
         }
 
         public static bool operator ==(TileType t1, TileType t2)
@@ -165,11 +164,11 @@
             {
                 return this.value.ToString();
             }
-            if (this.value == TileType.TYPE_MINE)
+            if (this.value == TileType.TypeMine)
             {
                 return "MINE";
             }
-            if (this.value == TileType.TYPE_EMPTY)
+            if (this.value == TileType.TypeEmpty)
             {
                 return "EMPTY";
             }

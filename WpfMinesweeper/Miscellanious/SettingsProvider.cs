@@ -55,7 +55,7 @@
 
     public class SettingsProvider : ISettingsProvider
     {
-        private const char settingsDelimiter = (char)20;
+        private const char SettingsDelimiter = (char)20;
         private static readonly ISettingsProvider instance = new SettingsProvider();
         private static string statisticsFileName = "statistics.txt";
         private readonly List<IStatisticsModule> newModules = new List<IStatisticsModule>();
@@ -254,7 +254,7 @@
             {
                 var module = StatisticsModule.Create();
                 var parts = statLine.Split(
-                    new[] {SettingsProvider.settingsDelimiter},
+                    new[] {SettingsProvider.SettingsDelimiter},
                     StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts)
                 {
@@ -349,7 +349,7 @@
                                                 sw,
                                                 pair.Value);
                                             writer.Write(
-                                                ((int)pair.Key).ToString() + ';' + sw + SettingsProvider.settingsDelimiter);
+                                                ((int)pair.Key).ToString() + ';' + sw + SettingsProvider.SettingsDelimiter);
                                         }
                                     }
 

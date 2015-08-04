@@ -21,57 +21,34 @@
     [TypeConverter(typeof(MessageButtonConverter)), ContentProperty("Button")]
     public class MessageButton
     {
-        /// <summary>
-        ///     Backing field for the <see cref="Button" /> property.
-        /// </summary>
-        private Button button;
-
-        /// <summary>
-        ///     Backing field for the <see cref="Result" /> property.
-        /// </summary>
-        private object result;
-
-        /// <summary>
-        ///     Backing field for the <see cref="RightToLeftIndex" /> property.
-        /// </summary>
         private int rightToLeftIndex = -1;
 
         /// <summary>
         ///     Gets or sets Button.
         /// </summary>
-        public Button Button
-        {
-            get
-            {
-                return this.button;
-            }
-            set
-            {
-                this.button = value;
-            }
-        }
+        public Button Button { get; set; }
 
         /// <summary>
         ///     Gets or sets Result.
         /// </summary>
-        public object Result
-        {
-            get
-            {
-                return this.result;
-            }
-            set
-            {
-                this.result = value;
-            }
-        }
+        public object Result { get; set; }
 
         /// <summary>
         ///     <para>Gets or sets the RightToLeftIndex, which determines the order in which buttons appear.</para>
-        ///     <para>The higher the number, the further to the right this <see cref="button" /> will be placed.</para>
         ///     <para>
-        ///         The default value is -1. All values below 0 will <see cref="result" /> in the button's order being determined
-        ///         before the <see cref="button" /> container is rendered.
+        ///         The higher the number, the further to the right this
+        ///         <see cref="WpfMinesweeper.Controls.MessageButton.Button" /> will be placed.
+        ///     </para>
+        ///     <para>
+        ///         <para>
+        ///             The default value is -1. All values below 0 will
+        ///             <see cref="WpfMinesweeper.Controls.MessageButton.Result" />
+        ///         </para>
+        ///         <para>
+        ///             in the button's order being determined before the
+        ///             <see cref="WpfMinesweeper.Controls.MessageButton.Button" />
+        ///         </para>
+        ///         <para>container is rendered.</para>
         ///     </para>
         /// </summary>
         public int RightToLeftIndex
@@ -88,10 +65,10 @@
 
         public override string ToString()
         {
-            var resultText = this.result != null ? this.result.ToString() : "null";
-            if (this.button != null && this.button.Content != null)
+            var resultText = this.Result != null ? this.Result.ToString() : "null";
+            if (this.Button != null && this.Button.Content != null)
             {
-                return this.button.Content + ";" + resultText;
+                return this.Button.Content + ";" + resultText;
             }
 
             return resultText;
@@ -232,7 +209,7 @@
             0.127,
             0.527);
 
-        public static DependencyProperty InnerContentProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty InnerContentProperty = DependencyProperty.Register(
             "InnerContent",
             typeof(object),
             typeof(MessagePanel),
@@ -240,7 +217,7 @@
                 null,
                 MessagePanel.InnerContentChanged));
 
-        public static DependencyProperty ButtonsProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(
             "Buttons",
             typeof(ObservableCollection<MessageButton>),
             typeof(MessagePanel),
@@ -248,7 +225,7 @@
                 new ObservableCollection<MessageButton>(),
                 MessagePanel.ButtonsChanged));
 
-        public static DependencyProperty UseCustomButtonMarginsProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty UseCustomButtonMarginsProperty = DependencyProperty.Register(
             "UseCustomButtonMargins",
             typeof(bool),
             typeof(MessagePanel),

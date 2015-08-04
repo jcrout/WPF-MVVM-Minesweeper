@@ -9,7 +9,7 @@
 
     public class StatisticsViewModel : MinesweeperComponentViewModel
     {
-        private const string defaultStatText = "-None-";
+        private const string DefaultStatText = "-None-";
         private static readonly StatValueViewModel emptyPage;
         private double columnWidth = double.NaN;
         private IEnumerable<object> dropDownStatisticsList;
@@ -22,7 +22,7 @@
 
         static StatisticsViewModel()
         {
-            StatisticsViewModel.emptyPage = new StatValueViewModel(StatisticsViewModel.defaultStatText);
+            StatisticsViewModel.emptyPage = new StatValueViewModel(StatisticsViewModel.DefaultStatText);
             StatisticsViewModel.emptyPage.StatisticValues = new List<object>(1) {"No values to display."};
         }
 
@@ -38,7 +38,7 @@
                         s => s).ToList();
             statList.Insert(
                 0,
-                StatisticsViewModel.defaultStatText);
+                StatisticsViewModel.DefaultStatText);
 
             this.Pages = new List<StatValueViewModel>();
             this.sortByList = new List<Statistic>();
@@ -308,9 +308,7 @@
             }
 
             var model = (StatValueViewModel)sender;
-            var index = this.pages.IndexOf(
-                model);
-            var values = this.pages[0].StatisticValues;
+            var index = this.pages.IndexOf(model);
             var stats = new List<KeyValuePair<Statistic, object>>(index + 1);
 
             for (var i = 0; i < this.pages.Count; i++)
@@ -318,9 +316,7 @@
                 var selectedValue = this.pages[i].SelectedValue;
                 if (selectedValue != null)
                 {
-                    stats.Add(
-                        new KeyValuePair<Statistic, object>(this.sortByList[i],
-                            selectedValue));
+                    stats.Add(new KeyValuePair<Statistic, object>(this.sortByList[i],selectedValue));
                 }
             }
 
@@ -331,10 +327,9 @@
                 return;
             }
 
-            var moduleList = ViewModelBase.Settings.Statistics.Where(
-                st => this.HasAllValues(
-                    st,
-                    stats));
+            var moduleList = ViewModelBase.Settings.Statistics
+                .Where(st => this.HasAllValues(st, stats));
+
             var statList = new List<StatDisplay>();
             if (moduleList.Count() == 0)
             {
@@ -376,7 +371,7 @@
             }
 
             if (this.statisticNameSelectedItems.Count == 0 || this.statisticNameSelectedItems.Contains(
-                StatisticsViewModel.defaultStatText))
+                StatisticsViewModel.DefaultStatText))
             {
                 this.LoadDefaultList();
             }
@@ -422,9 +417,9 @@
         private void StatSelectionChanged()
         {
             if (this.statisticNameSelectedItems.Count > 1 && this.statisticNameSelectedItems.Contains(
-                StatisticsViewModel.defaultStatText))
+                StatisticsViewModel.DefaultStatText))
             {
-                this.StatisticNameSelectedItems = new List<object> {StatisticsViewModel.defaultStatText};
+                this.StatisticNameSelectedItems = new List<object> {StatisticsViewModel.DefaultStatText};
             }
             else
             {
