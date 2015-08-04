@@ -56,6 +56,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -105,7 +106,7 @@
     <Compile Include="Miscellanious\SettingsProvider.cs" />
     <Compile Include="Miscellanious\ThicknessBindingConverter.cs" />
     <Compile Include="Models\BoardSize.cs" />
-    <Compile Include="Models\GameState.cs" />
+    <Compile Include="Models\GameResult.cs" />
     <Compile Include="Models\Minesweeper.cs" />
     <Compile Include="Models\MinesweeperBoardValidator.cs" />
     <Compile Include="Models\SmileyState.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Models\StatisticModule.cs" />
     <Compile Include="Models\Statistics.cs" />
     <Compile Include="Models\TileCollection.cs" />
+    <Compile Include="Unit Tests\MinesweeperTest.cs" />
     <Compile Include="ViewModels\CustomBoardViewModel.cs" />
     <Compile Include="ViewModels\DisplayPanelViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -278,6 +280,9 @@
       <Project>{afcf9d3a-f066-40d7-8518-f57a4b4600bf}</Project>
       <Name>JonUtility</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.1\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.1\build\Fody.targets')" />

@@ -199,12 +199,12 @@
             var losses = 0;
             foreach (var module in ViewModelBase.Settings.Statistics)
             {
-                var finalState = (GameState)module[Statistic.GameState];
-                if (finalState == GameState.GameOver)
+                var finalState = (GameResult)module[Statistic.GameState];
+                if (finalState == GameResult.GameOver)
                 {
                     losses++;
                 }
-                else if (finalState == GameState.Victory)
+                else if (finalState == GameResult.Victory)
                 {
                     wins++;
                 }

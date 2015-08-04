@@ -132,7 +132,7 @@
             }
         }
 
-        private void OnSaveCustomBoard(object paramter)
+        private void OnSaveCustomBoard(object parameter)
         {
             var customBoard = this.width.ToString() + ',' + this.height + ',' + this.mines;
             Mediator.Instance.Notify(

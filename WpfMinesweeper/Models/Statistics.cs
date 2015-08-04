@@ -18,7 +18,7 @@
         [Statistics(typeof (int), Description = "The total number of unflagged mines on the board. A negative number indicates that more flags have been placed than there are mines.", DisplayText = "Mines Remaining")]
         MinesRemaining = 2,
 
-        [Statistics(typeof (GameState), Description = "The final state of the game, which is either Incomplete, Victory, or Gameover.", DisplayText = "Result")]
+        [Statistics(typeof (GameResult), Description = "The final state of the game, which is either Incomplete, Victory, or Gameover.", DisplayText = "Result")]
         GameState = 3,
 
         [Statistics(typeof (int), Description = "Total number of flages placed at the end of the game.", DisplayText = "Flags Placed")]

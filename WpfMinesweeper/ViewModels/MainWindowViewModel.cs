@@ -181,7 +181,7 @@
             }
         }
 
-        private void OnTileBoardInitialized(object paramter)
+        private void OnTileBoardInitialized(object parameter)
         {
             if (!this.initialized)
             {

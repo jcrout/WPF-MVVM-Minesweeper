@@ -137,14 +137,14 @@
                 e.NewValue);
         }
 
-        private void UpdateButtons(object paramter)
+        private void UpdateButtons(object parameter)
         {
-            if (!(paramter is ObservableCollection<MessageButton>))
+            if (!(parameter is ObservableCollection<MessageButton>))
             {
                 return;
             }
 
-            var buttonList = (ObservableCollection<MessageButton>)paramter;
+            var buttonList = (ObservableCollection<MessageButton>)parameter;
             if (buttonList.Count == 0)
             {
                 return;

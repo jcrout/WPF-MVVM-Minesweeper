@@ -136,63 +136,63 @@
             }
         }
 
-        private void OnGameStarted(object paramter)
+        private void OnGameStarted(object parameter)
         {
             this.gameStarted = true;
             this.gameTimer.Start();
         }
 
-        private void OnCreateNewBoard(object paramter)
+        private void OnCreateNewBoard(object parameter)
         {
-            if (paramter == null)
+            if (parameter == null)
             {
                 this.Minesweeper = MinesweeperFactory.Create(
                     this.Minesweeper);
                 return;
             }
 
-            if (paramter.GetType() == typeof (BoardSize))
+            if (parameter.GetType() == typeof (BoardSize))
             {
                 this.Minesweeper = MinesweeperFactory.Create(
-                    (BoardSize)paramter);
+                    (BoardSize)parameter);
             }
-            if (paramter is string)
+            if (parameter is string)
             {
                 var boardSize = BoardSize.Parse(
-                    paramter.ToString());
+                    parameter.ToString());
                 this.Minesweeper = MinesweeperFactory.Create(
                     boardSize);
             }
             else
             {
-                throw new ArgumentException("paramter must either be of type String or BoardSize.");
+                throw new ArgumentException("parameter must either be of type String or BoardSize.");
             }
         }
 
-        private void OnGameOver(object paramter)
+        private void OnGameOver(object parameter)
         {
             this.EndGame(
-                GameState.GameOver);
+                GameResult.GameOver);
             Mediator.Instance.Notify(
                 ViewModelMessages.UpdateSmileyIndex,
                 SmileyState.GameOver);
         }
 
-        private void OnVictory(object paramter)
+        private void OnVictory(object parameter)
         {
             this.EndGame(
-                GameState.Victory);
+                GameResult.Victory);
             Mediator.Instance.Notify(
                 ViewModelMessages.UpdateSmileyIndex,
                 SmileyState.Victory);
         }
 
-        private void EndGame(GameState finalState)
+        private void EndGame(GameResult finalResult)
         {
             this.gameTimer.Stop();
 
             this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
-            this.GameStatistics[Statistic.GameState] = finalState;
+            this.GameStatistics[Statistic.GameState] = finalResult;
             this.GameStatistics[Statistic.MinesRemaining] = this.Minesweeper.MinesRemaining;
             this.GameStatistics[Statistic.TimeElapsed] = this.Minesweeper.TimeElapsed;
 

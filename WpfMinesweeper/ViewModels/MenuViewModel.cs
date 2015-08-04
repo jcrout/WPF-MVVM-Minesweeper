@@ -15,8 +15,7 @@
 
         public MenuViewModel()
         {
-            this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(
-                o));
+            this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(o));
             this.selectedColor = MenuViewModel.defaultSelectedColor;
             this.CustomBoardViewModel = new CustomBoardViewModel();
             this.StatisticsViewModel = new StatisticsViewModel();
@@ -107,11 +106,11 @@
             }
         }
 
-        private void OnBoardSizeSelected(object paramter)
+        private void OnBoardSizeSelected(object parameter)
         {
             Mediator.Instance.Notify(
                 ViewModelMessages.CreateNewBoard,
-                paramter);
+                parameter);
         }
     }
 }
