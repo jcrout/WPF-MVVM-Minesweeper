@@ -46,17 +46,17 @@
         private Brush hoverBrush;
         private Point hoverTilePoint = TileBoardViewModel.emptyPoint;
         private bool isGameOver;
-        private bool isTilePressed = false;
+        private bool isTilePressed;
         private bool isVictory;
-        private int lastBoardHeight = 0;
-        private int lastBoardWidth = 0;
-        private bool leftAndRightMouseDown = false;
-        private bool leftMouseDown = false;
-        private int revealedSpaces = 0;
+        private int lastBoardHeight;
+        private int lastBoardWidth;
+        private bool leftAndRightMouseDown;
+        private bool leftMouseDown;
+        private int revealedSpaces;
         private Func<int, int, Task> revealSurroundingTiles;
         private AnimatedTilesCollection selectedTiles;
         private Brush selectionBrush;
-        private int targetSpaceCount = 0;
+        private int targetSpaceCount;
         private Brush tileBrush;
         private ICommand tileHoverCommand;
         private TileShadingMode tileShadingMode = TileShadingMode.SingleTile;
@@ -401,9 +401,6 @@
                         this.LeftRightDown(
                             e.TileEventArgs);
                     }
-                    else
-                    {
-                    }
                 }
 
                 return;
@@ -471,7 +468,7 @@
                                 where (!tile.Shown) && (tile.ExtraTileData == ExtraTileData.Flag)
                                 select tilePoint).ToList();
 
-            int mineCount = e.Tile.Type.Value;
+            var mineCount = e.Tile.Type.Value;
 
             if (flaggedTiles.Count == mineCount)
             {
@@ -538,10 +535,7 @@
             {
                 return;
             }
-            else
-            {
-                this.leftMouseDown = false;
-            }
+            this.leftMouseDown = false;
 
             if (!this.boardInitialized)
             {
@@ -646,7 +640,6 @@
             {
                 this.CheckFlagCountAndSurroundingTiles(
                     e);
-                return;
             }
         }
 
@@ -669,7 +662,7 @@
             await Task.Run(
                 () =>
                 {
-                    List<Point> tilesToCheck = new List<Point>
+                    var tilesToCheck = new List<Point>
                     {
                         new Point(x,
                             y)
@@ -729,9 +722,9 @@
         private void Victory()
         {
             var list = new List<Point>();
-            for (int r = 0; r < this.Minesweeper.Tiles.Width; r++)
+            for (var r = 0; r < this.Minesweeper.Tiles.Width; r++)
             {
-                for (int c = 0; c < this.Minesweeper.Tiles.Height; c++)
+                for (var c = 0; c < this.Minesweeper.Tiles.Height; c++)
                 {
                     var tile = this.Minesweeper.Tiles[r,
                         c];
@@ -771,9 +764,9 @@
         {
             var list = new List<Point>();
 
-            for (int r = 0; r < this.Minesweeper.Tiles.Width; r++)
+            for (var r = 0; r < this.Minesweeper.Tiles.Width; r++)
             {
-                for (int c = 0; c < this.Minesweeper.Tiles.Height; c++)
+                for (var c = 0; c < this.Minesweeper.Tiles.Height; c++)
                 {
                     var tile = this.Minesweeper.Tiles[r,
                         c];
@@ -845,15 +838,15 @@
         /// <param name="y">The Y coordinate of the tile.</param>
         private void CheckSurroundingTiles(List<Point> tiles, int x, int y)
         {
-            int count = 0;
-            int left = x > 0 ? x - 1 : x;
-            int right = x < this.Minesweeper.Tiles.Width - 1 ? x + 1 : x;
-            int top = y > 0 ? y - 1 : y;
-            int bottom = y < this.Minesweeper.Tiles.Height - 1 ? y + 1 : y;
+            var count = 0;
+            var left = x > 0 ? x - 1 : x;
+            var right = x < this.Minesweeper.Tiles.Width - 1 ? x + 1 : x;
+            var top = y > 0 ? y - 1 : y;
+            var bottom = y < this.Minesweeper.Tiles.Height - 1 ? y + 1 : y;
 
-            for (int r = left; r <= right; r++)
+            for (var r = left; r <= right; r++)
             {
-                for (int c = top; c <= bottom; c++)
+                for (var c = top; c <= bottom; c++)
                 {
                     if ((r != x || c != y) && this.Minesweeper.Tiles[r,
                         c].Type == TileType.Mine)
@@ -882,9 +875,9 @@
                     y,
                     new Tile(TileType.EmptySpace,
                         true));
-                for (int r = left; r <= right; r++)
+                for (var r = left; r <= right; r++)
                 {
-                    for (int c = top; c <= bottom; c++)
+                    for (var c = top; c <= bottom; c++)
                     {
                         if (r != x || c != y)
                         {
@@ -930,15 +923,15 @@
                 new Point(x,
                     y));
 
-            int count = 0;
-            int left = x > 0 ? x - 1 : x;
-            int right = x < this.Minesweeper.Tiles.Width - 1 ? x + 1 : x;
-            int top = y > 0 ? y - 1 : y;
-            int bottom = y < this.Minesweeper.Tiles.Height - 1 ? y + 1 : y;
+            var count = 0;
+            var left = x > 0 ? x - 1 : x;
+            var right = x < this.Minesweeper.Tiles.Width - 1 ? x + 1 : x;
+            var top = y > 0 ? y - 1 : y;
+            var bottom = y < this.Minesweeper.Tiles.Height - 1 ? y + 1 : y;
 
-            for (int r = left; r <= right; r++)
+            for (var r = left; r <= right; r++)
             {
-                for (int c = top; c <= bottom; c++)
+                for (var c = top; c <= bottom; c++)
                 {
                     if ((r != x || c != y) && this.Minesweeper.Tiles[r,
                         c].Type == TileType.Mine)
@@ -964,9 +957,9 @@
                     y,
                     new Tile(TileType.EmptySpace,
                         true));
-                for (int r = left; r <= right; r++)
+                for (var r = left; r <= right; r++)
                 {
-                    for (int c = top; c <= bottom; c++)
+                    for (var c = top; c <= bottom; c++)
                     {
                         if (r != x || c != y)
                         {
@@ -994,14 +987,14 @@
         private List<Point> GetSurroundingTiles(int x, int y, int distance = 1)
         {
             var list = new List<Point>();
-            int left = x >= distance ? x - distance : x;
-            int right = x < this.Minesweeper.Tiles.Width - distance ? x + distance : x;
-            int top = y >= distance ? y - distance : y;
-            int bottom = y < this.Minesweeper.Tiles.Height - distance ? y + distance : y;
+            var left = x >= distance ? x - distance : x;
+            var right = x < this.Minesweeper.Tiles.Width - distance ? x + distance : x;
+            var top = y >= distance ? y - distance : y;
+            var bottom = y < this.Minesweeper.Tiles.Height - distance ? y + distance : y;
 
-            for (int r = left; r <= right; r++)
+            for (var r = left; r <= right; r++)
             {
-                for (int c = top; c <= bottom; c++)
+                for (var c = top; c <= bottom; c++)
                 {
                     if (r != x || c != y)
                     {
@@ -1040,9 +1033,9 @@
         /// <returns></returns>
         private List<int> GetSafeTileIndexes(int clickX, int clickY)
         {
-            int mineCount = this.Minesweeper.MineCount;
-            int nonMineCount = this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height - mineCount;
-            int safeSpotCount = this.minSafeSpotsAroundFirstClick;
+            var mineCount = this.Minesweeper.MineCount;
+            var nonMineCount = this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height - mineCount;
+            var safeSpotCount = this.minSafeSpotsAroundFirstClick;
 
             if (this.minSafeSpotsAroundFirstClick != this.maxSafeSpotsAroundFirstClick)
             {
@@ -1064,10 +1057,10 @@
                 clickX,
                 clickY,
                 1);
-            int surroundingTileCount = surroundingTiles.Count - 1;
-            for (int i = 0; i < safeSpotCount; i++)
+            var surroundingTileCount = surroundingTiles.Count - 1;
+            for (var i = 0; i < safeSpotCount; i++)
             {
-                int randomIndex = TileBoardViewModel.randomGenerator.Next(
+                var randomIndex = TileBoardViewModel.randomGenerator.Next(
                     0,
                     surroundingTiles.Count);
                 var tilePoint = surroundingTiles[randomIndex];
@@ -1106,18 +1099,18 @@
             var safeList = this.GetSafeTileIndexes(
                 clickX,
                 clickY);
-            int spaceCount = this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height;
-            int mineCount = this.Minesweeper.MineCount;
-            int clickIndex = clickX*clickY;
+            var spaceCount = this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height;
+            var mineCount = this.Minesweeper.MineCount;
+            var clickIndex = clickX*clickY;
             var spaceList = new List<int>(spaceCount);
 
-            int currentIndex = 0;
+            var currentIndex = 0;
             safeList.Add(
                 this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height);
-            for (int i = 0; i < safeList.Count; i++)
+            for (var i = 0; i < safeList.Count; i++)
             {
-                int targetIndex = safeList[i];
-                for (int i2 = currentIndex; i2 < targetIndex; i2++)
+                var targetIndex = safeList[i];
+                for (var i2 = currentIndex; i2 < targetIndex; i2++)
                 {
                     spaceList.Add(
                         i2);
@@ -1126,17 +1119,17 @@
                 currentIndex = targetIndex + 1;
             }
 
-            for (int i = 0; i < mineCount; i++)
+            for (var i = 0; i < mineCount; i++)
             {
-                int randomIndex = TileBoardViewModel.randomGenerator.Next(
+                var randomIndex = TileBoardViewModel.randomGenerator.Next(
                     0,
                     spaceList.Count);
-                int randomSpace = spaceList[randomIndex];
+                var randomSpace = spaceList[randomIndex];
                 spaceList.RemoveAt(
                     randomIndex);
-                int y = (int)Math.Floor(
+                var y = (int)Math.Floor(
                     (double)randomSpace/this.Minesweeper.Tiles.Width);
-                int x = randomSpace%this.Minesweeper.Tiles.Width;
+                var x = randomSpace%this.Minesweeper.Tiles.Width;
                 this.SetTile(
                     x,
                     y,

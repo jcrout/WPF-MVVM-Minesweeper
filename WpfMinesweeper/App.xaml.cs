@@ -62,7 +62,7 @@ namespace WpfMinesweeper.Properties
 
     internal sealed partial class Settings
     {
-        [UserScopedSetting(), DefaultSettingValue("9,9,10")]
+        [UserScopedSetting, DefaultSettingValue("9,9,10")]
         public BoardSize LastBoardSize
         {
             get

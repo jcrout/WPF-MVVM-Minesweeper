@@ -51,6 +51,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -98,7 +100,7 @@
     <Compile Include="Controls\PromptBox.cs" />
     <Compile Include="Controls\TileBoard.cs" />
     <Compile Include="Controls\ViewBoxAutosize.cs" />
-    <Compile Include="Mediator.cs" />
+    <Compile Include="Models\Mediator.cs" />
     <Compile Include="Miscellanious\BrushAnimation.cs" />
     <Compile Include="Miscellanious\SettingsProvider.cs" />
     <Compile Include="Miscellanious\ThicknessBindingConverter.cs" />

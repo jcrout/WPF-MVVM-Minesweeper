@@ -64,7 +64,7 @@
         {
             get
             {
-                return (int)TileType.mineCountMaximum;
+                return TileType.mineCountMaximum;
             }
         }
 
@@ -96,7 +96,7 @@
         {
             get
             {
-                return (int)this.value;
+                return this.value;
             }
         }
 
@@ -107,7 +107,7 @@
                 return TileType.EmptySpace;
             }
 
-            ushort usmineCount = (ushort)mineCount;
+            var usmineCount = (ushort)mineCount;
             if (usmineCount > TileType.mineCountMaximum || usmineCount < 0)
             {
                 throw new ArgumentOutOfRangeException("mineCount");
@@ -153,11 +153,11 @@
             {
                 return this.value.ToString();
             }
-            else if (this.value == TileType.TYPE_MINE)
+            if (this.value == TileType.TYPE_MINE)
             {
                 return "MINE";
             }
-            else if (this.value == TileType.TYPE_EMPTY)
+            if (this.value == TileType.TYPE_EMPTY)
             {
                 return "EMPTY";
             }

@@ -15,11 +15,7 @@
 
         private FrameworkElement child;
         private FrameworkElement parent;
-        private bool updatedSize = false;
-
-        public ViewBoxAutosize()
-        {
-        }
+        private bool updatedSize;
 
         public bool KeepExpandedRatio
         {
@@ -93,10 +89,10 @@
                 this.Width) && !double.IsNaN(
                     this.Height))
             {
-                double widthRatio = Math.Max(
+                var widthRatio = Math.Max(
                     1d,
                     this.Width/e.PreviousSize.Width);
-                double heightRatio = Math.Max(
+                var heightRatio = Math.Max(
                     1d,
                     this.Height/e.PreviousSize.Height);
                 this.Width = e.NewSize.Width*widthRatio;

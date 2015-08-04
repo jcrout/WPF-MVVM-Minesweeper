@@ -95,7 +95,7 @@
                 PromptBox.WindowStyleChanged));
 
         private readonly List<MessageButton> buttons = new List<MessageButton>();
-        private bool obtainedResultBeforeClosing = false;
+        private bool obtainedResultBeforeClosing;
         private MessagePanel panel;
         private Window window;
 
@@ -460,7 +460,7 @@
                     var newButton = (MessageButton)newItemEnumerator.Current;
                     if (button != null)
                     {
-                        int index = this.buttons.IndexOf(
+                        var index = this.buttons.IndexOf(
                             button);
                         this.buttons[index] = newButton;
                     }
@@ -551,7 +551,7 @@
 
         private void InvokeCommands(MessageButton button, MessageResult result)
         {
-            object buttonResult = (button != null)
+            var buttonResult = (button != null)
                 ? button.Result ?? result
                 : result;
 

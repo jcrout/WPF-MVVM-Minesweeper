@@ -150,12 +150,12 @@
                 return;
             }
 
-            bool useCustomMargins = this.UseCustomButtonMargins;
+            var useCustomMargins = this.UseCustomButtonMargins;
             var buttons = buttonList.ToList();
             buttons.Sort(
                 (b1, b2) => b1.RightToLeftIndex > b2.RightToLeftIndex ? 1 : b1.RightToLeftIndex < b2.RightToLeftIndex ? -1 : 0);
 
-            int highestIndex = buttons[buttons.Count - 1].RightToLeftIndex;
+            var highestIndex = buttons[buttons.Count - 1].RightToLeftIndex;
             foreach (var mb in buttons)
             {
                 if (mb.RightToLeftIndex < 0)
@@ -280,7 +280,7 @@
             {
                 return true;
             }
-            else if (sourceType == typeof (string))
+            if (sourceType == typeof (string))
             {
                 return true;
             }
@@ -296,7 +296,7 @@
             {
                 return true;
             }
-            else if (destinationType == typeof (string))
+            if (destinationType == typeof (string))
             {
                 return true;
             }
@@ -317,14 +317,13 @@
             if (valueType == typeof (Button))
             {
                 var button = (Button)value;
-                return new MessageButton() {Button = button};
+                return new MessageButton {Button = button};
             }
-            else if (valueType == typeof (string))
+            if (valueType == typeof (string))
             {
-                var textFragments = value.ToString().Split(
-                    new char[] {';'});
+                var textFragments = value.ToString().Split(';');
                 var button = new Button {Content = textFragments[0]};
-                var mbutton = new MessageButton() {Button = button};
+                var mbutton = new MessageButton {Button = button};
 
                 button.Measure(
                     new Size(double.PositiveInfinity,
@@ -338,7 +337,7 @@
 
                 if (textFragments.Length > 1)
                 {
-                    int rightToLeftIndex = 0;
+                    var rightToLeftIndex = 0;
                     if (int.TryParse(
                         textFragments[1],
                         out rightToLeftIndex))
@@ -415,10 +414,6 @@
         /// </summary>
         private int rightToLeftIndex = -1;
 
-        public MessageButton()
-        {
-        }
-
         /// <summary>
         ///     Gets or sets Button.
         /// </summary>
@@ -474,7 +469,7 @@
             var resultText = this.result != null ? this.result.ToString() : "null";
             if (this.button != null && this.button.Content != null)
             {
-                return this.button.Content.ToString() + ";" + resultText;
+                return this.button.Content + ";" + resultText;
             }
 
             return resultText;

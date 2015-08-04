@@ -103,17 +103,14 @@
 
         public int CompareTo(BoardSize other)
         {
-            int thisTotal = this.width*this.height;
-            int otherTotal = other.width*other.height;
+            var thisTotal = this.width*this.height;
+            var otherTotal = other.width*other.height;
 
             if (thisTotal == otherTotal)
             {
                 return this.mineCount > other.mineCount ? 1 : this.mineCount < other.mineCount ? -1 : 0;
             }
-            else
-            {
-                return thisTotal > otherTotal ? 1 : -1;
-            }
+            return thisTotal > otherTotal ? 1 : -1;
         }
 
         public override string ToString()
@@ -122,18 +119,15 @@
             {
                 return "Beginner";
             }
-            else if (this == BoardSize.intermediate)
+            if (this == BoardSize.intermediate)
             {
                 return "Intermediate";
             }
-            else if (this == BoardSize.expert)
+            if (this == BoardSize.expert)
             {
                 return "Expert";
             }
-            else
-            {
-                return this.Description;
-            }
+            return this.Description;
         }
 
         public static BoardSize Parse(string text)
@@ -142,40 +136,37 @@
             {
                 throw new ArgumentNullException("text");
             }
-            else if (string.Equals(
+            if (string.Equals(
                 text,
                 BoardSize.beginner.ToString()))
             {
                 return BoardSize.beginner;
             }
-            else if (string.Equals(
+            if (string.Equals(
                 text,
                 BoardSize.intermediate.ToString()))
             {
                 return BoardSize.intermediate;
             }
-            else if (string.Equals(
+            if (string.Equals(
                 text,
                 BoardSize.expert.ToString()))
             {
                 return BoardSize.expert;
             }
-            else
+            var parts = text.Split(
+                new[] {','},
+                StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length != 3)
             {
-                var parts = text.Split(
-                    new char[] {','},
-                    StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length != 3)
-                {
-                    throw new FormatException("text must either be equal to the value of one of the static BoardSize properties or include width, height, and mine count delineated by commas between the numbers.");
-                }
-                return new BoardSize(int.Parse(
-                    parts[0]),
-                    int.Parse(
-                        parts[1]),
-                    int.Parse(
-                        parts[2]));
+                throw new FormatException("text must either be equal to the value of one of the static BoardSize properties or include width, height, and mine count delineated by commas between the numbers.");
             }
+            return new BoardSize(int.Parse(
+                parts[0]),
+                int.Parse(
+                    parts[1]),
+                int.Parse(
+                    parts[2]));
         }
 
         public override int GetHashCode()

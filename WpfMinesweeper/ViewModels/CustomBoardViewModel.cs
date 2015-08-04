@@ -91,7 +91,7 @@
         {
             get
             {
-                bool isValid = this.validator.ValidateBoard(
+                var isValid = this.validator.ValidateBoard(
                     this.width,
                     this.height,
                     this.mines) == null;
@@ -125,10 +125,7 @@
 
                 if (columnName == "Mines")
                 {
-                    return this.validator.ValidateMineCount(
-                        mineCount: this.mines,
-                        width: this.width,
-                        height: this.height);
+                    return this.validator.ValidateMineCount(this.mines, this.width, this.height);
                 }
 
                 return null;
@@ -137,7 +134,7 @@
 
         private void OnSaveCustomBoard(object paramter)
         {
-            string customBoard = this.width.ToString() + ',' + this.height.ToString() + ',' + this.mines.ToString();
+            var customBoard = this.width.ToString() + ',' + this.height + ',' + this.mines;
             Mediator.Instance.Notify(
                 ViewModelMessages.CreateNewBoard,
                 customBoard);

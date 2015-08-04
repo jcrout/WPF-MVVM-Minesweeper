@@ -167,7 +167,7 @@
 
         public static Minesweeper Create(int width, int height, int mineCount)
         {
-            string validationResult = MinesweeperBoardValidator.Create().ValidateBoard(
+            var validationResult = MinesweeperBoardValidator.Create().ValidateBoard(
                 width,
                 height,
                 mineCount);

@@ -40,8 +40,7 @@
 
         protected void OnPropertyChanged([CallerMemberName] string prop = "")
         {
-            if (string.IsNullOrWhiteSpace(
-                prop))
+            if (string.IsNullOrWhiteSpace(prop))
             {
                 return;
             }

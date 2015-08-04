@@ -19,7 +19,7 @@
     [ContentProperty("Content")]
     public class TileBoard : FrameworkElement
     {
-        private int moveCounter = 0;
+        private int moveCounter;
 
         static TileBoard()
         {
@@ -30,12 +30,12 @@
             TileBoard.defaultTileSetImage = tileImages.Item2;
 
             TileBoard.images = new Dictionary<TileType, ImageSource>();
-            for (int i = 1; i < TileType.MineCountMaximum + 1; i++)
+            for (var i = 1; i < TileType.MineCountMaximum + 1; i++)
             {
                 TileBoard.images.Add(
                     TileType.Number(
                         i),
-                    new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/" + i.ToString() + ".png",
+                    new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/" + i + ".png",
                         UriKind.Absolute)));
             }
             TileBoard.images.Add(
@@ -46,11 +46,6 @@
                 UriKind.Absolute));
             TileBoard.questionMarkImage = new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/QuestionMark.png",
                 UriKind.Absolute));
-        }
-
-        public TileBoard()
-        {
-            //this.InitializeBoard();
         }
 
         public IMinesweeper Minesweeper
@@ -293,13 +288,13 @@
                 throw new ArgumentNullException("tileBrush");
             }
 
-            double tileWidth = tileSize.Width;
-            double tileHeight = tileSize.Height;
-            double actualWidth = tileWidth - 1d;
-            double actualHeight = tileHeight - 1d;
-            int horizontalThickness = (int)Math.Floor(
+            var tileWidth = tileSize.Width;
+            var tileHeight = tileSize.Height;
+            var actualWidth = tileWidth - 1d;
+            var actualHeight = tileHeight - 1d;
+            var horizontalThickness = (int)Math.Floor(
                 tileWidth/tileWidth) + 1;
-            int verticalThickness = (int)Math.Floor(
+            var verticalThickness = (int)Math.Floor(
                 tileHeight/tileHeight) + 1;
 
             Pen lightPen = null;
@@ -349,7 +344,7 @@
                         0,
                         tileWidth,
                         tileHeight));
-                for (int i = 0; i < horizontalThickness; i++)
+                for (var i = 0; i < horizontalThickness; i++)
                 {
                     drawingContext.DrawLine(
                         lightPen,
@@ -365,7 +360,7 @@
                             actualHeight - i + 0.5));
                 }
 
-                for (int i = 0; i < verticalThickness; i++)
+                for (var i = 0; i < verticalThickness; i++)
                 {
                     drawingContext.DrawLine(
                         lightPen,
@@ -619,13 +614,13 @@
             var minesweeper = this.Minesweeper;
             var mouseCoordinates = e.GetPosition(
                 this);
-            int tileX = Math.Max(
+            var tileX = Math.Max(
                 0,
                 Math.Min(
                     (int)Math.Floor(
                         mouseCoordinates.X/this.TileSize.Width),
                     minesweeper.Tiles.Width - 1));
-            int tileY = Math.Max(
+            var tileY = Math.Max(
                 0,
                 Math.Min(
                     (int)Math.Floor(
@@ -650,10 +645,10 @@
             base.OnMouseLeftButtonDown(
                 e);
 
-            bool doubleClicked = false;
+            var doubleClicked = false;
             if (this.lastClickTime != -1)
             {
-                long currentClickTime = Stopwatch.GetTimestamp();
+                var currentClickTime = Stopwatch.GetTimestamp();
                 if (currentClickTime - this.lastClickTime <= TileBoard.doubleClickInterval)
                 {
                     doubleClicked = true;
@@ -715,19 +710,19 @@
 
         private void InitializeBoard()
         {
-            bool skipRedraw = this.boardWidth == this.Minesweeper.Tiles.Width && this.boardHeight == this.Minesweeper.Tiles.Height;
+            var skipRedraw = this.boardWidth == this.Minesweeper.Tiles.Width && this.boardHeight == this.Minesweeper.Tiles.Height;
             if (skipRedraw)
             {
-                int lastTileIndex = this.boardWidth*this.boardHeight;
-                int removeEnd = (this.shaderVisual == null) ? lastTileIndex - 1 : lastTileIndex;
-                for (int i = this.visuals.Count - 1; i > removeEnd; i--)
+                var lastTileIndex = this.boardWidth*this.boardHeight;
+                var removeEnd = (this.shaderVisual == null) ? lastTileIndex - 1 : lastTileIndex;
+                for (var i = this.visuals.Count - 1; i > removeEnd; i--)
                 {
                     this.RemoveVisualChild(
                         this.visuals[i]);
                     this.visuals.RemoveAt(
                         i);
                 }
-                for (int i = 0; i < lastTileIndex; i++)
+                for (var i = 0; i < lastTileIndex; i++)
                 {
                     ((DrawingVisual)this.visuals[i]).Children.Clear();
                 }
@@ -790,23 +785,20 @@
             {
                 return null;
             }
-            else
-            {
-                var tilePoint = this.GetTileCoordinatesFromBoardPoint(
-                    boardPoint);
-                int x = (int)tilePoint.X;
-                int y = (int)tilePoint.Y;
-                return new TileEventArgs(
-                    this.Minesweeper.Tiles[x,
-                        y],
-                    x,
-                    y);
-            }
+            var tilePoint = this.GetTileCoordinatesFromBoardPoint(
+                boardPoint);
+            var x = (int)tilePoint.X;
+            var y = (int)tilePoint.Y;
+            return new TileEventArgs(
+                this.Minesweeper.Tiles[x,
+                    y],
+                x,
+                y);
         }
 
         private InputButtons GetStateOfAllMouseButtons(MouseButtonEventArgs e)
         {
-            InputButtons allButtons = InputButtons.None;
+            var allButtons = InputButtons.None;
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -838,7 +830,7 @@
 
         private void RaiseTileTap(Point tapPoint, InputButtons button, bool pressedDown, bool doubleClicked, MouseButtonEventArgs e)
         {
-            InputButtons allButtons = e != null ? this.GetStateOfAllMouseButtons(
+            var allButtons = e != null ? this.GetStateOfAllMouseButtons(
                 e) : InputButtons.None;
 
             this.TileTapCommand.ExecuteIfAbleTo(
@@ -861,10 +853,10 @@
                     using (var drawingContext = animationVisual.RenderOpen())
                     {
                         var image = frame.Image;
-                        double offsetX = Math.Max(
+                        var offsetX = Math.Max(
                             0,
                             (this.TileSize.Width - image.Width)/2);
-                        double offsetY = Math.Max(
+                        var offsetY = Math.Max(
                             0,
                             (this.TileSize.Height - image.Height)/2);
 
@@ -909,10 +901,10 @@
 
         private void DrawTiles(List<Point> tileList)
         {
-            int startIndex = this.visuals.Count;
+            var startIndex = this.visuals.Count;
             foreach (var tilePoint in tileList)
             {
-                int index = (int)(this.Minesweeper.Tiles.Height*tilePoint.X + tilePoint.Y);
+                var index = (int)(this.Minesweeper.Tiles.Height*tilePoint.X + tilePoint.Y);
                 var tile = this.Minesweeper.Tiles[(int)tilePoint.X,
                     (int)tilePoint.Y];
                 var tileVisual = (DrawingVisual)this.visuals[index];
@@ -989,16 +981,16 @@
             this.moveCounter++;
             WpfExtensionMethods.ConvertToJpeg(
                 this,
-                @"Y:\Downloads\Minesweeper_" + this.moveCounter.ToString() + ".jpeg",
+                @"Y:\Downloads\Minesweeper_" + this.moveCounter + ".jpeg",
                 96d);
         }
 
         private void DrawImageWithOffsets(DrawingContext drawingContext, ImageSource imageToDraw, Rect tileRect)
         {
-            double offsetX = Math.Max(
+            var offsetX = Math.Max(
                 0,
                 (this.TileSize.Width - imageToDraw.Width)/2);
-            double offsetY = Math.Max(
+            var offsetY = Math.Max(
                 0,
                 (this.TileSize.Height - imageToDraw.Height)/2);
             drawingContext.DrawImage(
@@ -1050,8 +1042,8 @@
                 return;
             }
 
-            int index = this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height;
-            for (int i = index; i < this.visuals.Count; i++)
+            var index = this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height;
+            for (var i = index; i < this.visuals.Count; i++)
             {
                 if (object.ReferenceEquals(
                     this.visuals[i],
@@ -1177,9 +1169,9 @@
         private void DrawBoard()
         {
             var tiles = this.Minesweeper.Tiles;
-            for (int r = 0; r < tiles.Width; r++)
+            for (var r = 0; r < tiles.Width; r++)
             {
-                for (int c = 0; c < tiles.Height; c++)
+                for (var c = 0; c < tiles.Height; c++)
                 {
                     this.DrawTile(
                         r,
@@ -1641,20 +1633,20 @@
 
         static TileAnimation()
         {
-            int frameCount = 3;
+            var frameCount = 3;
             double tileWidth = 16;
             double tileHeight = 16;
-            double tileWidthHalf = (tileWidth/2);
-            double tileHeightHalf = (tileHeight/2);
-            double tileWidthIncrement = tileWidthHalf/frameCount;
-            double tileHeightIncrement = tileHeightHalf/frameCount;
+            var tileWidthHalf = (tileWidth/2);
+            var tileHeightHalf = (tileHeight/2);
+            var tileWidthIncrement = tileWidthHalf/frameCount;
+            var tileHeightIncrement = tileHeightHalf/frameCount;
 
-            ImageSource[] images = new ImageSource[frameCount];
-            AnimationFrame[] frames = new AnimationFrame[frameCount];
-            for (int i = 0; i < frameCount; i++)
+            var images = new ImageSource[frameCount];
+            var frames = new AnimationFrame[frameCount];
+            for (var i = 0; i < frameCount; i++)
             {
-                double rectWidth = tileWidthHalf + (tileWidthIncrement*i);
-                double rectHeight = tileHeightHalf + (tileHeightIncrement*i);
+                var rectWidth = tileWidthHalf + (tileWidthIncrement*i);
+                var rectHeight = tileHeightHalf + (tileHeightIncrement*i);
 
                 var rectTarget = new RenderTargetBitmap((int)rectWidth,
                     (int)rectHeight,
@@ -1663,7 +1655,7 @@
                     PixelFormats.Pbgra32);
                 var rectVisual = new DrawingVisual();
 
-                byte rgbValue = (byte)(125 + (i*50));
+                var rgbValue = (byte)(125 + (i*50));
 
                 using (var drawingContext = rectVisual.RenderOpen())
                 {

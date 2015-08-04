@@ -95,15 +95,15 @@ namespace WpfMinesweeper.Miscellanious
                 return defaultDestinationValue;
             }
 
-            return new VisualBrush(new Border()
+            return new VisualBrush(new Border
             {
                 Width = 1,
                 Height = 1,
                 Background = defaultOriginValue,
-                Child = new Border()
+                Child = new Border
                 {
                     Background = defaultDestinationValue,
-                    Opacity = animationClock.CurrentProgress.Value,
+                    Opacity = animationClock.CurrentProgress.Value
                 }
             });
         }

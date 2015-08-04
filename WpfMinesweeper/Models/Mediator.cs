@@ -1,4 +1,4 @@
-﻿namespace WpfMinesweeper
+﻿namespace WpfMinesweeper.Models
 {
     using System;
     using System.Collections.Generic;

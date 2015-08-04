@@ -42,7 +42,7 @@
             this.height = height;
             this.tiles = new Tile[height][];
 
-            for (int c = 0; c < height; c++)
+            for (var c = 0; c < height; c++)
             {
                 this.tiles[c] = new Tile[width];
             }
@@ -78,9 +78,9 @@
 
         public IEnumerator<Tile> GetEnumerator()
         {
-            for (int r = 0; r < this.Width; r++)
+            for (var r = 0; r < this.Width; r++)
             {
-                for (int c = 0; c < this.Height; c++)
+                for (var c = 0; c < this.Height; c++)
                 {
                     yield return this[r,
                         c];
@@ -97,9 +97,9 @@
         {
             var newCollection = new TileCollection(this.width,
                 this.height);
-            for (int r = 0; r < this.Width; r++)
+            for (var r = 0; r < this.Width; r++)
             {
-                for (int c = 0; c < this.Height; c++)
+                for (var c = 0; c < this.Height; c++)
                 {
                     newCollection.tiles[r][c] = this.tiles[r][c];
                 }

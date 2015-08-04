@@ -29,24 +29,21 @@
 
         public string ValidateBoard(int width, int height, int mineCount)
         {
-            string validateWidth = this.ValidateWidth(
+            var validateWidth = this.ValidateWidth(
                 width);
             if (validateWidth != null)
             {
                 return validateWidth;
             }
 
-            string validateHeight = this.ValidateHeight(
+            var validateHeight = this.ValidateHeight(
                 height);
             if (validateHeight != null)
             {
                 return validateHeight;
             }
 
-            string validateMineCount = this.ValidateMineCount(
-                mineCount: mineCount,
-                width: width,
-                height: height);
+            var validateMineCount = this.ValidateMineCount(mineCount, width, height);
             if (validateMineCount != null)
             {
                 return validateMineCount;
@@ -102,7 +99,7 @@
                     MinesweeperBoardValidator.minimumMineCount - 1);
             }
 
-            int targetMaximum = width*height - MinesweeperBoardValidator.minimumMineCountDifference;
+            var targetMaximum = width*height - MinesweeperBoardValidator.minimumMineCountDifference;
             if (mineCount > targetMaximum)
             {
                 return string.Format(

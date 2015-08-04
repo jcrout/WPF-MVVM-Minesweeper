@@ -27,15 +27,6 @@
         private Dictionary<Statistic, object> stats;
 
         /// <summary>
-        /// Creates and returns a new IStatisticsModule using the default implementation method.
-        /// </summary>
-        /// <returns>An enumerator that iterates through a collection.</returns>
-        public static IStatisticsModule Create()
-        {
-            return new StatisticsModule();
-        }
-
-        /// <summary>
         ///     Initializes a new instance of the StatisticsModule class.
         /// </summary>
         private StatisticsModule()
@@ -49,6 +40,15 @@
                     stat,
                     StatisticHelper.GetType(stat).GetDefaultValue());
             }
+        }
+
+        /// <summary>
+        ///     Creates and returns a new IStatisticsModule using the default implementation method.
+        /// </summary>
+        /// <returns>An enumerator that iterates through a collection.</returns>
+        public static IStatisticsModule Create()
+        {
+            return new StatisticsModule();
         }
 
         /// <summary>

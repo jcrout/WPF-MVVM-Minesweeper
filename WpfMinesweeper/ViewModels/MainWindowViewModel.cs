@@ -1,18 +1,19 @@
 ﻿namespace WpfMinesweeper.ViewModels
 {
     using System.Windows;
+    using WpfMinesweeper.Models;
 
     public class MainWindowViewModel : ViewModelBase
     {
-        private double height = 0;
-        private bool initialized = false;
-        private double left = 0;
-        private double minHeight = 0;
-        private double minWidth = 0;
+        private double height;
+        private bool initialized;
+        private double left;
+        private double minHeight;
+        private double minWidth;
         private SizeToContent sizeToContentMode = SizeToContent.WidthAndHeight;
-        private double top = 0;
+        private double top;
         private ViewModelBase viewModel;
-        private double width = 0;
+        private double width;
         private WindowState windowState = WindowState.Normal;
 
         public MainWindowViewModel()

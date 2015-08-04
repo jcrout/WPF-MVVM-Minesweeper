@@ -43,7 +43,7 @@
             this.Pages = new List<StatValueViewModel>();
             this.sortByList = new List<Statistic>();
             this.StatisticNameList = statList;
-            this.StatisticNameSelectedItems = new List<object>() {statList[0]};
+            this.StatisticNameSelectedItems = new List<object> {statList[0]};
         }
 
         public IEnumerable<object> StatisticNameList
@@ -178,7 +178,7 @@
             if (this.statisticNameSelectedItems.Count > 1 && this.statisticNameSelectedItems.Contains(
                 StatisticsViewModel.defaultStatText))
             {
-                this.StatisticNameSelectedItems = new List<object>() {StatisticsViewModel.defaultStatText};
+                this.StatisticNameSelectedItems = new List<object> {StatisticsViewModel.defaultStatText};
             }
             else
             {
@@ -195,8 +195,8 @@
         private List<StatDisplay> GetDefaultList()
         {
             var defaultList = new List<StatDisplay>();
-            int wins = 0;
-            int losses = 0;
+            var wins = 0;
+            var losses = 0;
             foreach (var module in ViewModelBase.Settings.Statistics)
             {
                 var finalState = (GameState)module[Statistic.GameState];
@@ -289,12 +289,12 @@
             }
 
             var model = (StatValueViewModel)sender;
-            int index = this.pages.IndexOf(
+            var index = this.pages.IndexOf(
                 model);
             var values = this.pages[0].StatisticValues;
             var stats = new List<KeyValuePair<Statistic, object>>(index + 1);
 
-            for (int i = 0; i < this.pages.Count; i++)
+            for (var i = 0; i < this.pages.Count; i++)
             {
                 var selectedValue = this.pages[i].SelectedValue;
                 if (selectedValue != null)
@@ -378,7 +378,7 @@
 
         private bool IsSelected(Statistic stat)
         {
-            int index = this.sortByList.IndexOf(
+            var index = this.sortByList.IndexOf(
                 stat);
             if (index < 0)
             {
@@ -406,7 +406,7 @@
                 return average.ToString(
                     "0.00");
             }
-            else if (statType == typeof (DateTime))
+            if (statType == typeof (DateTime))
             {
                 var average = (int)modules.Select(
                     module => (((DateTime)module[stat]).Hour*60) + ((DateTime)module[stat]).Minute).Average();

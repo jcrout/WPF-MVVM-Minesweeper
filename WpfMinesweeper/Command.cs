@@ -185,16 +185,10 @@
                 {
                     return true;
                 }
-                else
-                {
-                    return this.canExecuteWithArgument(
-                        parameter);
-                }
+                return this.canExecuteWithArgument(
+                    parameter);
             }
-            else
-            {
-                return this.canExecute();
-            }
+            return this.canExecute();
         }
 
         /// <summary>
@@ -362,16 +356,10 @@
                 {
                     return true;
                 }
-                else
-                {
-                    return this.canExecuteWithArgument(
-                        (T)parameter);
-                }
+                return this.canExecuteWithArgument(
+                    (T)parameter);
             }
-            else
-            {
-                return this.canExecute();
-            }
+            return this.canExecute();
         }
 
         /// <summary>

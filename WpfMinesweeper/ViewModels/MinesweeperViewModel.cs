@@ -155,15 +155,13 @@
             {
                 this.Minesweeper = MinesweeperFactory.Create(
                     (BoardSize)paramter);
-                return;
             }
-            else if (paramter is string)
+            if (paramter is string)
             {
                 var boardSize = BoardSize.Parse(
                     paramter.ToString());
                 this.Minesweeper = MinesweeperFactory.Create(
                     boardSize);
-                return;
             }
             else
             {

@@ -61,7 +61,7 @@
         private readonly List<IStatisticsModule> newModules = new List<IStatisticsModule>();
         private readonly object statisticsSyncLock = new object();
         private readonly Settings userSettings = new Settings();
-        private bool saveAllModules = false;
+        private bool saveAllModules;
         private ObservableCollection<IStatisticsModule> statistics = new ObservableCollection<IStatisticsModule>();
 
         private SettingsProvider()
@@ -135,10 +135,7 @@
                 {
                     return this.userSettings.TileBrushSolid;
                 }
-                else
-                {
-                    return this.userSettings.TileBrushGradient;
-                }
+                return this.userSettings.TileBrushGradient;
             }
             set
             {
@@ -201,7 +198,7 @@
                     null,
                     null))
                 {
-                    using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName,
+                    using (var isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName,
                         this.saveAllModules ? FileMode.Create : FileMode.Append,
                         isoStore))
                     {
@@ -220,7 +217,7 @@
                                                 sw,
                                                 pair.Value);
                                             writer.Write(
-                                                ((int)pair.Key).ToString() + ';' + sw.ToString() + SettingsProvider.settingsDelimiter);
+                                                ((int)pair.Key).ToString() + ';' + sw + SettingsProvider.settingsDelimiter);
                                         }
                                     }
 
@@ -242,10 +239,7 @@
             {
                 return this.statistics;
             }
-            else
-            {
-                return this.newModules;
-            }
+            return this.newModules;
         }
 
         private async void LoadStatistics()
@@ -258,7 +252,7 @@
             long time1 = 0, time2 = 0;
             Diagnostics.QueryPerformanceCounter(
                 ref time1);
-            string[] statLines = await this.LoadStatText();
+            var statLines = await this.LoadStatText();
 
             if (statLines.Length == 0)
             {
@@ -322,7 +316,7 @@
                         var statText = await reader.ReadToEndAsync().ConfigureAwait(
                             true);
                         var statLines = statText.Split(
-                            new string[] {Environment.NewLine},
+                            new[] {Environment.NewLine},
                             StringSplitOptions.RemoveEmptyEntries);
                         return statLines;
                     }
@@ -339,11 +333,11 @@
             {
                 var module = StatisticsModule.Create();
                 var parts = statLine.Split(
-                    new char[] {SettingsProvider.settingsDelimiter},
+                    new[] {SettingsProvider.settingsDelimiter},
                     StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts)
                 {
-                    int index = part.IndexOf(
+                    var index = part.IndexOf(
                         ';');
                     var key = (Statistic)int.Parse(
                         part.Substring(
@@ -357,11 +351,10 @@
                     using (var reader = new StringReader(part.Substring(
                         index + 1)))
                     {
-                        object value = serializer.Deserialize(
+                        var value = serializer.Deserialize(
                             reader,
                             conversionType);
                         module[key] = value;
-                        continue;
                     }
                 }
 

@@ -40,11 +40,9 @@
         MatchCount = 9
     }
 
-    [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field)]
     public sealed class StatisticsAttribute : Attribute
     {
-        // See the attribute guidelines at 
-        //  http://go.microsoft.com/fwlink/?LinkId=85236
         private readonly Type statType;
         private string description = string.Empty;
         private string displayText = string.Empty;
@@ -120,8 +118,7 @@
 
         static StatisticHelper()
         {
-            var fields = typeof (Statistic).GetFields().Skip(
-                1);
+            var fields = typeof (Statistic).GetFields().Skip(1);
             StatisticHelper.statData = new Dictionary<Statistic, StatisticsAttribute>();
 
             foreach (var field in fields)
@@ -185,7 +182,7 @@
         {
             foreach (var pair in StatisticHelper.statData)
             {
-                if (String.Equals(
+                if (string.Equals(
                     pair.Value.DisplayText,
                     displayText))
                 {
@@ -260,23 +257,23 @@
             var objType = x.GetType();
             if (objType.IsPrimitive)
             {
-                double d1 = (double)Convert.ChangeType(
+                var d1 = (double)Convert.ChangeType(
                     x,
                     typeof (double));
-                double d2 = (double)Convert.ChangeType(
+                var d2 = (double)Convert.ChangeType(
                     y,
                     typeof (double));
                 return (d1 > d2 ? 1 : d1 < d2 ? -1 : 0);
             }
-            else if (objType == typeof (BoardSize))
+            if (objType == typeof (BoardSize))
             {
                 return ((BoardSize)x).CompareTo(
                     (BoardSize)y);
             }
-            else if (objType.IsEnum)
+            if (objType.IsEnum)
             {
-                string value1 = x.ToString();
-                string value2 = y.ToString();
+                var value1 = x.ToString();
+                var value2 = y.ToString();
 
                 return value1.CompareTo(
                     value2);
