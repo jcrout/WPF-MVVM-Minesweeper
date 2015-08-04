@@ -5,8 +5,9 @@
     using System.Windows.Input;
 
     /// <summary>
-    ///     Provides an implementation of the ICommand interface that allows Execute/CanExecute delegates to optionally contain
-    ///     object parameters.
+    ///     Provides an implementation of the ICommand interface that allows
+    ///     Execute/CanExecute delegates to optionally contain object
+    ///     parameters.
     /// </summary>
     [DebuggerStepThrough]
     public class Command : ICommand

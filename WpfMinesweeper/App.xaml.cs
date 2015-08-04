@@ -35,6 +35,8 @@ namespace WpfMinesweeper
     /// </summary>
     public partial class App : Application
     {
+        internal static TraceSource Tracer;
+
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(
@@ -72,7 +74,5 @@ namespace WpfMinesweeper
             App.Tracer.Listeners.Add(
                 listener);
         }
-
-        internal static TraceSource Tracer;
     }
 }

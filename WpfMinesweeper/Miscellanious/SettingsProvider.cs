@@ -55,6 +55,7 @@
 
     public class SettingsProvider : ISettingsProvider
     {
+        private const char settingsDelimiter = (char)20;
         private static readonly ISettingsProvider instance = new SettingsProvider();
         private static string statisticsFileName = "statistics.txt";
         private readonly List<IStatisticsModule> newModules = new List<IStatisticsModule>();
@@ -385,7 +386,5 @@
                 this.saveAllModules = true;
             }
         }
-
-        private const char settingsDelimiter = (char)20;
     }
 }

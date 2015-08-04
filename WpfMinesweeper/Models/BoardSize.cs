@@ -6,7 +6,8 @@
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Represents the number of tiles and the mine count of a Minesweeper board.
+    ///     Represents the number of tiles and the mine count of a Minesweeper
+    ///     board.
     /// </summary>
     [Serializable, DataContract(Name = "BoardSize", IsReference = false), TypeConverter(typeof(BoardSizeConverter))]
     public struct BoardSize : IComparable<BoardSize>
@@ -159,20 +160,17 @@
                     int.Parse(parts[0].Substring(indexOfFirstDelimiter + 1)),
                     int.Parse(parts[1].Substring(0, indexOfSecondDelimiter)));
             }
-            else if (parts.Length == 3)
+            if (parts.Length == 3)
             {
                 return new BoardSize(
                     int.Parse(parts[0]),
                     int.Parse(parts[1]),
                     int.Parse(parts[2]));
             }
-            else
-            {
-                throw new FormatException("text must either be equal to one of the following: " +
-                                          "the value of one of the static BoardSize properties; " +
-                                          "a BoardSize.Description string; " +
-                                          "a string including the width, height, and mine count delineated by commas between the numbers.");
-            }
+            throw new FormatException("text must either be equal to one of the following: " +
+                                      "the value of one of the static BoardSize properties; " +
+                                      "a BoardSize.Description string; " +
+                                      "a string including the width, height, and mine count delineated by commas between the numbers.");
         }
 
         /// <summary>

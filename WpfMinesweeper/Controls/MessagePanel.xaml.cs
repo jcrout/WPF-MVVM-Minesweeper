@@ -22,17 +22,17 @@
     public class MessageButton
     {
         /// <summary>
-        ///     Backing field for the Button property.
+        ///     Backing field for the <see cref="Button" /> property.
         /// </summary>
         private Button button;
 
         /// <summary>
-        ///     Backing field for the Result property.
+        ///     Backing field for the <see cref="Result" /> property.
         /// </summary>
         private object result;
 
         /// <summary>
-        ///     Backing field for the RightToLeftIndex property.
+        ///     Backing field for the <see cref="RightToLeftIndex" /> property.
         /// </summary>
         private int rightToLeftIndex = -1;
 
@@ -68,10 +68,10 @@
 
         /// <summary>
         ///     <para>Gets or sets the RightToLeftIndex, which determines the order in which buttons appear.</para>
-        ///     <para>The higher the number, the further to the right this button will be placed.</para>
+        ///     <para>The higher the number, the further to the right this <see cref="button" /> will be placed.</para>
         ///     <para>
-        ///         The default value is -1. All values below 0 will result in the button's order being determined before the
-        ///         button container is rendered.
+        ///         The default value is -1. All values below 0 will <see cref="result" /> in the button's order being determined
+        ///         before the <see cref="button" /> container is rendered.
         ///     </para>
         /// </summary>
         public int RightToLeftIndex
@@ -231,6 +231,29 @@
             0.521,
             0.127,
             0.527);
+
+        public static DependencyProperty InnerContentProperty = DependencyProperty.Register(
+            "InnerContent",
+            typeof(object),
+            typeof(MessagePanel),
+            new PropertyMetadata(
+                null,
+                MessagePanel.InnerContentChanged));
+
+        public static DependencyProperty ButtonsProperty = DependencyProperty.Register(
+            "Buttons",
+            typeof(ObservableCollection<MessageButton>),
+            typeof(MessagePanel),
+            new PropertyMetadata(
+                new ObservableCollection<MessageButton>(),
+                MessagePanel.ButtonsChanged));
+
+        public static DependencyProperty UseCustomButtonMarginsProperty = DependencyProperty.Register(
+            "UseCustomButtonMargins",
+            typeof(bool),
+            typeof(MessagePanel),
+            new PropertyMetadata(
+                false));
 
         static MessagePanel()
         {
@@ -431,29 +454,6 @@
             this.ContentGrid.Children.Add(
                 element);
         }
-
-        public static DependencyProperty InnerContentProperty = DependencyProperty.Register(
-            "InnerContent",
-            typeof(object),
-            typeof(MessagePanel),
-            new PropertyMetadata(
-                null,
-                MessagePanel.InnerContentChanged));
-
-        public static DependencyProperty ButtonsProperty = DependencyProperty.Register(
-            "Buttons",
-            typeof(ObservableCollection<MessageButton>),
-            typeof(MessagePanel),
-            new PropertyMetadata(
-                new ObservableCollection<MessageButton>(),
-                MessagePanel.ButtonsChanged));
-
-        public static DependencyProperty UseCustomButtonMarginsProperty = DependencyProperty.Register(
-            "UseCustomButtonMargins",
-            typeof(bool),
-            typeof(MessagePanel),
-            new PropertyMetadata(
-                false));
     }
 
     public class MessageResultArgs : EventArgs

@@ -10,9 +10,13 @@
     public interface IStatisticsModule : IEnumerable<KeyValuePair<Statistic, object>>
     {
         /// <summary>
-        ///     Gets or sets the value of the statistic for this module.
+        ///     Gets or sets the value of the <paramref name="statistic" /> for
+        ///     this module.
         /// </summary>
-        /// <param name="statistic">The statistic to use as an indexer to retrieve an associated value.</param>
+        /// <param name="statistic">
+        ///     The statistic to use as an indexer to
+        ///     retrieve an associated value.
+        /// </param>
         /// <returns>Returns the value associated with the statistic.</returns>
         object this[Statistic statistic] { get; set; }
     }
@@ -43,7 +47,7 @@
         }
 
         /// <summary>
-        ///     Gets or sets the value of the statistic for this module.
+        ///     Gets or sets the value of the <paramref name="statistic" /> for this module.
         /// </summary>
         /// <param name="statistic">The statistic to use as an indexer to retrieve an associated value.</param>
         /// <returns>Returns the value associated with the statistic.</returns>
@@ -69,7 +73,7 @@
         }
 
         /// <summary>
-        ///     Creates and returns a new IStatisticsModule using the default implementation method.
+        ///     Creates and returns a new <see cref="IStatisticsModule" /> using the default implementation method.
         /// </summary>
         /// <returns>An enumerator that iterates through a collection.</returns>
         public static IStatisticsModule Create()

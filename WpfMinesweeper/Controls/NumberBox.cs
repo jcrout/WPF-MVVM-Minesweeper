@@ -8,6 +8,29 @@
     public class NumberBox : FrameworkElement
     {
         private static readonly ImageSource[] bitmaps;
+
+        public static readonly DependencyProperty NumberProperty =
+            DependencyProperty.Register(
+                "Number",
+                typeof(int),
+                typeof(NumberBox),
+                new FrameworkPropertyMetadata(
+                    0,
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    NumberBox.OnNumberChanged,
+                    NumberBox.CoerceNumberCallback));
+
+        public static readonly DependencyProperty DigitsProperty =
+            DependencyProperty.Register(
+                "Digits",
+                typeof(int),
+                typeof(NumberBox),
+                new FrameworkPropertyMetadata(
+                    0,
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    NumberBox.OnDigitsChanged,
+                    NumberBox.CoerceDigitsCallback));
+
         private int maxNumber = 999;
         private int minNumber = -99;
 
@@ -155,27 +178,5 @@
                 10d,
                 digits - 1) + 1;
         }
-
-        public static readonly DependencyProperty NumberProperty =
-            DependencyProperty.Register(
-                "Number",
-                typeof(int),
-                typeof(NumberBox),
-                new FrameworkPropertyMetadata(
-                    0,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
-                    NumberBox.OnNumberChanged,
-                    NumberBox.CoerceNumberCallback));
-
-        public static readonly DependencyProperty DigitsProperty =
-            DependencyProperty.Register(
-                "Digits",
-                typeof(int),
-                typeof(NumberBox),
-                new FrameworkPropertyMetadata(
-                    0,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
-                    NumberBox.OnDigitsChanged,
-                    NumberBox.CoerceDigitsCallback));
     }
 }

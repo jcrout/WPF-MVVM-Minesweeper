@@ -1,7 +1,8 @@
 ﻿namespace WpfMinesweeper.Models
 {
     /// <summary>
-    ///     Defines a set of methods for validating a Minesweeper board by width, height, and mine count.
+    ///     Defines a set of methods for validating a <see cref="Minesweeper" />
+    ///     board by width, height, and mine count.
     /// </summary>
     public interface IMinesweeperBoardValidator
     {
@@ -16,7 +17,7 @@
         string ValidateBoard(int width, int height, int mineCount);
 
         /// <summary>
-        ///     Validates the number of tiles per column  and returns an error message string if there are any errors; otherwise,
+        ///     Validates the number of tiles per column and returns an error message string if there are any errors; otherwise,
         ///     returns null.
         /// </summary>
         /// <param name="height">The number of tiles per column.</param>
@@ -24,8 +25,9 @@
         string ValidateHeight(int height);
 
         /// <summary>
-        ///     Validates the total number of mines, given a board width and height, and returns an error message string if there
-        ///     are any errors; otherwise, returns null. This method does not validate the width and height.
+        ///     Validates the total number of mines, given a board <paramref name="width" /> and height, and returns an error
+        ///     message string if there are any errors; otherwise, returns null. This method does not validate the
+        ///     <paramref name="width" /> and height.
         /// </summary>
         /// <param name="mineCount">The total number of mines on the board.</param>
         /// <param name="width">The number of tiles per row.</param>
@@ -34,7 +36,7 @@
         string ValidateMineCount(int mineCount, int width, int height);
 
         /// <summary>
-        ///     Validates the number of tiles per row  and returns an error message string if there are any errors; otherwise,
+        ///     Validates the number of tiles per row and returns an error message string if there are any errors; otherwise,
         ///     returns null.
         /// </summary>
         /// <param name="width">The number of tiles per row.</param>

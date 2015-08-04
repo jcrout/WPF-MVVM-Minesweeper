@@ -5,7 +5,8 @@
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Represents a 2-dimensional array with a default property taking in two index values.
+    ///     Represents a 2-dimensional array with a default property taking in
+    ///     two index values.
     /// </summary>
     public interface IEnumerable2D<T> : IEnumerable<T>
     {
@@ -78,10 +79,10 @@
         }
 
         /// <summary>
-        ///     Returns a new ITileCollection with the specified width and height.
+        ///     Returns a new <see cref="ITileCollection" /> with the specified width and height.
         /// </summary>
-        /// <param name="width">The number of tiles per row.</param>
-        /// <param name="height">The number of tiles per column.</param>
+        /// <param name="width">The number of <see cref="tiles" /> per row.</param>
+        /// <param name="height">The number of <see cref="tiles" /> per column.</param>
         /// <returns></returns>
         public static ITileCollection Create(int width, int height)
         {

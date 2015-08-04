@@ -6,7 +6,8 @@
     using Miscellanious;
 
     /// <summary>
-    ///     This interface implements the core aspects of the game Minesweeper.
+    ///     This <see langword="interface" /> implements the core aspects of the
+    ///     game Minesweeper.
     /// </summary>
     public interface IMinesweeper : INotifyPropertyChanged
     {
@@ -32,7 +33,7 @@
     }
 
     /// <summary>
-    ///     THe default implementation of the IMinesweeper interface.
+    ///     THe default implementation of the <see cref="IMinesweeper" /> interface.
     /// </summary>
     public class Minesweeper : IMinesweeper
     {
@@ -47,7 +48,7 @@
         private int minesLeft;
 
         /// <summary>
-        ///     The collection of tiles that make up the board.
+        ///     The collection of <see cref="tiles" /> that make up the board.
         /// </summary>
         private ITileCollection tiles;
 

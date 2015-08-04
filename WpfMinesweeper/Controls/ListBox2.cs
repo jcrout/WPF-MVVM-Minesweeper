@@ -6,11 +6,23 @@
     using System.Windows.Controls;
 
     /// <summary>
-    ///     This class extends the ListBox class to allow XAML binding to the SelectedItems property through the new
-    ///     SelectedItemsBinding property.
+    ///     This class extends the ListBox class to allow XAML binding to the
+    ///     SelectedItems property through the new SelectedItemsBinding
+    ///     property.
     /// </summary>
     public class ListBox2 : ListBox
     {
+        /// <summary>
+        ///     This property is a proxy to SelectedItems and updates any bindings.
+        /// </summary>
+        public static DependencyProperty SelectedItemsBindingProperty = DependencyProperty.Register(
+            "SelectedItemsBinding",
+            typeof(IList),
+            typeof(ListBox2),
+            new PropertyMetadata(
+                new List<object>(),
+                ListBox2.SelectedItemsBindingChanged));
+
         /// <summary>
         ///     Gets or sets the SelectedItems property. This property is a proxy to SelectedItems and updates any bindings.
         /// </summary>
@@ -30,7 +42,8 @@
         }
 
         /// <summary>
-        ///     This method updates the SelectedItemsBinding property after any changes to the ListBox's SelectedItems property.
+        ///     This method updates the <see cref="SelectedItemsBinding" /> property after any changes to the ListBox's
+        ///     SelectedItems property.
         /// </summary>
         /// <param name="e">The SelectionChanged EventArgs.</param>
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
@@ -58,16 +71,5 @@
                     newList);
             }
         }
-
-        /// <summary>
-        ///     This property is a proxy to SelectedItems and updates any bindings.
-        /// </summary>
-        public static DependencyProperty SelectedItemsBindingProperty = DependencyProperty.Register(
-            "SelectedItemsBinding",
-            typeof(IList),
-            typeof(ListBox2),
-            new PropertyMetadata(
-                new List<object>(),
-                ListBox2.SelectedItemsBindingChanged));
     }
 }

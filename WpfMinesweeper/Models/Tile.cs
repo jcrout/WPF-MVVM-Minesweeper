@@ -4,8 +4,9 @@
     using System.Runtime.InteropServices;
 
     /// <summary>
-    ///     Specifies the extra data associated with a Tile, including whether or not the Tile is flagged or contains a
-    ///     question mark.
+    ///     Specifies the extra data associated with a Tile, including whether
+    ///     or not the <see cref="Tile" /> is flagged or contains a question
+    ///     mark.
     /// </summary>
     public enum ExtraTileData
     {
@@ -15,7 +16,7 @@
     }
 
     /// <summary>
-    ///     Represents a single tile on a Minesweeper tile board.
+    ///     Represents a single tile on a <see cref="Minesweeper" /> tile board.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
     public struct Tile
@@ -61,6 +62,8 @@
     /// </summary>
     public struct TileType
     {
+        private const ushort TYPE_EMPTY = 100;
+        private const ushort TYPE_MINE = 200;
         private static readonly ushort mineCountMaximum = 8;
         private readonly ushort value;
 
@@ -173,8 +176,5 @@
 
             return "UNSET";
         }
-
-        private const ushort TYPE_EMPTY = 100;
-        private const ushort TYPE_MINE = 200;
     }
 }

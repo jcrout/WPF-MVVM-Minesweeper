@@ -13,6 +13,87 @@
     [ContentProperty("Content"), DefaultProperty("Content"), Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
     public class PromptBox : FrameworkElement
     {
+        public static DependencyProperty ButtonBorderBackgroundProperty = DependencyProperty.RegisterAttached(
+            "ButtonBorderBackground",
+            typeof(Brush),
+            typeof(PromptBox),
+            new PropertyMetadata(
+                null,
+                PromptBox.ButtonBorderBackgroundChanged));
+
+        public static DependencyProperty ContentProperty = DependencyProperty.Register(
+            "Content",
+            typeof(object),
+            typeof(PromptBox),
+            new PropertyMetadata(
+                null,
+                PromptBox.ContentChanged));
+
+        public static DependencyProperty OKButtonProperty = DependencyProperty.Register(
+            "OKButton",
+            typeof(MessageButton),
+            typeof(PromptBox),
+            new PropertyMetadata(
+                null,
+                PromptBox.OKButtonChanged));
+
+        public static DependencyProperty CancelButtonProperty = DependencyProperty.Register(
+            "CancelButton",
+            typeof(MessageButton),
+            typeof(PromptBox),
+            new PropertyMetadata(
+                null,
+                PromptBox.CancelButtonChanged));
+
+        public static DependencyProperty OtherButtonsProperty = DependencyProperty.Register(
+            "OtherButtons",
+            typeof(ObservableCollection<MessageButton>),
+            typeof(PromptBox),
+            new PropertyMetadata(
+                new ObservableCollection<MessageButton>(),
+                PromptBox.OtherButtonsChanged));
+
+        public static DependencyProperty IsModalProperty = DependencyProperty.Register(
+            "IsModal",
+            typeof(bool),
+            typeof(PromptBox));
+
+        public static DependencyProperty ResultCancelCommandProperty = DependencyProperty.Register(
+            "ResultCancelCommand",
+            typeof(ICommand),
+            typeof(PromptBox));
+
+        public static DependencyProperty ResultCommandProperty = DependencyProperty.Register(
+            "ResultCommand",
+            typeof(ICommand),
+            typeof(PromptBox));
+
+        public static DependencyProperty ResultOKCommandProperty = DependencyProperty.Register(
+            "ResultOKCommand",
+            typeof(ICommand),
+            typeof(PromptBox));
+
+        public static DependencyProperty ResultOtherCommandProperty = DependencyProperty.Register(
+            "ResultOtherCommand",
+            typeof(ICommand),
+            typeof(PromptBox));
+
+        public static DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title",
+            typeof(string),
+            typeof(PromptBox),
+            new PropertyMetadata(
+                string.Empty,
+                PromptBox.TitleChanged));
+
+        public static DependencyProperty WindowStyleProperty = DependencyProperty.Register(
+            "WindowStyle",
+            typeof(WindowStyle),
+            typeof(PromptBox),
+            new PropertyMetadata(
+                WindowStyle.SingleBorderWindow,
+                PromptBox.WindowStyleChanged));
+
         private readonly List<MessageButton> buttons = new List<MessageButton>();
         private bool obtainedResultBeforeClosing;
         private MessagePanel panel;
@@ -581,86 +662,5 @@
                 this.window = null;
             }
         }
-
-        public static DependencyProperty ButtonBorderBackgroundProperty = DependencyProperty.RegisterAttached(
-            "ButtonBorderBackground",
-            typeof(Brush),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.ButtonBorderBackgroundChanged));
-
-        public static DependencyProperty ContentProperty = DependencyProperty.Register(
-            "Content",
-            typeof(object),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.ContentChanged));
-
-        public static DependencyProperty OKButtonProperty = DependencyProperty.Register(
-            "OKButton",
-            typeof(MessageButton),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.OKButtonChanged));
-
-        public static DependencyProperty CancelButtonProperty = DependencyProperty.Register(
-            "CancelButton",
-            typeof(MessageButton),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.CancelButtonChanged));
-
-        public static DependencyProperty OtherButtonsProperty = DependencyProperty.Register(
-            "OtherButtons",
-            typeof(ObservableCollection<MessageButton>),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                new ObservableCollection<MessageButton>(),
-                PromptBox.OtherButtonsChanged));
-
-        public static DependencyProperty ResultCancelCommandProperty = DependencyProperty.Register(
-            "ResultCancelCommand",
-            typeof(ICommand),
-            typeof(PromptBox));
-
-        public static DependencyProperty ResultOKCommandProperty = DependencyProperty.Register(
-            "ResultOKCommand",
-            typeof(ICommand),
-            typeof(PromptBox));
-
-        public static DependencyProperty ResultOtherCommandProperty = DependencyProperty.Register(
-            "ResultOtherCommand",
-            typeof(ICommand),
-            typeof(PromptBox));
-
-        public static DependencyProperty ResultCommandProperty = DependencyProperty.Register(
-            "ResultCommand",
-            typeof(ICommand),
-            typeof(PromptBox));
-
-        public static DependencyProperty IsModalProperty = DependencyProperty.Register(
-            "IsModal",
-            typeof(bool),
-            typeof(PromptBox));
-
-        public static DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Title",
-            typeof(string),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                string.Empty,
-                PromptBox.TitleChanged));
-
-        public static DependencyProperty WindowStyleProperty = DependencyProperty.Register(
-            "WindowStyle",
-            typeof(WindowStyle),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                WindowStyle.SingleBorderWindow,
-                PromptBox.WindowStyleChanged));
     }
 }

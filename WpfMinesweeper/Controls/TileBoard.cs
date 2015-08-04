@@ -1579,12 +1579,12 @@
         private Tile tile;
 
         /// <summary>
-        ///     Tile X.
+        ///     <see cref="Tile" /> X.
         /// </summary>
         private int x;
 
         /// <summary>
-        ///     Tile Y.
+        ///     <see cref="Tile" /> Y.
         /// </summary>
         private int y;
 
@@ -1611,7 +1611,7 @@
         }
 
         /// <summary>
-        ///     Gets the Tile's X coordinate.
+        ///     Gets the Tile's <see cref="X" /> coordinate.
         /// </summary>
         public int X
         {
@@ -1626,7 +1626,7 @@
         }
 
         /// <summary>
-        ///     Gets the Tile's Y coordinate.
+        ///     Gets the Tile's <see cref="Y" /> coordinate.
         /// </summary>
         public int Y
         {
@@ -1678,7 +1678,7 @@
         }
 
         /// <summary>
-        ///     Gets the state of all mouse buttons. Inclusion means that the button is currently pressed down.
+        ///     Gets the state of all mouse buttons. Inclusion means that the <see cref="button" /> is currently pressed down.
         /// </summary>
         public InputButtons AllButtonStates
         {

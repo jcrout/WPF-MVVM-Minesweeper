@@ -1,22 +1,23 @@
 ﻿namespace WpfMinesweeper.Models
 {
     /// <summary>
-    ///     Represents all of the data necessary to display a statistic in a ListView.
+    ///     Represents all of the data necessary to display a statistic in a
+    ///     ListView.
     /// </summary>
     public class StatDisplay
     {
         /// <summary>
-        ///     Backing field for the Description property.
+        ///     Backing field for the <see cref="Description" /> property.
         /// </summary>
         private readonly string description;
 
         /// <summary>
-        ///     Backing field for the Label property.
+        ///     Backing field for the <see cref="Label" /> property.
         /// </summary>
         private readonly string label;
 
         /// <summary>
-        ///     Backing field for the Value property.
+        ///     Backing field for the <see cref="Value" /> property.
         /// </summary>
         private readonly string value;
 
@@ -56,7 +57,7 @@
         }
 
         /// <summary>
-        ///     Gets the value for the specific stat.
+        ///     Gets the <see cref="value" /> for the specific stat.
         /// </summary>
         public string Value
         {

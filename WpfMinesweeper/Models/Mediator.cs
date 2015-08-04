@@ -32,7 +32,9 @@
         /// <summary>
         ///     Gets the current Mediator instance.
         /// </summary>
-        /// <value>The instance.</value>
+        /// <value>
+        ///     The instance.
+        /// </value>
         public static Mediator Instance
         {
             get

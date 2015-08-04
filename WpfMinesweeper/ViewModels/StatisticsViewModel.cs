@@ -9,6 +9,7 @@
 
     public class StatisticsViewModel : MinesweeperComponentViewModel
     {
+        private const string defaultStatText = "-None-";
         private static readonly StatValueViewModel emptyPage;
         private double columnWidth = double.NaN;
         private IEnumerable<object> dropDownStatisticsList;
@@ -430,8 +431,6 @@
                 this.OnStatisticListSelectionChanged();
             }
         }
-
-        private const string defaultStatText = "-None-";
     }
 
     public class StatValueViewModel : ViewModelBase

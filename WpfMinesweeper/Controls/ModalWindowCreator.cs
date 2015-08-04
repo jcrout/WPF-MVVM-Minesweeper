@@ -8,6 +8,14 @@
     [ContentProperty("Content"), DefaultProperty("Content"), Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
     public class ModalWindowCreator : FrameworkElement
     {
+        public static DependencyProperty ContentProperty = DependencyProperty.Register(
+            "Content",
+            typeof(object),
+            typeof(ModalWindowCreator),
+            new PropertyMetadata(
+                null,
+                ModalWindowCreator.ContentChanged));
+
         [Bindable(true)]
         public object Content
         {
@@ -75,13 +83,5 @@
                     e.NewValue);
             }
         }
-
-        public static DependencyProperty ContentProperty = DependencyProperty.Register(
-            "Content",
-            typeof(object),
-            typeof(ModalWindowCreator),
-            new PropertyMetadata(
-                null,
-                ModalWindowCreator.ContentChanged));
     }
 }

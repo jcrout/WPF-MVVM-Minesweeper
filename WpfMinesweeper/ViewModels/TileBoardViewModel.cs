@@ -357,15 +357,22 @@
         }
 
         /// <summary>
-        ///     Sets the current tile equal to the mine count, appends the list of tiles to update, and recursively checks the
-        ///     surrounding tiles if the current tile's mine count is zero.
+        ///     Sets the current tile equal to the mine count, appends the list
+        ///     of <paramref name="tiles" /> to update, and recursively checks
+        ///     the surrounding <paramref name="tiles" /> if the current tile's
+        ///     mine count is zero.
         /// </summary>
         /// <remarks>
-        ///     This method checks each of the un-flipped surrounding tiles centered on the x and y coordinate parameters.
-        ///     Each call adds the tile point to the list. If there are zero mines surrounding this coordinate, an empty
-        ///     tile is set and this method is called recursively on each of the valid surrounding tiles.
+        ///     This method checks each of the un-flipped surrounding
+        ///     <paramref name="tiles" /> centered on the <paramref name="x" /> and
+        ///     <paramref name="y" /> coordinate parameters. Each call adds the tile
+        ///     point to the list. If there are zero mines surrounding this
+        ///     coordinate, an empty tile is set and this method is called
+        ///     recursively on each of the valid surrounding tiles.
         /// </remarks>
-        /// <param name="tiles">The cumulative list of tile points to populate.</param>
+        /// <param name="tiles">
+        ///     The cumulative list of tile points to populate.
+        /// </param>
         /// <param name="x">The X coordinate of the tile.</param>
         /// <param name="y">The Y coordinate of the tile.</param>
         private void CheckSurroundingTiles(List<Point> tiles, int x, int y)
@@ -434,20 +441,22 @@
         }
 
         /// <summary>
-        ///     Returns a list of surrounding tiles needing to be checked while adding to the list of tiles needing updated.
+        ///     Returns a list of surrounding <paramref name="tiles" /> needing to be <see langword="checked" /> while adding to
+        ///     the list of <paramref name="tiles" /> needing updated.
         /// </summary>
-        /// <returns>
-        ///     This method then returns the list of tiles that need checked. An empty list is returned if the current
-        ///     tile is a number. If the tile is an empty space, then it returns a list of surrounding tiles that
-        ///     are not yet defined that haven't already been added to the cumulative list.
-        /// </returns>
         /// <remarks>
-        ///     This method checks each of the un-flipped surrounding tiles centered on the x and y coordinate parameters.
-        ///     Each call adds the tile point to the list. The list of surrounding tiles is then returned.
+        ///     This method checks each of the un-flipped surrounding <paramref name="tiles" /> centered on the
+        ///     <paramref name="x" /> and <paramref name="y" /> coordinate parameters. Each call adds the tile point to the list.
+        ///     The list of surrounding <paramref name="tiles" /> is then returned.
         /// </remarks>
         /// <param name="tiles">The cumulative list of tile points to populate.</param>
         /// <param name="x">The X coordinate of the tile.</param>
         /// <param name="y">The Y coordinate of the tile.</param>
+        /// <returns>
+        ///     This method then returns the list of <paramref name="tiles" /> that need checked. An empty list is returned if
+        ///     the current tile is a number. If the tile is an empty space, then it returns a list of surrounding
+        ///     <paramref name="tiles" /> that are not yet defined that haven't already been added to the cumulative list.
+        /// </returns>
         private List<Point> CheckSurroundingTiles_NonRecursive(List<Point> tiles, int x, int y)
         {
             var tilesToCheck = new List<Point>();
@@ -589,8 +598,8 @@
         /// <remarks>
         ///     This method randomly determines the location of each mine on the board. The first tile clicked is excluded. An
         ///     additional set of tiles may be added to the exclusion list depending on the minimum/maximum number of safe spots
-        ///     around the clicked tile and also on the number of non-mine spaces available by calling the GetSafeTileIndexes
-        ///     method.
+        ///     around the clicked tile and also on the number of non-mine spaces available by calling the
+        ///     <see cref="GetSafeTileIndexes" /> method.
         /// </remarks>
         /// <param name="clickX"></param>
         /// <param name="clickY"></param>
@@ -925,9 +934,9 @@
         }
 
         /// <summary>
-        ///     Sets the revealSurroundingTiles delegate, depending on the board size. If a stackoverflow exception is a possiblity
-        ///     due to a large number of tiles, then a non-recursive method is used. If it is not a possibility, then the faster
-        ///     recursive method is used.
+        ///     Sets the <see cref="revealSurroundingTiles" /> delegate, depending on the board size. If a stackoverflow exception
+        ///     is a possiblity due to a large number of tiles, then a non-recursive method is used. If it is not a possibility,
+        ///     then the faster recursive method is used.
         /// </summary>
         private void SetRevealTileMethod()
         {
