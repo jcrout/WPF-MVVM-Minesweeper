@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using WpfMinesweeper.Properties;
-using WpfMinesweeper.Views;
-
-namespace WpfMinesweeper
+﻿namespace WpfMinesweeper
 {
+    using System;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Windows;
     using Miscellanious;
+    using ViewModels;
+    using Views;
 
     /// <summary>
-    /// Interaction logic for App.xaml
+    ///     Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
@@ -23,18 +17,20 @@ namespace WpfMinesweeper
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            base.OnStartup(
+                e);
             //this.InitializeTracer();
 
             var window = new MainWindow();
-            var view = new ViewModels.MainWindowViewModel();
+            var view = new MainWindowViewModel();
             window.DataContext = view;
             window.Show();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            base.OnExit(e);
+            base.OnExit(
+                e);
 
             SettingsProvider.Instance.Save();
         }
@@ -53,21 +49,25 @@ namespace WpfMinesweeper
                 FileAccess.Write,
                 FileShare.None);
             var listener = new TextWriterTraceListener(fs);
-            App.Tracer.Listeners.Add(listener);
+            App.Tracer.Listeners.Add(
+                listener);
         }
     }
 }
 
 namespace WpfMinesweeper.Properties
 {
+    using System.Configuration;
+    using Models;
+
     internal sealed partial class Settings
     {
-        [UserScopedSettingAttribute(), DefaultSettingValueAttribute("9,9,10")]
-        public Models.BoardSize LastBoardSize
+        [UserScopedSetting(), DefaultSettingValue("9,9,10")]
+        public BoardSize LastBoardSize
         {
             get
             {
-                return ((Models.BoardSize) (this["LastBoardSize"]));
+                return ((BoardSize)(this["LastBoardSize"]));
             }
             set
             {

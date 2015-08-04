@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfMinesweeper.Models;
-
-namespace WpfMinesweeper.ViewModels
+﻿namespace WpfMinesweeper.ViewModels
 {
+    using Models;
+
     public abstract class MinesweeperComponentViewModel : ViewModelBase
     {
         private IStatisticsModule gameStatistics;

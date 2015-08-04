@@ -4,7 +4,7 @@
     using System.Runtime.InteropServices;
 
     /// <summary>
-    /// Represents a single tile on a Minesweeper tile board.
+    ///     Represents a single tile on a Minesweeper tile board.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
     public struct Tile
@@ -46,21 +46,25 @@
     }
 
     /// <summary>
-    /// Represents the type of a tile, including EmptySpace, Mine, Number, or Unset
+    ///     Represents the type of a tile, including EmptySpace, Mine, Number, or Unset
     /// </summary>
     public struct TileType
     {
-        private static readonly ushort mineCountMaximum = 8;
         private const ushort TYPE_EMPTY = 100;
         private const ushort TYPE_MINE = 200;
-
+        private static readonly ushort mineCountMaximum = 8;
         private readonly ushort value;
+
+        private TileType(ushort value)
+        {
+            this.value = value;
+        }
 
         public static int MineCountMaximum
         {
             get
             {
-                return (int) TileType.mineCountMaximum;
+                return (int)TileType.mineCountMaximum;
             }
         }
 
@@ -88,6 +92,14 @@
             }
         }
 
+        public int Value
+        {
+            get
+            {
+                return (int)this.value;
+            }
+        }
+
         public static TileType Number(int mineCount)
         {
             if (mineCount == 0)
@@ -95,7 +107,7 @@
                 return TileType.EmptySpace;
             }
 
-            ushort usmineCount = (ushort) mineCount;
+            ushort usmineCount = (ushort)mineCount;
             if (usmineCount > TileType.mineCountMaximum || usmineCount < 0)
             {
                 throw new ArgumentOutOfRangeException("mineCount");
@@ -112,19 +124,6 @@
         public static bool operator !=(TileType t1, TileType t2)
         {
             return t1.value != t2.value;
-        }
-
-        private TileType(ushort value)
-        {
-            this.value = value;
-        }
-
-        public int Value
-        {
-            get
-            {
-                return (int) this.value;
-            }
         }
 
         public bool IsNumber()
@@ -144,7 +143,7 @@
 
         public override bool Equals(object obj)
         {
-            var t2 = (TileType) obj;
+            var t2 = (TileType)obj;
             return this.value == t2.value;
         }
 
@@ -168,7 +167,8 @@
     }
 
     /// <summary>
-    /// Specifies the extra data associated with a Tile, including whether or not the Tile is flagged or contains a question mark.
+    ///     Specifies the extra data associated with a Tile, including whether or not the Tile is flagged or contains a
+    ///     question mark.
     /// </summary>
     public enum ExtraTileData
     {

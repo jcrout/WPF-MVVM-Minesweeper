@@ -1,13 +1,7 @@
 ﻿namespace WpfMinesweeper.Controls
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Controls;
     using System.Windows.Markup;
     using System.Windows.Media;
 
@@ -22,21 +16,6 @@
                 null,
                 ModalWindowCreator.ContentChanged));
 
-        private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var mwc = (ModalWindowCreator) d;
-
-            if (e.OldValue != null)
-            {
-                mwc.RemoveLogicalChild(e.OldValue);
-            }
-
-            if (e.NewValue != null)
-            {
-                mwc.AddLogicalChild(e.NewValue);
-            }
-        }
-
         protected override int VisualChildrenCount
         {
             get
@@ -45,23 +24,42 @@
             }
         }
 
-        protected override Visual GetVisualChild(int index)
-        {
-            return null;
-        }
-
         [Bindable(true)]
         public object Content
         {
             get
             {
-                return this.GetValue(ModalWindowCreator.ContentProperty);
+                return this.GetValue(
+                    ModalWindowCreator.ContentProperty);
             }
             set
             {
-                this.SetValue(ModalWindowCreator.ContentProperty,
+                this.SetValue(
+                    ModalWindowCreator.ContentProperty,
                     value);
             }
+        }
+
+        private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var mwc = (ModalWindowCreator)d;
+
+            if (e.OldValue != null)
+            {
+                mwc.RemoveLogicalChild(
+                    e.OldValue);
+            }
+
+            if (e.NewValue != null)
+            {
+                mwc.AddLogicalChild(
+                    e.NewValue);
+            }
+        }
+
+        protected override Visual GetVisualChild(int index)
+        {
+            return null;
         }
 
         public void Show()
@@ -74,7 +72,8 @@
 
             if (this.Parent != null)
             {
-                window.Owner = Window.GetWindow(this.Parent);
+                window.Owner = Window.GetWindow(
+                    this.Parent);
                 window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
             else

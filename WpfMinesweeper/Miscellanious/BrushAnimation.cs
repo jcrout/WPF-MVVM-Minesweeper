@@ -12,12 +12,14 @@ namespace WpfMinesweeper.Miscellanious
     public class BrushAnimation : AnimationTimeline
     {
         public static readonly DependencyProperty FromProperty =
-            DependencyProperty.Register("From",
+            DependencyProperty.Register(
+                "From",
                 typeof (Brush),
                 typeof (BrushAnimation));
 
         public static readonly DependencyProperty ToProperty =
-            DependencyProperty.Register("To",
+            DependencyProperty.Register(
+                "To",
                 typeof (Brush),
                 typeof (BrushAnimation));
 
@@ -34,11 +36,13 @@ namespace WpfMinesweeper.Miscellanious
         {
             get
             {
-                return (Brush) this.GetValue(BrushAnimation.FromProperty);
+                return (Brush)this.GetValue(
+                    BrushAnimation.FromProperty);
             }
             set
             {
-                this.SetValue(BrushAnimation.FromProperty,
+                this.SetValue(
+                    BrushAnimation.FromProperty,
                     value);
             }
         }
@@ -47,11 +51,13 @@ namespace WpfMinesweeper.Miscellanious
         {
             get
             {
-                return (Brush) this.GetValue(BrushAnimation.ToProperty);
+                return (Brush)this.GetValue(
+                    BrushAnimation.ToProperty);
             }
             set
             {
-                this.SetValue(BrushAnimation.ToProperty,
+                this.SetValue(
+                    BrushAnimation.ToProperty,
                     value);
             }
         }
@@ -60,7 +66,8 @@ namespace WpfMinesweeper.Miscellanious
             object defaultDestinationValue,
             AnimationClock animationClock)
         {
-            return this.GetCurrentValue(defaultOriginValue as Brush,
+            return this.GetCurrentValue(
+                defaultOriginValue as Brush,
                 defaultDestinationValue as Brush,
                 animationClock);
         }

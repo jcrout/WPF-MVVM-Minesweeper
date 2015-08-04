@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WpfMinesweeper.Properties;
-using WpfMinesweeper.ViewModels;
-
-namespace WpfMinesweeper
+﻿namespace WpfMinesweeper
 {
+    using System;
+    using System.Collections.Generic;
+
     public enum ViewModelMessages
     {
         TileBoardSizeChanged,
@@ -29,6 +24,11 @@ namespace WpfMinesweeper
         private static readonly Mediator instance = new Mediator();
         private readonly Dictionary<ViewModelMessages, List<Action<object>>> callbacks;
 
+        private Mediator()
+        {
+            this.callbacks = new Dictionary<ViewModelMessages, List<Action<object>>>();
+        }
+
         public static Mediator Instance
         {
             get
@@ -37,34 +37,34 @@ namespace WpfMinesweeper
             }
         }
 
-        private Mediator()
-        {
-            this.callbacks = new Dictionary<ViewModelMessages, List<Action<object>>>();
-        }
-
         public void Notify(ViewModelMessages message, object parameter = null)
         {
-            if (!this.callbacks.ContainsKey(message))
+            if (!this.callbacks.ContainsKey(
+                message))
             {
                 return;
             }
 
             foreach (var callback in this.callbacks[message])
             {
-                callback(parameter);
+                callback(
+                    parameter);
             }
         }
 
         public void Register(ViewModelMessages message, Action<object> callback)
         {
-            if (!this.callbacks.ContainsKey(message))
+            if (!this.callbacks.ContainsKey(
+                message))
             {
-                this.callbacks.Add(message,
+                this.callbacks.Add(
+                    message,
                     new List<Action<object>>(1) {callback});
             }
             else
             {
-                this.callbacks[message].Add(callback);
+                this.callbacks[message].Add(
+                    callback);
             }
         }
     }

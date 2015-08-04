@@ -1,21 +1,16 @@
 ﻿namespace WpfMinesweeper.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows.Input;
     using Models;
 
     public class CustomBoardViewModel : ViewModelBase, IDataErrorInfo
     {
         private readonly IMinesweeperBoardValidator validator;
-        private ICommand saveCustomBoardCommand;
-        private int width;
         private int height;
         private int mines;
+        private ICommand saveCustomBoardCommand;
+        private int width;
 
         public CustomBoardViewModel(int width = 9, int height = 9, int mines = 10)
         {
@@ -23,7 +18,8 @@
             this.height = height;
             this.mines = mines;
             this.validator = MinesweeperBoardValidator.Create();
-            this.saveCustomBoardCommand = new Command(o => this.OnSaveCustomBoard(o),
+            this.saveCustomBoardCommand = new Command(o => this.OnSaveCustomBoard(
+                o),
                 () => this.IsValid);
         }
 
@@ -95,7 +91,8 @@
         {
             get
             {
-                bool isValid = this.validator.ValidateBoard(this.width,
+                bool isValid = this.validator.ValidateBoard(
+                    this.width,
                     this.height,
                     this.mines) == null;
                 return isValid;
@@ -116,17 +113,20 @@
             {
                 if (columnName == "Width")
                 {
-                    return this.validator.ValidateWidth(this.width);
+                    return this.validator.ValidateWidth(
+                        this.width);
                 }
 
                 if (columnName == "Height")
                 {
-                    return this.validator.ValidateHeight(this.height);
+                    return this.validator.ValidateHeight(
+                        this.height);
                 }
 
                 if (columnName == "Mines")
                 {
-                    return this.validator.ValidateMineCount(mineCount: this.mines,
+                    return this.validator.ValidateMineCount(
+                        mineCount: this.mines,
                         width: this.width,
                         height: this.height);
                 }
@@ -138,7 +138,8 @@
         private void OnSaveCustomBoard(object paramter)
         {
             string customBoard = this.width.ToString() + ',' + this.height.ToString() + ',' + this.mines.ToString();
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard,
+            Mediator.Instance.Notify(
+                ViewModelMessages.CreateNewBoard,
                 customBoard);
         }
     }

@@ -1,15 +1,16 @@
 ﻿namespace WpfMinesweeper.Models
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     /// <summary>
-    /// Represents a 2-dimensional array with a default property taking in two index values.
+    ///     Represents a 2-dimensional array with a default property taking in two index values.
     /// </summary>
     public interface IEnumerable2D<T> : IEnumerable<T>
     {
         /// <summary>
-        /// The default indexer property of the IEnumerable.
+        ///     The default indexer property of the IEnumerable.
         /// </summary>
         /// <param name="x">The first dimensional index value.</param>
         /// <param name="y">The second dimensional index value.</param>
@@ -18,35 +19,22 @@
     }
 
     /// <summary>
-    /// Represents a collection of tiles, including the width and height of the board.
+    ///     Represents a collection of tiles, including the width and height of the board.
     /// </summary>
     public interface ITileCollection : IEnumerable2D<Tile>, ICloneable
     {
         int Width { get; }
-
         int Height { get; }
     }
 
     /// <summary>
-    /// The default implementation of ITileCollection.
+    ///     The default implementation of ITileCollection.
     /// </summary>
     public class TileCollection : ITileCollection
     {
+        private readonly int height;
         private readonly Tile[][] tiles;
         private readonly int width;
-        private readonly int height;
-
-        /// <summary>
-        /// Returns a new ITileCollection with the specified width and height.
-        /// </summary>
-        /// <param name="width">The number of tiles per row.</param>
-        /// <param name="height">The number of tiles per column.</param>
-        /// <returns></returns>
-        public static ITileCollection Create(int width, int height)
-        {
-            return new TileCollection(width,
-                height);
-        }
 
         protected TileCollection(int width, int height)
         {
@@ -100,7 +88,7 @@
             }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
@@ -118,6 +106,18 @@
             }
 
             return newCollection;
+        }
+
+        /// <summary>
+        ///     Returns a new ITileCollection with the specified width and height.
+        /// </summary>
+        /// <param name="width">The number of tiles per row.</param>
+        /// <param name="height">The number of tiles per column.</param>
+        /// <returns></returns>
+        public static ITileCollection Create(int width, int height)
+        {
+            return new TileCollection(width,
+                height);
         }
     }
 }

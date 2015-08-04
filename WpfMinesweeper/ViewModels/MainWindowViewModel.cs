@@ -1,78 +1,32 @@
 ﻿namespace WpfMinesweeper.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
 
     public class MainWindowViewModel : ViewModelBase
     {
-        private WindowState windowState = WindowState.Normal;
-        private SizeToContent sizeToContentMode = SizeToContent.WidthAndHeight;
-        private ViewModelBase viewModel;
-        private double minWidth = 0;
-        private double minHeight = 0;
         private double height = 0;
-        private double width = 0;
-        private double left = 0;
-        private double top = 0;
         private bool initialized = false;
+        private double left = 0;
+        private double minHeight = 0;
+        private double minWidth = 0;
+        private SizeToContent sizeToContentMode = SizeToContent.WidthAndHeight;
+        private double top = 0;
+        private ViewModelBase viewModel;
+        private double width = 0;
+        private WindowState windowState = WindowState.Normal;
 
         public MainWindowViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.TileBoardSizeChanged,
-                o => this.OnTileBoardInitialized(o));
+            Mediator.Instance.Register(
+                ViewModelMessages.TileBoardSizeChanged,
+                o => this.OnTileBoardInitialized(
+                    o));
 
             this.minWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
             this.width = this.minWidth;
             this.ViewModel = new MinesweeperViewModel();
 
             this.PositionWindow();
-        }
-
-        private void OnTileBoardInitialized(object paramter)
-        {
-            if (!this.initialized)
-            {
-                this.initialized = true;
-                this.MinWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
-                this.MinHeight = ViewModelBase.Settings.LastWindowMinSize.Height;
-                this.SizeToContentMode = SizeToContent.Manual;
-                return;
-            }
-
-            this.MinWidth = 0;
-            this.MinHeight = 0;
-            this.SizeToContentMode = SizeToContent.WidthAndHeight;
-            this.MinWidth = this.width;
-            this.MinHeight = this.height;
-            this.SizeToContentMode = SizeToContent.Manual;
-
-            ViewModelBase.Settings.LastWindowMinSize = new Size(this.width,
-                this.height);
-        }
-
-        private void PositionWindow()
-        {
-            if (ViewModelBase.Settings.LastLocation.X < 0 || ViewModelBase.Settings.LastLocation.Y < 0)
-            {
-                this.CenterWindow();
-            }
-            else
-            {
-                var point = ViewModelBase.Settings.LastLocation;
-                this.Left = point.X;
-                this.Top = point.Y;
-            }
-        }
-
-        private void CenterWindow()
-        {
-            this.Left = (SystemParameters.FullPrimaryScreenWidth - this.width)/2;
-            this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height)/2;
         }
 
         public ViewModelBase ViewModel
@@ -118,7 +72,8 @@
                 if (this.windowState != value)
                 {
                     this.windowState = value;
-                    Mediator.Instance.Notify(ViewModelMessages.GameWindowStateChanged,
+                    Mediator.Instance.Notify(
+                        ViewModelMessages.GameWindowStateChanged,
                         value);
                     this.OnPropertyChanged();
                 }
@@ -223,6 +178,48 @@
                     this.OnPropertyChanged();
                 }
             }
+        }
+
+        private void OnTileBoardInitialized(object paramter)
+        {
+            if (!this.initialized)
+            {
+                this.initialized = true;
+                this.MinWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
+                this.MinHeight = ViewModelBase.Settings.LastWindowMinSize.Height;
+                this.SizeToContentMode = SizeToContent.Manual;
+                return;
+            }
+
+            this.MinWidth = 0;
+            this.MinHeight = 0;
+            this.SizeToContentMode = SizeToContent.WidthAndHeight;
+            this.MinWidth = this.width;
+            this.MinHeight = this.height;
+            this.SizeToContentMode = SizeToContent.Manual;
+
+            ViewModelBase.Settings.LastWindowMinSize = new Size(this.width,
+                this.height);
+        }
+
+        private void PositionWindow()
+        {
+            if (ViewModelBase.Settings.LastLocation.X < 0 || ViewModelBase.Settings.LastLocation.Y < 0)
+            {
+                this.CenterWindow();
+            }
+            else
+            {
+                var point = ViewModelBase.Settings.LastLocation;
+                this.Left = point.X;
+                this.Top = point.Y;
+            }
+        }
+
+        private void CenterWindow()
+        {
+            this.Left = (SystemParameters.FullPrimaryScreenWidth - this.width)/2;
+            this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height)/2;
         }
     }
 }

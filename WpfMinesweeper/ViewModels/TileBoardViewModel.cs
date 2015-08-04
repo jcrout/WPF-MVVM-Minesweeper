@@ -3,31 +3,31 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Windows;
-    using Models;
-    using Controls;
     using System.Windows.Input;
-    using System.Timers;
-    using JonUtility;
     using System.Windows.Media;
+    using Controls;
+    using Models;
 
     public class TileBoardViewModel : MinesweeperComponentViewModel
     {
         private static readonly Brush defaultTileBrush = ViewModelBase.Settings.TileBrush;
 
-        private static readonly Brush defaultSelectionBrush = new SolidColorBrush(Color.FromArgb(150,
+        private static readonly Brush defaultSelectionBrush = new SolidColorBrush(Color.FromArgb(
+            150,
             150,
             150,
             150));
 
-        private static readonly Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(110,
+        private static readonly Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(
+            110,
             255,
             255,
             255));
 
-        private static readonly Brush mineClickBrush = new SolidColorBrush(Color.FromArgb(80,
+        private static readonly Brush mineClickBrush = new SolidColorBrush(Color.FromArgb(
+            80,
             255,
             0,
             0));
@@ -37,76 +37,51 @@
         private static readonly Point emptyPoint = new Point(-1,
             -1);
 
-        private ICommand tileHoverCommand;
-        private ICommand tileTapCommand;
-        private ICommand boardInitializedCommand;
-        private TileShadingMode tileShadingMode = TileShadingMode.SingleTile;
-        private AnimatedTilesCollection tilesToUpdate;
-        private AnimatedTilesCollection selectedTiles;
-        private Brush selectionBrush;
-        private Brush hoverBrush;
-        private Brush tileBrush;
-        private Point hoverTilePoint = TileBoardViewModel.emptyPoint;
-        private Func<int, int, Task> revealSurroundingTiles;
-        private bool boardInitialized;
-        private bool isGameOver;
-        private bool isVictory;
         private readonly bool areQuestionMarksEnabled = true;
+        private readonly int maxSafeSpotsAroundFirstClick = 5;
+        private readonly int maxStackSize = 2000;
+        private readonly int minSafeSpotsAroundFirstClick = 1;
+        private bool boardInitialized;
+        private ICommand boardInitializedCommand;
+        private Brush hoverBrush;
+        private Point hoverTilePoint = TileBoardViewModel.emptyPoint;
+        private bool isGameOver;
+        private bool isTilePressed = false;
+        private bool isVictory;
+        private int lastBoardHeight = 0;
+        private int lastBoardWidth = 0;
         private bool leftAndRightMouseDown = false;
         private bool leftMouseDown = false;
-        private bool isTilePressed = false;
-        private readonly int minSafeSpotsAroundFirstClick = 1;
-        private readonly int maxSafeSpotsAroundFirstClick = 5;
         private int revealedSpaces = 0;
+        private Func<int, int, Task> revealSurroundingTiles;
+        private AnimatedTilesCollection selectedTiles;
+        private Brush selectionBrush;
         private int targetSpaceCount = 0;
-        private readonly int maxStackSize = 2000;
-        private int lastBoardWidth = 0;
-        private int lastBoardHeight = 0;
+        private Brush tileBrush;
+        private ICommand tileHoverCommand;
+        private TileShadingMode tileShadingMode = TileShadingMode.SingleTile;
+        private AnimatedTilesCollection tilesToUpdate;
+        private ICommand tileTapCommand;
 
         public TileBoardViewModel()
         {
             this.TileBrush = TileBoardViewModel.defaultTileBrush;
-            this.TileHoverCommand = new Command(o => this.OnTileHover((TileEventArgs) o),
+            this.TileHoverCommand = new Command(o => this.OnTileHover(
+                (TileEventArgs)o),
                 () => this.CanInteractWithBoard());
-            this.TileTapCommand = new Command(o => this.OnTileTap((TileTapEventArgs) o),
+            this.TileTapCommand = new Command(o => this.OnTileTap(
+                (TileTapEventArgs)o),
                 () => this.CanInteractWithBoard());
-            this.boardInitializedCommand = new Command(o => this.OnTileBoardInitialized(o));
+            this.boardInitializedCommand = new Command(o => this.OnTileBoardInitialized(
+                o));
 
-            Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged,
+            Mediator.Instance.Notify(
+                ViewModelMessages.TileColorsChanged,
                 TileBoardViewModel.defaultTileBrush);
-            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged,
-                o => this.UpdateTileBrush((Brush) o));
-        }
-
-        /// <summary>
-        /// Sets the revealSurroundingTiles delegate, depending on the board size. If a stackoverflow exception is a possiblity
-        /// due to a large number of tiles, then a non-recursive method is used. If it is not a possibility, then the faster
-        /// recursive method is used.
-        /// </summary>
-        private void SetRevealTileMethod()
-        {
-            if (this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height < this.maxStackSize)
-            {
-                this.revealSurroundingTiles = this.RevealSurroundingTiles;
-            }
-            else
-            {
-                this.revealSurroundingTiles = this.RevealSurroundingTiles2;
-            }
-        }
-
-        protected override void OnMinesweeperChanged()
-        {
-            this.targetSpaceCount = (this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height) - this.Minesweeper.MineCount;
-            this.SetRevealTileMethod();
-            this.boardInitialized = false;
-            this.IsGameOver = false;
-            this.IsVictory = false;
-            this.leftAndRightMouseDown = false;
-            this.revealedSpaces = 0;
-            this.SelectionBrush = TileBoardViewModel.defaultSelectionBrush;
-            this.HoverBrush = TileBoardViewModel.defaultHoverBrush;
-            this.IsTilePressed = false;
+            Mediator.Instance.Register(
+                ViewModelMessages.TileColorsChanged,
+                o => this.UpdateTileBrush(
+                    (Brush)o));
         }
 
         public ICommand BoardInitializedCommand
@@ -282,7 +257,8 @@
                 if (this.isTilePressed != value)
                 {
                     this.isTilePressed = value;
-                    Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex,
+                    Mediator.Instance.Notify(
+                        ViewModelMessages.UpdateSmileyIndex,
                         value ? SmileyState.TapDown : SmileyState.Default);
                     this.OnPropertyChanged();
                 }
@@ -321,6 +297,37 @@
             }
         }
 
+        /// <summary>
+        ///     Sets the revealSurroundingTiles delegate, depending on the board size. If a stackoverflow exception is a possiblity
+        ///     due to a large number of tiles, then a non-recursive method is used. If it is not a possibility, then the faster
+        ///     recursive method is used.
+        /// </summary>
+        private void SetRevealTileMethod()
+        {
+            if (this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height < this.maxStackSize)
+            {
+                this.revealSurroundingTiles = this.RevealSurroundingTiles;
+            }
+            else
+            {
+                this.revealSurroundingTiles = this.RevealSurroundingTiles2;
+            }
+        }
+
+        protected override void OnMinesweeperChanged()
+        {
+            this.targetSpaceCount = (this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height) - this.Minesweeper.MineCount;
+            this.SetRevealTileMethod();
+            this.boardInitialized = false;
+            this.IsGameOver = false;
+            this.IsVictory = false;
+            this.leftAndRightMouseDown = false;
+            this.revealedSpaces = 0;
+            this.SelectionBrush = TileBoardViewModel.defaultSelectionBrush;
+            this.HoverBrush = TileBoardViewModel.defaultHoverBrush;
+            this.IsTilePressed = false;
+        }
+
         private void UpdateTileBrush(Brush brush)
         {
             this.TileBrush = brush;
@@ -330,7 +337,8 @@
         {
             if (this.Minesweeper.Tiles.Width != this.lastBoardWidth || this.Minesweeper.Tiles.Height != this.lastBoardHeight)
             {
-                Mediator.Instance.Notify(ViewModelMessages.TileBoardSizeChanged,
+                Mediator.Instance.Notify(
+                    ViewModelMessages.TileBoardSizeChanged,
                     parameter);
 
                 this.lastBoardWidth = this.Minesweeper.Tiles.Width;
@@ -369,7 +377,8 @@
                 this.HoverTile = TileBoardViewModel.emptyPoint;
                 if (this.selectedTiles != null)
                 {
-                    this.SelectSurroundingTiles(e);
+                    this.SelectSurroundingTiles(
+                        e);
                 }
             }
         }
@@ -381,13 +390,16 @@
                 this.leftMouseDown = true;
             }
 
-            if (e.AllButtonStates.HasFlag(InputButtons.Left) && e.AllButtonStates.HasFlag(InputButtons.Right))
+            if (e.AllButtonStates.HasFlag(
+                InputButtons.Left) && e.AllButtonStates.HasFlag(
+                    InputButtons.Right))
             {
                 if (e.TileEventArgs.Tile.Shown)
                 {
                     if (e.PressedDown)
                     {
-                        this.LeftRightDown(e.TileEventArgs);
+                        this.LeftRightDown(
+                            e.TileEventArgs);
                     }
                     else
                     {
@@ -406,27 +418,32 @@
             {
                 if (e.DoubleClicked)
                 {
-                    this.LeftDoubleClicked(e.TileEventArgs);
+                    this.LeftDoubleClicked(
+                        e.TileEventArgs);
                 }
                 else if (!e.PressedDown)
                 {
-                    this.TileTapLeftUp(e.TileEventArgs);
+                    this.TileTapLeftUp(
+                        e.TileEventArgs);
                     this.leftAndRightMouseDown = false;
                 }
                 else
                 {
-                    this.TileTapLeftDown(e.TileEventArgs);
+                    this.TileTapLeftDown(
+                        e.TileEventArgs);
                 }
             }
             else if (e.Button == InputButtons.Right)
             {
                 if (e.PressedDown)
                 {
-                    this.TileTapRightDown(e.TileEventArgs);
+                    this.TileTapRightDown(
+                        e.TileEventArgs);
                 }
                 else
                 {
-                    this.TileTapRightUp(e.TileEventArgs);
+                    this.TileTapRightUp(
+                        e.TileEventArgs);
                     this.leftAndRightMouseDown = false;
                 }
             }
@@ -439,18 +456,20 @@
                 return;
             }
 
-            this.CheckFlagCountAndSurroundingTiles(e);
+            this.CheckFlagCountAndSurroundingTiles(
+                e);
         }
 
         private void CheckFlagCountAndSurroundingTiles(TileEventArgs e)
         {
-            var surroundingTiles = this.GetSurroundingTiles(e.X,
+            var surroundingTiles = this.GetSurroundingTiles(
+                e.X,
                 e.Y);
             var flaggedTiles = (from tilePoint in surroundingTiles
-                let tile = this.Minesweeper.Tiles[(int) tilePoint.X,
-                    (int) tilePoint.Y]
-                where (!tile.Shown) && (tile.ExtraTileData == ExtraTileData.Flag)
-                select tilePoint).ToList();
+                                let tile = this.Minesweeper.Tiles[(int)tilePoint.X,
+                                    (int)tilePoint.Y]
+                                where (!tile.Shown) && (tile.ExtraTileData == ExtraTileData.Flag)
+                                select tilePoint).ToList();
 
             int mineCount = e.Tile.Type.Value;
 
@@ -458,10 +477,11 @@
             {
                 foreach (var tile in flaggedTiles)
                 {
-                    if (this.Minesweeper.Tiles[(int) tile.X,
-                        (int) tile.Y].Type != TileType.Mine)
+                    if (this.Minesweeper.Tiles[(int)tile.X,
+                        (int)tile.Y].Type != TileType.Mine)
                     {
-                        this.GameOver(e.X,
+                        this.GameOver(
+                            e.X,
                             e.Y);
                         return;
                     }
@@ -469,12 +489,13 @@
 
                 foreach (var tilePoint in surroundingTiles)
                 {
-                    var tile = this.Minesweeper.Tiles[(int) tilePoint.X,
-                        (int) tilePoint.Y];
+                    var tile = this.Minesweeper.Tiles[(int)tilePoint.X,
+                        (int)tilePoint.Y];
                     if (!tile.Shown && tile.ExtraTileData != ExtraTileData.Flag)
                     {
-                        this.revealSurroundingTiles((int) tilePoint.X,
-                            (int) tilePoint.Y);
+                        this.revealSurroundingTiles(
+                            (int)tilePoint.X,
+                            (int)tilePoint.Y);
                     }
                 }
             }
@@ -482,8 +503,9 @@
 
         private void UpdateTileListAndCheckForVictory(List<Point> updateTileList)
         {
-            this.GameStatistics[Statistic.Moves] = (int) this.GameStatistics[Statistic.Moves] + 1;
-            this.TilesToUpdate = AnimatedTilesCollection.Create(updateTileList);
+            this.GameStatistics[Statistic.Moves] = (int)this.GameStatistics[Statistic.Moves] + 1;
+            this.TilesToUpdate = AnimatedTilesCollection.Create(
+                updateTileList);
 
             if (this.revealedSpaces == this.targetSpaceCount)
             {
@@ -499,7 +521,8 @@
                 return;
             }
 
-            this.SelectSurroundingTiles(e);
+            this.SelectSurroundingTiles(
+                e);
         }
 
         private void TileTapLeftDown(TileEventArgs e)
@@ -522,14 +545,17 @@
 
             if (!this.boardInitialized)
             {
-                await Task.Run(() => this.GenerateMinefield(e.X,
-                    e.Y));
+                await Task.Run(
+                    () => this.GenerateMinefield(
+                        e.X,
+                        e.Y));
                 this.GameStatistics[Statistic.GameStartTime] = DateTime.Now;
             }
 
             if (this.leftAndRightMouseDown)
             {
-                this.CheckFlagCountAndSurroundingTiles(e);
+                this.CheckFlagCountAndSurroundingTiles(
+                    e);
                 this.HoverTile = TileBoardViewModel.emptyPoint;
                 return;
             }
@@ -541,12 +567,14 @@
 
             if (e.Tile.Type == TileType.Mine)
             {
-                this.GameOver(e.X,
+                this.GameOver(
+                    e.X,
                     e.Y);
             }
             else
             {
-                await this.revealSurroundingTiles(e.X,
+                await this.revealSurroundingTiles(
+                    e.X,
                     e.Y);
                 this.HoverTile = TileBoardViewModel.emptyPoint;
             }
@@ -554,7 +582,8 @@
             if (!this.boardInitialized && this.CanInteractWithBoard())
             {
                 this.boardInitialized = true;
-                Mediator.Instance.Notify(ViewModelMessages.GameStarted);
+                Mediator.Instance.Notify(
+                    ViewModelMessages.GameStarted);
             }
         }
 
@@ -569,29 +598,32 @@
             {
                 if (e.Tile.ExtraTileData == ExtraTileData.None)
                 {
-                    this.SetTile(e.X,
+                    this.SetTile(
+                        e.X,
                         e.Y,
                         new Tile(
                             e.Tile.Type,
                             e.Tile.Shown,
                             ExtraTileData.Flag));
                     this.Minesweeper.MinesRemaining--;
-                    this.GameStatistics[Statistic.FlagsPlaced] = (int) this.GameStatistics[Statistic.FlagsPlaced] + 1;
+                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] + 1;
                 }
                 else if (e.Tile.ExtraTileData == ExtraTileData.Flag)
                 {
-                    this.SetTile(e.X,
+                    this.SetTile(
+                        e.X,
                         e.Y,
                         new Tile(
                             e.Tile.Type,
                             e.Tile.Shown,
                             (this.areQuestionMarksEnabled) ? ExtraTileData.QuestionMark : ExtraTileData.None));
                     this.Minesweeper.MinesRemaining++;
-                    this.GameStatistics[Statistic.FlagsPlaced] = (int) this.GameStatistics[Statistic.FlagsPlaced] - 1;
+                    this.GameStatistics[Statistic.FlagsPlaced] = (int)this.GameStatistics[Statistic.FlagsPlaced] - 1;
                 }
                 else // ExtraTileData.QuestionMark
                 {
-                    this.SetTile(e.X,
+                    this.SetTile(
+                        e.X,
                         e.Y,
                         new Tile(
                             e.Tile.Type,
@@ -612,7 +644,8 @@
         {
             if (this.leftAndRightMouseDown)
             {
-                this.CheckFlagCountAndSurroundingTiles(e);
+                this.CheckFlagCountAndSurroundingTiles(
+                    e);
                 return;
             }
         }
@@ -620,37 +653,46 @@
         private async Task RevealSurroundingTiles(int x, int y)
         {
             var updateTileList = new List<Point>();
-            await Task.Run(() => this.CheckSurroundingTiles(updateTileList,
-                x,
-                y)).ConfigureAwait(true);
-            this.UpdateTileListAndCheckForVictory(updateTileList);
+            await Task.Run(
+                () => this.CheckSurroundingTiles(
+                    updateTileList,
+                    x,
+                    y)).ConfigureAwait(
+                        true);
+            this.UpdateTileListAndCheckForVictory(
+                updateTileList);
         }
 
         private async Task RevealSurroundingTiles2(int x, int y)
         {
             var updateTileList = new List<Point>();
-            await Task.Run(() =>
-            {
-                List<Point> tilesToCheck = new List<Point>
+            await Task.Run(
+                () =>
                 {
-                    new Point(x,
-                        y)
-                };
-                do
-                {
-                    var newList = new List<Point>();
-                    foreach (var point in tilesToCheck)
+                    List<Point> tilesToCheck = new List<Point>
                     {
-                        newList.AddRange(this.CheckSurroundingTiles_NonRecursive(updateTileList,
-                            (int) point.X,
-                            (int) point.Y));
-                    }
+                        new Point(x,
+                            y)
+                    };
+                    do
+                    {
+                        var newList = new List<Point>();
+                        foreach (var point in tilesToCheck)
+                        {
+                            newList.AddRange(
+                                this.CheckSurroundingTiles_NonRecursive(
+                                    updateTileList,
+                                    (int)point.X,
+                                    (int)point.Y));
+                        }
 
-                    tilesToCheck = newList;
-                } while (tilesToCheck.Count > 0);
-            }).ConfigureAwait(true);
+                        tilesToCheck = newList;
+                    } while (tilesToCheck.Count > 0);
+                }).ConfigureAwait(
+                    true);
 
-            this.UpdateTileListAndCheckForVictory(updateTileList);
+            this.UpdateTileListAndCheckForVictory(
+                updateTileList);
         }
 
         private bool CanInteractWithBoard()
@@ -660,14 +702,15 @@
 
         private Tile GetTile(Point tilePoint)
         {
-            return this.Minesweeper.Tiles[(int) tilePoint.X,
-                (int) tilePoint.Y];
+            return this.Minesweeper.Tiles[(int)tilePoint.X,
+                (int)tilePoint.Y];
         }
 
         private void SetTile(Point tilePoint, Tile value)
         {
-            this.SetTile((int) tilePoint.X,
-                (int) tilePoint.Y,
+            this.SetTile(
+                (int)tilePoint.X,
+                (int)tilePoint.Y,
                 value);
         }
 
@@ -695,13 +738,15 @@
 
                     if (tile.Type == TileType.Mine && tile.ExtraTileData != ExtraTileData.Flag)
                     {
-                        this.SetTile(r,
+                        this.SetTile(
+                            r,
                             c,
                             new Tile(TileType.Mine,
                                 false,
                                 ExtraTileData.Flag));
-                        list.Add(new Point(r,
-                            c));
+                        list.Add(
+                            new Point(r,
+                                c));
                     }
                 }
             }
@@ -710,15 +755,17 @@
 
             if (list.Count > 0)
             {
-                this.TilesToUpdate = AnimatedTilesCollection.Create(list);
+                this.TilesToUpdate = AnimatedTilesCollection.Create(
+                    list);
             }
 
             this.IsVictory = true;
-            Mediator.Instance.Notify(ViewModelMessages.Victory);
+            Mediator.Instance.Notify(
+                ViewModelMessages.Victory);
         }
 
         /// <summary>
-        /// This method is called on GameOver, which occurs when a mine tile is left-clicked.
+        ///     This method is called on GameOver, which occurs when a mine tile is left-clicked.
         /// </summary>
         private void GameOver(int clickX, int clickY)
         {
@@ -732,12 +779,14 @@
                         c];
                     if (tile.Type == TileType.Mine)
                     {
-                        this.SetTile(r,
+                        this.SetTile(
+                            r,
                             c,
                             new Tile(tile.Type,
                                 true));
-                        list.Add(new Point(r,
-                            c));
+                        list.Add(
+                            new Point(r,
+                                c));
                     }
                 }
             }
@@ -746,7 +795,8 @@
             this.HoverTile = new Point(-1,
                 -1);
 
-            this.TilesToUpdate = AnimatedTilesCollection.Create(list);
+            this.TilesToUpdate = AnimatedTilesCollection.Create(
+                list);
             if (clickX > -1 && clickY > 0)
             {
                 this.SelectionBrush = TileBoardViewModel.mineClickBrush;
@@ -756,35 +806,39 @@
                 // mine was clicked, causing game over
                 if (tile.Type == TileType.Mine)
                 {
-                    this.SelectedTiles = AnimatedTilesCollection.Create(new List<Point>(1)
-                    {
-                        new Point(clickX,
-                            clickY)
-                    });
+                    this.SelectedTiles = AnimatedTilesCollection.Create(
+                        new List<Point>(1)
+                        {
+                            new Point(clickX,
+                                clickY)
+                        });
                 }
                 else
                 {
-                    var mineTiles = (from tilePoint in this.GetSurroundingTiles(clickX,
+                    var mineTiles = (from tilePoint in this.GetSurroundingTiles(
+                        clickX,
                         clickY)
-                        let surroundingTile = this.Minesweeper.Tiles[(int) tilePoint.X,
-                            (int) tilePoint.Y]
-                        where (surroundingTile.Type == TileType.Mine)
-                        select tilePoint).ToList();
-                    this.SelectedTiles = AnimatedTilesCollection.Create(mineTiles);
+                                     let surroundingTile = this.Minesweeper.Tiles[(int)tilePoint.X,
+                                         (int)tilePoint.Y]
+                                     where (surroundingTile.Type == TileType.Mine)
+                                     select tilePoint).ToList();
+                    this.SelectedTiles = AnimatedTilesCollection.Create(
+                        mineTiles);
                 }
             }
 
-            Mediator.Instance.Notify(ViewModelMessages.GameOver);
+            Mediator.Instance.Notify(
+                ViewModelMessages.GameOver);
         }
 
         /// <summary>
-        /// Sets the current tile equal to the mine count, appends the list of tiles to update, and recursively checks the
-        /// surrounding tiles if the current tile's mine count is zero.
+        ///     Sets the current tile equal to the mine count, appends the list of tiles to update, and recursively checks the
+        ///     surrounding tiles if the current tile's mine count is zero.
         /// </summary>
         /// <remarks>
-        /// This method checks each of the un-flipped surrounding tiles centered on the x and y coordinate parameters.
-        /// Each call adds the tile point to the list. If there are zero mines surrounding this coordinate, an empty
-        /// tile is set and this method is called recursively on each of the valid surrounding tiles.
+        ///     This method checks each of the un-flipped surrounding tiles centered on the x and y coordinate parameters.
+        ///     Each call adds the tile point to the list. If there are zero mines surrounding this coordinate, an empty
+        ///     tile is set and this method is called recursively on each of the valid surrounding tiles.
         /// </remarks>
         /// <param name="tiles">The cumulative list of tile points to populate.</param>
         /// <param name="x">The X coordinate of the tile.</param>
@@ -809,18 +863,22 @@
                 }
             }
 
-            tiles.Add(new Point(x,
-                y));
+            tiles.Add(
+                new Point(x,
+                    y));
             if (count > 0)
             {
-                this.SetTile(x,
+                this.SetTile(
+                    x,
                     y,
-                    new Tile(TileType.Number(count),
+                    new Tile(TileType.Number(
+                        count),
                         true));
             }
             else
             {
-                this.SetTile(x,
+                this.SetTile(
+                    x,
                     y,
                     new Tile(TileType.EmptySpace,
                         true));
@@ -836,9 +894,11 @@
                             {
                                 if (tile.Shown)
                                 {
-                                    Console.WriteLine("ee");
+                                    Console.WriteLine(
+                                        "ee");
                                 }
-                                this.CheckSurroundingTiles(tiles,
+                                this.CheckSurroundingTiles(
+                                    tiles,
                                     r,
                                     c);
                             }
@@ -849,16 +909,16 @@
         }
 
         /// <summary>
-        /// Returns a list of surrounding tiles needing to be checked while adding to the list of tiles needing updated.
+        ///     Returns a list of surrounding tiles needing to be checked while adding to the list of tiles needing updated.
         /// </summary>
         /// <returns>
-        /// This method then returns the list of tiles that need checked. An empty list is returned if the current
-        /// tile is a number. If the tile is an empty space, then it returns a list of surrounding tiles that
-        /// are not yet defined that haven't already been added to the cumulative list.
+        ///     This method then returns the list of tiles that need checked. An empty list is returned if the current
+        ///     tile is a number. If the tile is an empty space, then it returns a list of surrounding tiles that
+        ///     are not yet defined that haven't already been added to the cumulative list.
         /// </returns>
         /// <remarks>
-        /// This method checks each of the un-flipped surrounding tiles centered on the x and y coordinate parameters.
-        /// Each call adds the tile point to the list. The list of surrounding tiles is then returned.
+        ///     This method checks each of the un-flipped surrounding tiles centered on the x and y coordinate parameters.
+        ///     Each call adds the tile point to the list. The list of surrounding tiles is then returned.
         /// </remarks>
         /// <param name="tiles">The cumulative list of tile points to populate.</param>
         /// <param name="x">The X coordinate of the tile.</param>
@@ -866,8 +926,9 @@
         private List<Point> CheckSurroundingTiles_NonRecursive(List<Point> tiles, int x, int y)
         {
             var tilesToCheck = new List<Point>();
-            tiles.Add(new Point(x,
-                y));
+            tiles.Add(
+                new Point(x,
+                    y));
 
             int count = 0;
             int left = x > 0 ? x - 1 : x;
@@ -889,14 +950,17 @@
 
             if (count > 0)
             {
-                this.SetTile(x,
+                this.SetTile(
+                    x,
                     y,
-                    new Tile(TileType.Number(count),
+                    new Tile(TileType.Number(
+                        count),
                         true));
             }
             else
             {
-                this.SetTile(x,
+                this.SetTile(
+                    x,
                     y,
                     new Tile(TileType.EmptySpace,
                         true));
@@ -910,12 +974,14 @@
                                 c];
                             if (tile.Type == TileType.Unset && !tile.Shown && tile.ExtraTileData != ExtraTileData.Flag)
                             {
-                                this.SetTile(x,
+                                this.SetTile(
+                                    x,
                                     y,
                                     new Tile(TileType.Unset,
                                         true));
-                                tilesToCheck.Add(new Point(r,
-                                    c));
+                                tilesToCheck.Add(
+                                    new Point(r,
+                                        c));
                             }
                         }
                     }
@@ -939,8 +1005,9 @@
                 {
                     if (r != x || c != y)
                     {
-                        list.Add(new Point(r,
-                            c));
+                        list.Add(
+                            new Point(r,
+                                c));
                     }
                 }
             }
@@ -950,21 +1017,23 @@
 
         private void SelectSurroundingTiles(TileEventArgs e)
         {
-            var tiles = (from tilePoint in this.GetSurroundingTiles(e.X,
+            var tiles = (from tilePoint in this.GetSurroundingTiles(
+                e.X,
                 e.Y)
-                let tile = this.Minesweeper.Tiles[(int) tilePoint.X,
-                    (int) tilePoint.Y]
-                where (!tile.Shown) && (tile.ExtraTileData == ExtraTileData.None)
-                select tilePoint).ToList();
+                         let tile = this.Minesweeper.Tiles[(int)tilePoint.X,
+                             (int)tilePoint.Y]
+                         where (!tile.Shown) && (tile.ExtraTileData == ExtraTileData.None)
+                         select tilePoint).ToList();
 
-            this.SelectedTiles = tiles.Count > 0 ? AnimatedTilesCollection.Create(tiles) : null;
+            this.SelectedTiles = tiles.Count > 0 ? AnimatedTilesCollection.Create(
+                tiles) : null;
         }
 
         /// <summary>
-        /// This method calculates and returns a list of safe tiles around the first tile clicked. Safe tiles are those that
-        /// are not mines and are adjacent to or within a specified radial range of the first tile clicked. This is done to
-        /// increase the odds of the first click containing more than just a single number and decrease the odds of the first
-        /// click being a high number like 8.
+        ///     This method calculates and returns a list of safe tiles around the first tile clicked. Safe tiles are those that
+        ///     are not mines and are adjacent to or within a specified radial range of the first tile clicked. This is done to
+        ///     increase the odds of the first click containing more than just a single number and decrease the odds of the first
+        ///     click being a high number like 8.
         /// </summary>
         /// <param name="clickX">The X coordinate of the first tile clicked.</param>
         /// <param name="clickY">The Y coordinate of the first tile clicked.</param>
@@ -977,11 +1046,13 @@
 
             if (this.minSafeSpotsAroundFirstClick != this.maxSafeSpotsAroundFirstClick)
             {
-                safeSpotCount = TileBoardViewModel.randomGenerator.Next(this.minSafeSpotsAroundFirstClick,
+                safeSpotCount = TileBoardViewModel.randomGenerator.Next(
+                    this.minSafeSpotsAroundFirstClick,
                     this.maxSafeSpotsAroundFirstClick + 1);
             }
 
-            safeSpotCount = Math.Min(safeSpotCount,
+            safeSpotCount = Math.Min(
+                safeSpotCount,
                 nonMineCount - 1);
             if (safeSpotCount == 0)
             {
@@ -989,22 +1060,27 @@
             }
 
             var safeList = new List<int>(safeSpotCount) {(clickY*this.Minesweeper.Tiles.Width) + clickX};
-            var surroundingTiles = this.GetSurroundingTiles(clickX,
+            var surroundingTiles = this.GetSurroundingTiles(
+                clickX,
                 clickY,
                 1);
             int surroundingTileCount = surroundingTiles.Count - 1;
             for (int i = 0; i < safeSpotCount; i++)
             {
-                int randomIndex = TileBoardViewModel.randomGenerator.Next(0,
+                int randomIndex = TileBoardViewModel.randomGenerator.Next(
+                    0,
                     surroundingTiles.Count);
                 var tilePoint = surroundingTiles[randomIndex];
-                surroundingTiles.RemoveAt(randomIndex);
+                surroundingTiles.RemoveAt(
+                    randomIndex);
 
-                safeList.Add((int) ((tilePoint.Y*this.Minesweeper.Tiles.Width) + tilePoint.X));
+                safeList.Add(
+                    (int)((tilePoint.Y*this.Minesweeper.Tiles.Width) + tilePoint.X));
 
                 if (i == surroundingTileCount)
                 {
-                    surroundingTiles = this.GetSurroundingTiles(clickX,
+                    surroundingTiles = this.GetSurroundingTiles(
+                        clickX,
                         clickY,
                         2);
                 }
@@ -1015,18 +1091,20 @@
         }
 
         /// <summary>
-        /// Generates the minefield centered around the first tile clicked.
+        ///     Generates the minefield centered around the first tile clicked.
         /// </summary>
         /// <remarks>
-        /// This method randomly determines the location of each mine on the board. The first tile clicked is excluded. An
-        /// additional set of tiles may be added to the exclusion list depending on the minimum/maximum number of safe spots
-        /// around the clicked tile and also on the number of non-mine spaces available by calling the GetSafeTileIndexes method.
+        ///     This method randomly determines the location of each mine on the board. The first tile clicked is excluded. An
+        ///     additional set of tiles may be added to the exclusion list depending on the minimum/maximum number of safe spots
+        ///     around the clicked tile and also on the number of non-mine spaces available by calling the GetSafeTileIndexes
+        ///     method.
         /// </remarks>
         /// <param name="clickX"></param>
         /// <param name="clickY"></param>
         private void GenerateMinefield(int clickX, int clickY)
         {
-            var safeList = this.GetSafeTileIndexes(clickX,
+            var safeList = this.GetSafeTileIndexes(
+                clickX,
                 clickY);
             int spaceCount = this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height;
             int mineCount = this.Minesweeper.MineCount;
@@ -1034,13 +1112,15 @@
             var spaceList = new List<int>(spaceCount);
 
             int currentIndex = 0;
-            safeList.Add(this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height);
+            safeList.Add(
+                this.Minesweeper.Tiles.Width*this.Minesweeper.Tiles.Height);
             for (int i = 0; i < safeList.Count; i++)
             {
                 int targetIndex = safeList[i];
                 for (int i2 = currentIndex; i2 < targetIndex; i2++)
                 {
-                    spaceList.Add(i2);
+                    spaceList.Add(
+                        i2);
                 }
 
                 currentIndex = targetIndex + 1;
@@ -1048,13 +1128,17 @@
 
             for (int i = 0; i < mineCount; i++)
             {
-                int randomIndex = TileBoardViewModel.randomGenerator.Next(0,
+                int randomIndex = TileBoardViewModel.randomGenerator.Next(
+                    0,
                     spaceList.Count);
                 int randomSpace = spaceList[randomIndex];
-                spaceList.RemoveAt(randomIndex);
-                int y = (int) Math.Floor((double) randomSpace/this.Minesweeper.Tiles.Width);
+                spaceList.RemoveAt(
+                    randomIndex);
+                int y = (int)Math.Floor(
+                    (double)randomSpace/this.Minesweeper.Tiles.Width);
                 int x = randomSpace%this.Minesweeper.Tiles.Width;
-                this.SetTile(x,
+                this.SetTile(
+                    x,
                     y,
                     new Tile(TileType.Mine,
                         false));

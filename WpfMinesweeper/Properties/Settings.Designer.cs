@@ -25,7 +25,7 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-300,-300")]
+        [global::System.Configuration.DefaultSettingValueAttribute(" -300,-300 ")]
         public global::System.Windows.Point LastLocation {
             get {
                 return ((global::System.Windows.Point)(this["LastLocation"]));
@@ -48,7 +48,7 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FF5F9EA0")]
+        [global::System.Configuration.DefaultSettingValueAttribute(" #FF5F9EA0 ")]
         public global::System.Windows.Media.SolidColorBrush TileBrushSolid {
             get {
                 return ((global::System.Windows.Media.SolidColorBrush)(this["TileBrushSolid"]));
@@ -60,7 +60,7 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FF5F9EA0")]
+        [global::System.Configuration.DefaultSettingValueAttribute(" #FF5F9EA0 ")]
         public global::System.Windows.Media.Color TileColor {
             get {
                 return ((global::System.Windows.Media.Color)(this["TileColor"]));
@@ -72,7 +72,7 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("261")]
+        [global::System.Configuration.DefaultSettingValueAttribute(" 261 ")]
         public double LastWindowMinHeight {
             get {
                 return ((double)(this["LastWindowMinHeight"]));
@@ -84,7 +84,7 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("170")]
+        [global::System.Configuration.DefaultSettingValueAttribute(" 170 ")]
         public double LastWindowMinWidth {
             get {
                 return ((double)(this["LastWindowMinWidth"]));
@@ -96,7 +96,7 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("261,170")]
+        [global::System.Configuration.DefaultSettingValueAttribute(" 261,170 ")]
         public global::System.Windows.Size LastWindowMinSize {
             get {
                 return ((global::System.Windows.Size)(this["LastWindowMinSize"]));

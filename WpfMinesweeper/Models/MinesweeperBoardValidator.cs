@@ -1,11 +1,5 @@
 ﻿namespace WpfMinesweeper.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     public interface IMinesweeperBoardValidator
     {
         string ValidateBoard(int width, int height, int mineCount);
@@ -29,26 +23,28 @@
             MinesweeperBoardValidator.defaultMinesweeperBoardValidator = new MinesweeperBoardValidator();
         }
 
-        public static IMinesweeperBoardValidator Create()
+        private MinesweeperBoardValidator()
         {
-            return MinesweeperBoardValidator.defaultMinesweeperBoardValidator;
         }
 
         public string ValidateBoard(int width, int height, int mineCount)
         {
-            string validateWidth = this.ValidateWidth(width);
+            string validateWidth = this.ValidateWidth(
+                width);
             if (validateWidth != null)
             {
                 return validateWidth;
             }
 
-            string validateHeight = this.ValidateHeight(height);
+            string validateHeight = this.ValidateHeight(
+                height);
             if (validateHeight != null)
             {
                 return validateHeight;
             }
 
-            string validateMineCount = this.ValidateMineCount(mineCount: mineCount,
+            string validateMineCount = this.ValidateMineCount(
+                mineCount: mineCount,
                 width: width,
                 height: height);
             if (validateMineCount != null)
@@ -63,13 +59,15 @@
         {
             if (width < MinesweeperBoardValidator.minimumWidth)
             {
-                return string.Format("Board width must be greater than {0}.",
+                return string.Format(
+                    "Board width must be greater than {0}.",
                     MinesweeperBoardValidator.minimumWidth - 1);
             }
 
             if (width > MinesweeperBoardValidator.maximumWidth)
             {
-                return string.Format("Board width must be less than {0}.",
+                return string.Format(
+                    "Board width must be less than {0}.",
                     MinesweeperBoardValidator.maximumWidth + 1);
             }
 
@@ -80,13 +78,15 @@
         {
             if (height < MinesweeperBoardValidator.minimumHeight)
             {
-                return string.Format("Board height must be greater than {0}.",
+                return string.Format(
+                    "Board height must be greater than {0}.",
                     MinesweeperBoardValidator.minimumHeight - 1);
             }
 
             if (height > MinesweeperBoardValidator.maximumHeight)
             {
-                return string.Format("Board height must be less than {0}.",
+                return string.Format(
+                    "Board height must be less than {0}.",
                     MinesweeperBoardValidator.maximumHeight + 1);
             }
 
@@ -97,14 +97,16 @@
         {
             if (mineCount < MinesweeperBoardValidator.minimumMineCount)
             {
-                return string.Format("Mine count must be greater than {0}.",
+                return string.Format(
+                    "Mine count must be greater than {0}.",
                     MinesweeperBoardValidator.minimumMineCount - 1);
             }
 
             int targetMaximum = width*height - MinesweeperBoardValidator.minimumMineCountDifference;
             if (mineCount > targetMaximum)
             {
-                return string.Format("Mine count on a {0}x{1} board must be less than {2}.",
+                return string.Format(
+                    "Mine count on a {0}x{1} board must be less than {2}.",
                     width,
                     height,
                     targetMaximum);
@@ -113,8 +115,9 @@
             return null;
         }
 
-        private MinesweeperBoardValidator()
+        public static IMinesweeperBoardValidator Create()
         {
+            return MinesweeperBoardValidator.defaultMinesweeperBoardValidator;
         }
     }
 }

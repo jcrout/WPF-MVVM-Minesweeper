@@ -1,13 +1,9 @@
 ﻿namespace WpfMinesweeper.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
+    using System.Globalization;
     using System.Runtime.Serialization;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Windows.Data;
 
     [Serializable, DataContract(Name = "BoardSize", IsReference = false), TypeConverter(typeof (BoardSizeConverter))]
     public struct BoardSize : IComparable<BoardSize>
@@ -36,7 +32,7 @@
         }
 
         /// <summary>
-        /// Gets Height.
+        ///     Gets Height.
         /// </summary>
         public int Height
         {
@@ -47,7 +43,7 @@
         }
 
         /// <summary>
-        /// Gets MineCount.
+        ///     Gets MineCount.
         /// </summary>
         public int MineCount
         {
@@ -58,7 +54,7 @@
         }
 
         /// <summary>
-        /// Gets Width.
+        ///     Gets Width.
         /// </summary>
         public int Width
         {
@@ -68,32 +64,13 @@
             }
         }
 
-        public override string ToString()
-        {
-            if (this == BoardSize.beginner)
-            {
-                return "Beginner";
-            }
-            else if (this == BoardSize.intermediate)
-            {
-                return "Intermediate";
-            }
-            else if (this == BoardSize.expert)
-            {
-                return "Expert";
-            }
-            else
-            {
-                return this.Description;
-            }
-        }
-
         [IgnoreDataMember]
         public string Description
         {
             get
             {
-                return string.Format(@"{0}x{1}, {2} mines",
+                return string.Format(
+                    @"{0}x{1}, {2} mines",
                     this.width,
                     this.height,
                     this.mineCount);
@@ -124,38 +101,80 @@
             }
         }
 
+        public int CompareTo(BoardSize other)
+        {
+            int thisTotal = this.width*this.height;
+            int otherTotal = other.width*other.height;
+
+            if (thisTotal == otherTotal)
+            {
+                return this.mineCount > other.mineCount ? 1 : this.mineCount < other.mineCount ? -1 : 0;
+            }
+            else
+            {
+                return thisTotal > otherTotal ? 1 : -1;
+            }
+        }
+
+        public override string ToString()
+        {
+            if (this == BoardSize.beginner)
+            {
+                return "Beginner";
+            }
+            else if (this == BoardSize.intermediate)
+            {
+                return "Intermediate";
+            }
+            else if (this == BoardSize.expert)
+            {
+                return "Expert";
+            }
+            else
+            {
+                return this.Description;
+            }
+        }
+
         public static BoardSize Parse(string text)
         {
             if (text == null)
             {
                 throw new ArgumentNullException("text");
             }
-            else if (string.Equals(text,
+            else if (string.Equals(
+                text,
                 BoardSize.beginner.ToString()))
             {
                 return BoardSize.beginner;
             }
-            else if (string.Equals(text,
+            else if (string.Equals(
+                text,
                 BoardSize.intermediate.ToString()))
             {
                 return BoardSize.intermediate;
             }
-            else if (string.Equals(text,
+            else if (string.Equals(
+                text,
                 BoardSize.expert.ToString()))
             {
                 return BoardSize.expert;
             }
             else
             {
-                var parts = text.Split(new char[] {','},
+                var parts = text.Split(
+                    new char[] {','},
                     StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length != 3)
                 {
                     throw new FormatException("text must either be equal to the value of one of the static BoardSize properties or include width, height, and mine count delineated by commas between the numbers.");
                 }
-                return new BoardSize(int.Parse(parts[0]),
-                    int.Parse(parts[1]),
-                    int.Parse(parts[2]));
+                return new BoardSize(int.Parse(
+                    parts[0]),
+                    int.Parse(
+                        parts[1]),
+                    int.Parse(
+                        parts[2]));
             }
         }
 
@@ -171,7 +190,7 @@
                 return false;
             }
 
-            var board = (BoardSize) obj;
+            var board = (BoardSize)obj;
             return this == board;
         }
 
@@ -188,21 +207,6 @@
                     bs1.height != bs2.height ||
                     bs1.mineCount != bs2.mineCount);
         }
-
-        public int CompareTo(BoardSize other)
-        {
-            int thisTotal = this.width*this.height;
-            int otherTotal = other.width*other.height;
-
-            if (thisTotal == otherTotal)
-            {
-                return this.mineCount > other.mineCount ? 1 : this.mineCount < other.mineCount ? -1 : 0;
-            }
-            else
-            {
-                return thisTotal > otherTotal ? 1 : -1;
-            }
-        }
     }
 
     public class BoardSizeConverter : TypeConverter
@@ -214,11 +218,12 @@
                 return true;
             }
 
-            return base.CanConvertFrom(context,
+            return base.CanConvertFrom(
+                context,
                 sourceType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (value == null)
             {
@@ -227,9 +232,11 @@
 
             if (value.GetType() == typeof (string))
             {
-                return BoardSize.Parse(value.ToString());
+                return BoardSize.Parse(
+                    value.ToString());
             }
-            return base.ConvertFrom(context,
+            return base.ConvertFrom(
+                context,
                 culture,
                 value);
         }
@@ -241,22 +248,25 @@
                 return true;
             }
 
-            return base.CanConvertTo(context,
+            return base.CanConvertTo(
+                context,
                 destinationType);
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            var boardSize = (BoardSize) value;
+            var boardSize = (BoardSize)value;
             if (destinationType == typeof (string))
             {
-                return string.Format("{0},{1},{2}",
+                return string.Format(
+                    "{0},{1},{2}",
                     boardSize.Width,
                     boardSize.Height,
                     boardSize.MineCount);
             }
 
-            return base.ConvertTo(context,
+            return base.ConvertTo(
+                context,
                 culture,
                 value,
                 destinationType);

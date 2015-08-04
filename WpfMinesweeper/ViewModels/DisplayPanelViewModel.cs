@@ -2,9 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using System.ComponentModel;
+    using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -14,71 +13,47 @@
     {
         private static readonly Dictionary<SmileyState, ImageSource> smileyImages;
         private static Brush defaultSmileyBorderBrush = Brushes.White;
-
         private ICommand borderSizeCommand;
-        private ImageSource smileyImage;
+        private string repeatAnimation;
         private ImageSource smileyBackground;
         private Brush smileyBorderBrush;
-        private string repeatAnimation;
+        private ImageSource smileyImage;
 
         static DisplayPanelViewModel()
         {
             DisplayPanelViewModel.smileyImages = new Dictionary<SmileyState, ImageSource>
             {
-                {SmileyState.Default, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyDefault.gif",
-                    UriKind.Absolute))
+                {
+                    SmileyState.Default, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyDefault.gif",
+                        UriKind.Absolute))
                 },
-                {SmileyState.TapDown, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyTapDown.gif",
-                    UriKind.Absolute))
+                {
+                    SmileyState.TapDown, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyTapDown.gif",
+                        UriKind.Absolute))
                 },
-                {SmileyState.GameOver, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyGameOver.gif",
-                    UriKind.Absolute))
+                {
+                    SmileyState.GameOver, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyGameOver.gif",
+                        UriKind.Absolute))
                 },
-                {SmileyState.Victory, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyVictory.gif",
-                    UriKind.Absolute))
+                {
+                    SmileyState.Victory, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyVictory.gif",
+                        UriKind.Absolute))
                 }
             };
         }
 
         public DisplayPanelViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.UpdateSmileyIndex,
-                o => this.OnUpdateSmileyIndex((SmileyState) o));
-            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged,
-                o => this.UpdateSmileyBackgroundImage((Brush) o));
+            Mediator.Instance.Register(
+                ViewModelMessages.UpdateSmileyIndex,
+                o => this.OnUpdateSmileyIndex(
+                    (SmileyState)o));
+            Mediator.Instance.Register(
+                ViewModelMessages.TileColorsChanged,
+                o => this.UpdateSmileyBackgroundImage(
+                    (Brush)o));
 
             this.borderSizeCommand = new Command(this.OnBorderSizeCommand);
-        }
-
-        private void UpdateSmileyBackgroundImage(Brush brush)
-        {
-            var target = new RenderTargetBitmap(23,
-                23,
-                96,
-                96,
-                PixelFormats.Pbgra32);
-            var newImage = new DrawingVisual();
-            using (var dc = newImage.RenderOpen())
-            {
-                dc.DrawRectangle(brush,
-                    null,
-                    new System.Windows.Rect(0,
-                        0,
-                        23,
-                        23));
-            }
-
-            target.Render(newImage);
-            this.SmileyBorderBrush = brush;
-            this.SmileyBackground = target;
-        }
-
-        protected override void OnMinesweeperChanged()
-        {
-            this.Minesweeper.PropertyChanged += this.minesweeper_PropertyChanged;
-            this.OnPropertyChanged("TimeElapsed");
-            this.OnPropertyChanged("MinesRemaining");
-            this.OnUpdateSmileyIndex(SmileyState.Default);
         }
 
         public ICommand BoardSizeCommand
@@ -177,15 +152,53 @@
             }
         }
 
-        private void minesweeper_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void UpdateSmileyBackgroundImage(Brush brush)
+        {
+            var target = new RenderTargetBitmap(23,
+                23,
+                96,
+                96,
+                PixelFormats.Pbgra32);
+            var newImage = new DrawingVisual();
+            using (var dc = newImage.RenderOpen())
+            {
+                dc.DrawRectangle(
+                    brush,
+                    null,
+                    new Rect(0,
+                        0,
+                        23,
+                        23));
+            }
+
+            target.Render(
+                newImage);
+            this.SmileyBorderBrush = brush;
+            this.SmileyBackground = target;
+        }
+
+        protected override void OnMinesweeperChanged()
+        {
+            this.Minesweeper.PropertyChanged += this.minesweeper_PropertyChanged;
+            this.OnPropertyChanged(
+                "TimeElapsed");
+            this.OnPropertyChanged(
+                "MinesRemaining");
+            this.OnUpdateSmileyIndex(
+                SmileyState.Default);
+        }
+
+        private void minesweeper_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "TimeElapsed")
             {
-                this.OnPropertyChanged("TimeElapsed");
+                this.OnPropertyChanged(
+                    "TimeElapsed");
             }
             else if (e.PropertyName == "MinesRemaining")
             {
-                this.OnPropertyChanged("MinesRemaining");
+                this.OnPropertyChanged(
+                    "MinesRemaining");
             }
         }
 
@@ -197,7 +210,8 @@
 
         private void OnBorderSizeCommand()
         {
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard);
+            Mediator.Instance.Notify(
+                ViewModelMessages.CreateNewBoard);
         }
     }
 }

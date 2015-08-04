@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
-namespace WpfMinesweeper.Controls
+﻿namespace WpfMinesweeper.Controls
 {
+    using System.Windows;
+
     /// <summary>
-    /// Interaction logic for ModalDialog.xaml
+    ///     Interaction logic for ModalDialog.xaml
     /// </summary>
     public partial class ModalDialog : Window
     {
@@ -35,11 +23,13 @@ namespace WpfMinesweeper.Controls
         {
             get
             {
-                return this.GetValue(ModalDialog.ReturnValueProperty);
+                return this.GetValue(
+                    ModalDialog.ReturnValueProperty);
             }
             set
             {
-                this.SetValue(ModalDialog.ReturnValueProperty,
+                this.SetValue(
+                    ModalDialog.ReturnValueProperty,
                     value);
             }
         }

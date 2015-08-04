@@ -1,39 +1,25 @@
 ﻿namespace WpfMinesweeper.Controls
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
     using System.Windows.Markup;
     using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
-    using System.Windows.Shapes;
     using JonUtility;
 
     /// <summary>
-    /// Interaction logic for MessagePanel.xaml
+    ///     Interaction logic for MessagePanel.xaml
     /// </summary>
     public partial class MessagePanel : UserControl
     {
-        public event EventHandler<MessageResultArgs> ButtonClicked;
-
         private static Thickness nullButtonMargins = new Thickness(0.125,
             0.521,
             0.127,
             0.527);
-
-        static MessagePanel()
-        {
-        }
 
         public static DependencyProperty InnerContentProperty = DependencyProperty.Register(
             "InnerContent",
@@ -58,35 +44,15 @@
             new PropertyMetadata(
                 false));
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        static MessagePanel()
         {
-            var buttonClicked = this.ButtonClicked;
-            if (buttonClicked != null)
-            {
-                var button = sender as Button;
-                var messageButton = this.Buttons.FirstOrDefault(mb => mb.Button == button);
-
-                buttonClicked(this,
-                    new MessageResultArgs(messageButton));
-            }
-        }
-
-        private static void ButtonsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var panel = (MessagePanel) d;
-            panel.UpdateButtons(e.NewValue);
-        }
-
-        private static void InnerContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var panel = (MessagePanel) d;
-            panel.UpdateInnerContent(e.NewValue);
         }
 
         public MessagePanel()
         {
             this.InitializeComponent();
-            this.ButtonPanelBorder.Background = new SolidColorBrush(Color.FromArgb(255,
+            this.ButtonPanelBorder.Background = new SolidColorBrush(Color.FromArgb(
+                255,
                 240,
                 240,
                 240));
@@ -97,11 +63,13 @@
         {
             get
             {
-                return this.GetValue(MessagePanel.InnerContentProperty);
+                return this.GetValue(
+                    MessagePanel.InnerContentProperty);
             }
             set
             {
-                this.SetValue(MessagePanel.InnerContentProperty,
+                this.SetValue(
+                    MessagePanel.InnerContentProperty,
                     value);
             }
         }
@@ -111,11 +79,13 @@
         {
             get
             {
-                return (bool) this.GetValue(MessagePanel.UseCustomButtonMarginsProperty);
+                return (bool)this.GetValue(
+                    MessagePanel.UseCustomButtonMarginsProperty);
             }
             set
             {
-                this.SetValue(MessagePanel.UseCustomButtonMarginsProperty,
+                this.SetValue(
+                    MessagePanel.UseCustomButtonMarginsProperty,
                     value);
             }
         }
@@ -125,13 +95,46 @@
         {
             get
             {
-                return (ObservableCollection<MessageButton>) this.GetValue(MessagePanel.ButtonsProperty);
+                return (ObservableCollection<MessageButton>)this.GetValue(
+                    MessagePanel.ButtonsProperty);
             }
             set
             {
-                this.SetValue(MessagePanel.ButtonsProperty,
+                this.SetValue(
+                    MessagePanel.ButtonsProperty,
                     value);
             }
+        }
+
+        public event EventHandler<MessageResultArgs> ButtonClicked;
+
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            var buttonClicked = this.ButtonClicked;
+            if (buttonClicked != null)
+            {
+                var button = sender as Button;
+                var messageButton = this.Buttons.FirstOrDefault(
+                    mb => mb.Button == button);
+
+                buttonClicked(
+                    this,
+                    new MessageResultArgs(messageButton));
+            }
+        }
+
+        private static void ButtonsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var panel = (MessagePanel)d;
+            panel.UpdateButtons(
+                e.NewValue);
+        }
+
+        private static void InnerContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var panel = (MessagePanel)d;
+            panel.UpdateInnerContent(
+                e.NewValue);
         }
 
         private void UpdateButtons(object paramter)
@@ -141,7 +144,7 @@
                 return;
             }
 
-            var buttonList = (ObservableCollection<MessageButton>) paramter;
+            var buttonList = (ObservableCollection<MessageButton>)paramter;
             if (buttonList.Count == 0)
             {
                 return;
@@ -149,7 +152,8 @@
 
             bool useCustomMargins = this.UseCustomButtonMargins;
             var buttons = buttonList.ToList();
-            buttons.Sort((b1, b2) => b1.RightToLeftIndex > b2.RightToLeftIndex ? 1 : b1.RightToLeftIndex < b2.RightToLeftIndex ? -1 : 0);
+            buttons.Sort(
+                (b1, b2) => b1.RightToLeftIndex > b2.RightToLeftIndex ? 1 : b1.RightToLeftIndex < b2.RightToLeftIndex ? -1 : 0);
 
             int highestIndex = buttons[buttons.Count - 1].RightToLeftIndex;
             foreach (var mb in buttons)
@@ -177,7 +181,8 @@
                 if (button.Parent != null && button.Parent != this)
                 {
                     var frameworkParent = button.Parent as FrameworkElement;
-                    if (frameworkParent != null && !frameworkParent.ForceRemoveChild(button))
+                    if (frameworkParent != null && !frameworkParent.ForceRemoveChild(
+                        button))
                     {
                         continue;
                     }
@@ -197,7 +202,8 @@
 
                 if (button.Parent == null)
                 {
-                    this.ButtonPanel.Children.Add(button);
+                    this.ButtonPanel.Children.Add(
+                        button);
                 }
             }
         }
@@ -210,20 +216,23 @@
                 return;
             }
 
-            var parent = LogicalTreeHelper.GetParent(element);
+            var parent = LogicalTreeHelper.GetParent(
+                element);
             if (parent != null)
             {
                 var frameworkParent = parent as FrameworkElement;
                 if (frameworkParent != null)
                 {
-                    if (!frameworkParent.ForceRemoveChild(innerContent))
+                    if (!frameworkParent.ForceRemoveChild(
+                        innerContent))
                     {
                         return;
                     }
                 }
                 else if (parent == this)
                 {
-                    this.RemoveLogicalChild(innerContent);
+                    this.RemoveLogicalChild(
+                        innerContent);
                 }
                 else
                 {
@@ -231,29 +240,29 @@
                 }
             }
 
-            this.ContentGrid.Children.Add(element);
+            this.ContentGrid.Children.Add(
+                element);
         }
     }
 
     public class MessageResultArgs : EventArgs
     {
-        public MessageButton Button { get; private set; }
-
-        public MessageResult Result { get; private set; }
-
         public MessageResultArgs(MessageButton button)
         {
             this.Button = button;
 
             if (button.Result is MessageResult)
             {
-                this.Result = (MessageResult) button.Result;
+                this.Result = (MessageResult)button.Result;
             }
             else
             {
                 this.Result = MessageResult.Other;
             }
         }
+
+        public MessageButton Button { get; private set; }
+        public MessageResult Result { get; private set; }
     }
 
     public enum MessageResult
@@ -276,7 +285,8 @@
                 return true;
             }
 
-            return base.CanConvertFrom(context,
+            return base.CanConvertFrom(
+                context,
                 sourceType);
         }
 
@@ -291,11 +301,12 @@
                 return true;
             }
 
-            return base.CanConvertTo(context,
+            return base.CanConvertTo(
+                context,
                 destinationType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (value == null)
             {
@@ -305,26 +316,31 @@
             var valueType = value.GetType();
             if (valueType == typeof (Button))
             {
-                var button = (Button) value;
+                var button = (Button)value;
                 return new MessageButton() {Button = button};
             }
             else if (valueType == typeof (string))
             {
-                var textFragments = value.ToString().Split(new char[] {';'});
+                var textFragments = value.ToString().Split(
+                    new char[] {';'});
                 var button = new Button {Content = textFragments[0]};
                 var mbutton = new MessageButton() {Button = button};
 
-                button.Measure(new Size(double.PositiveInfinity,
-                    double.PositiveInfinity));
-                button.Width = Math.Max(80,
+                button.Measure(
+                    new Size(double.PositiveInfinity,
+                        double.PositiveInfinity));
+                button.Width = Math.Max(
+                    80,
                     button.DesiredSize.Width);
-                button.Height = Math.Max(22,
+                button.Height = Math.Max(
+                    22,
                     button.DesiredSize.Height);
 
                 if (textFragments.Length > 1)
                 {
                     int rightToLeftIndex = 0;
-                    if (int.TryParse(textFragments[1],
+                    if (int.TryParse(
+                        textFragments[1],
                         out rightToLeftIndex))
                     {
                         mbutton.RightToLeftIndex = rightToLeftIndex;
@@ -334,27 +350,32 @@
                 if (textFragments.Length > 2)
                 {
                     var resultFragment = textFragments[2].ToUpper();
-                    if (string.Equals(resultFragment,
+                    if (string.Equals(
+                        resultFragment,
                         "OK"))
                     {
                         mbutton.Result = MessageResult.OK;
                     }
-                    else if (string.Equals(resultFragment,
+                    else if (string.Equals(
+                        resultFragment,
                         "CANCEL"))
                     {
                         mbutton.Result = MessageResult.Cancel;
                     }
-                    else if (string.Equals(resultFragment,
+                    else if (string.Equals(
+                        resultFragment,
                         "OTHER"))
                     {
                         mbutton.Result = MessageResult.Other;
                     }
-                    else if (string.Equals(resultFragment,
+                    else if (string.Equals(
+                        resultFragment,
                         "NULL"))
                     {
                         mbutton.Result = null;
                     }
-                    else if (!string.Equals(resultFragment,
+                    else if (!string.Equals(
+                        resultFragment,
                         string.Empty))
                     {
                         mbutton.Result = textFragments[2];
@@ -364,7 +385,8 @@
                 return mbutton;
             }
 
-            return base.ConvertFrom(context,
+            return base.ConvertFrom(
+                context,
                 culture,
                 value);
         }
@@ -379,17 +401,17 @@
     public class MessageButton
     {
         /// <summary>
-        /// Backing field for the Button property.
+        ///     Backing field for the Button property.
         /// </summary>
         private Button button;
 
         /// <summary>
-        /// Backing field for the Result property.
+        ///     Backing field for the Result property.
         /// </summary>
         private object result;
 
         /// <summary>
-        /// Backing field for the RightToLeftIndex property.
+        ///     Backing field for the RightToLeftIndex property.
         /// </summary>
         private int rightToLeftIndex = -1;
 
@@ -398,7 +420,7 @@
         }
 
         /// <summary>
-        /// Gets or sets Button.
+        ///     Gets or sets Button.
         /// </summary>
         public Button Button
         {
@@ -413,7 +435,7 @@
         }
 
         /// <summary>
-        /// Gets or sets Result.
+        ///     Gets or sets Result.
         /// </summary>
         public object Result
         {
@@ -428,9 +450,12 @@
         }
 
         /// <summary>
-        /// <para>Gets or sets the RightToLeftIndex, which determines the order in which buttons appear.</para>
-        /// <para>The higher the number, the further to the right this button will be placed.</para>
-        /// <para>The default value is -1. All values below 0 will result in the button's order being determined before the button container is rendered.</para>
+        ///     <para>Gets or sets the RightToLeftIndex, which determines the order in which buttons appear.</para>
+        ///     <para>The higher the number, the further to the right this button will be placed.</para>
+        ///     <para>
+        ///         The default value is -1. All values below 0 will result in the button's order being determined before the
+        ///         button container is rendered.
+        ///     </para>
         /// </summary>
         public int RightToLeftIndex
         {

@@ -1,30 +1,21 @@
 ﻿namespace WpfMinesweeper.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
-    using Xceed.Wpf.Toolkit;
 
     public class MenuViewModel : ViewModelBase
     {
         private static readonly Color defaultSelectedColor = ViewModelBase.Settings.TileColor;
-
-        private ViewModelBase customBoardViewModel;
-        private ViewModelBase statisticsViewModel;
-        private Color selectedColor;
         private ICommand boardSizeCommand;
+        private ViewModelBase customBoardViewModel;
+        private Color selectedColor;
+        private ViewModelBase statisticsViewModel;
         private ICommand tileColorCommand;
 
         public MenuViewModel()
         {
-            this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(o));
+            this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(
+                o));
             this.selectedColor = MenuViewModel.defaultSelectedColor;
             this.CustomBoardViewModel = new CustomBoardViewModel();
             this.StatisticsViewModel = new StatisticsViewModel();
@@ -75,7 +66,8 @@
                     this.selectedColor = value;
                     ViewModelBase.Settings.TileColor = value;
                     var brush = new SolidColorBrush(value);
-                    Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged,
+                    Mediator.Instance.Notify(
+                        ViewModelMessages.TileColorsChanged,
                         brush);
                     this.OnPropertyChanged();
                 }
@@ -116,7 +108,8 @@
 
         private void OnBoardSizeSelected(object paramter)
         {
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard,
+            Mediator.Instance.Notify(
+                ViewModelMessages.CreateNewBoard,
                 paramter);
         }
     }
