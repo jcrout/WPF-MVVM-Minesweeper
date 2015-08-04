@@ -23,7 +23,7 @@ namespace WpfMinesweeper.Views
     {
         public MainWindow()
         {
-            InitializeComponent();          
+            this.InitializeComponent();
         }
     }
 }

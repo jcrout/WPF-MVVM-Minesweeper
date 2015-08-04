@@ -154,8 +154,14 @@
         /// </summary>
         event EventHandler ICommand.CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add
+            {
+                CommandManager.RequerySuggested += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+            }
         }
 
         /// <summary>
@@ -312,8 +318,14 @@
         /// </summary>
         event EventHandler ICommand.CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add
+            {
+                CommandManager.RequerySuggested += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+            }
         }
 
         /// <summary>
@@ -331,7 +343,7 @@
                 }
                 else
                 {
-                    return this.canExecuteWithArgument((T)parameter);
+                    return this.canExecuteWithArgument((T) parameter);
                 }
             }
             else
@@ -348,7 +360,7 @@
         {
             if (this.execute == null)
             {
-                this.executeWithArgument((T)parameter);
+                this.executeWithArgument((T) parameter);
             }
             else
             {

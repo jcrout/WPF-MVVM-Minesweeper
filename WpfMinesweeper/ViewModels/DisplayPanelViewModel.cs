@@ -8,11 +8,11 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using WpfMinesweeper.Models;
+    using Models;
 
-    class DisplayPanelViewModel : MinesweeperComponentViewModel
+    public class DisplayPanelViewModel : MinesweeperComponentViewModel
     {
-        private static Dictionary<SmileyState, ImageSource> smileyImages;
+        private static readonly Dictionary<SmileyState, ImageSource> smileyImages;
         private static Brush defaultSmileyBorderBrush = Brushes.White;
 
         private ICommand borderSizeCommand;
@@ -23,30 +23,49 @@
 
         static DisplayPanelViewModel()
         {
-            smileyImages = new Dictionary<SmileyState, ImageSource>
+            DisplayPanelViewModel.smileyImages = new Dictionary<SmileyState, ImageSource>
             {
-                {SmileyState.Default, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyDefault.gif", UriKind.Absolute))},
-                {SmileyState.TapDown, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyTapDown.gif", UriKind.Absolute))},
-                {SmileyState.GameOver, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyGameOver.gif", UriKind.Absolute))},
-                {SmileyState.Victory, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyVictory.gif", UriKind.Absolute))}
+                {SmileyState.Default, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyDefault.gif",
+                    UriKind.Absolute))
+                },
+                {SmileyState.TapDown, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyTapDown.gif",
+                    UriKind.Absolute))
+                },
+                {SmileyState.GameOver, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyGameOver.gif",
+                    UriKind.Absolute))
+                },
+                {SmileyState.Victory, new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Animations/SmileyVictory.gif",
+                    UriKind.Absolute))
+                }
             };
         }
 
         public DisplayPanelViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
-            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateSmileyBackgroundImage((Brush)o));
+            Mediator.Instance.Register(ViewModelMessages.UpdateSmileyIndex,
+                o => this.OnUpdateSmileyIndex((SmileyState) o));
+            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged,
+                o => this.UpdateSmileyBackgroundImage((Brush) o));
 
-            this.borderSizeCommand = new Command(OnBorderSizeCommand);
+            this.borderSizeCommand = new Command(this.OnBorderSizeCommand);
         }
 
         private void UpdateSmileyBackgroundImage(Brush brush)
         {
-            var target = new RenderTargetBitmap(23, 23, 96, 96, PixelFormats.Pbgra32);
+            var target = new RenderTargetBitmap(23,
+                23,
+                96,
+                96,
+                PixelFormats.Pbgra32);
             var newImage = new DrawingVisual();
             using (var dc = newImage.RenderOpen())
             {
-                dc.DrawRectangle(brush, null, new System.Windows.Rect(0, 0, 23, 23));
+                dc.DrawRectangle(brush,
+                    null,
+                    new System.Windows.Rect(0,
+                        0,
+                        23,
+                        23));
             }
 
             target.Render(newImage);
@@ -55,8 +74,8 @@
         }
 
         protected override void OnMinesweeperChanged()
-        {       
-            this.Minesweeper.PropertyChanged += minesweeper_PropertyChanged;
+        {
+            this.Minesweeper.PropertyChanged += this.minesweeper_PropertyChanged;
             this.OnPropertyChanged("TimeElapsed");
             this.OnPropertyChanged("MinesRemaining");
             this.OnUpdateSmileyIndex(SmileyState.Default);
@@ -83,7 +102,7 @@
             get
             {
                 return this.Minesweeper != null ? this.Minesweeper.MinesRemaining : 0;
-            }            
+            }
         }
 
         public int TimeElapsed
@@ -172,7 +191,7 @@
 
         private void OnUpdateSmileyIndex(SmileyState newState)
         {
-            this.SmileyImage = smileyImages[newState];
+            this.SmileyImage = DisplayPanelViewModel.smileyImages[newState];
             this.RepeatAnimation = (newState == SmileyState.GameOver) ? "1x" : "Forever";
         }
 

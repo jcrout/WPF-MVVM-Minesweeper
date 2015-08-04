@@ -9,30 +9,32 @@
     using System.Threading.Tasks;
     using JonUtility;
     using System.Windows.Input;
+    using Miscellanious;
 
     public abstract class ViewModelBase : IDisposable, INotifyPropertyChanged
     {
-        private static ISettingsProvider settings = SettingsProvider.Instance;
+        private static readonly ISettingsProvider settings = SettingsProvider.Instance;
+
         public static ISettingsProvider Settings
         {
             get
             {
-                return settings;
+                return ViewModelBase.settings;
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         private bool disposed;
 
         public void Dispose()
         {
-            if (disposed)
+            if (this.disposed)
             {
                 return;
             }
 
-            disposed = true;
+            this.disposed = true;
             this.OnDispose(true);
             GC.SuppressFinalize(this);
         }
@@ -52,7 +54,8 @@
             if (propChangedEvent != null)
             {
                 var propChangedEventArgs = new PropertyChangedEventArgs(prop);
-                propChangedEvent(this, propChangedEventArgs);
+                propChangedEvent(this,
+                    propChangedEventArgs);
             }
         }
     }

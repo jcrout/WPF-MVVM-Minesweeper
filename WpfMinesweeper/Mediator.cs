@@ -26,14 +26,14 @@ namespace WpfMinesweeper
 
     public sealed class Mediator
     {
-        private static Mediator instance = new Mediator();
-        private Dictionary<ViewModelMessages, List<Action<object>>> callbacks;
+        private static readonly Mediator instance = new Mediator();
+        private readonly Dictionary<ViewModelMessages, List<Action<object>>> callbacks;
 
         public static Mediator Instance
         {
             get
             {
-                return instance;
+                return Mediator.instance;
             }
         }
 
@@ -59,7 +59,8 @@ namespace WpfMinesweeper
         {
             if (!this.callbacks.ContainsKey(message))
             {
-                this.callbacks.Add(message, new List<Action<object>>(1) { callback });
+                this.callbacks.Add(message,
+                    new List<Action<object>>(1) {callback});
             }
             else
             {

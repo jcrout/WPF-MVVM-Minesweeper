@@ -21,7 +21,7 @@ namespace WpfMinesweeper.Controls
     {
         public AutosizeWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

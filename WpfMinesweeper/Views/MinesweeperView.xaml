@@ -1,53 +1,53 @@
 ﻿<UserControl x:Class="WpfMinesweeper.Views.MinesweeperView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:WpfMinesweeper.ViewModels"
              xmlns:vw="clr-namespace:WpfMinesweeper.Views"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
              xmlns:local="clr-namespace:WpfMinesweeper"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
-             mc:Ignorable="d" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
              d:DesignHeight="213" d:DesignWidth="154">
 
     <Grid Name="MainGrid" Background="AliceBlue">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" VerticalAlignment="Top">
-            <vw:MenuView DataContext="{Binding Path=MenuViewModel, UpdateSourceTrigger=PropertyChanged}"></vw:MenuView>
+            <vw:MenuView DataContext="{Binding Path=MenuViewModel, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
         <Grid Grid.Row="1">
             <Border Name="Lolz"
-                    Margin="5,5,5,5" 
+                    Margin="5,5,5,5"
                     BorderThickness="1"
                     BorderBrush="DarkGray">
-                <Border Name="BorderDisplayPanel" 
-                    BorderThickness="1"
-                    Margin="0"
-                    BorderBrush="LightGray">
-                    <vw:DisplayPanelView 
+                <Border Name="BorderDisplayPanel"
+                        BorderThickness="1"
+                        Margin="0"
+                        BorderBrush="LightGray">
+                    <vw:DisplayPanelView
                         DataContext="{Binding Path=DisplayViewModel}"
-                        Margin="2"></vw:DisplayPanelView>
+                        Margin="2" />
                 </Border>
             </Border>
         </Grid>
         <Grid Grid.Row="2">
-            <Border Name="BorderBoard" 
-                    BorderThickness="5,0,5,5" 
+            <Border Name="BorderBoard"
+                    BorderThickness="5,0,5,5"
                     BorderBrush="AliceBlue">
-                <controls:ViewBoxAutosize x:Name="BoardViewBox" 
-                         HorizontalAlignment="Left" 
-                         VerticalAlignment="Top" 
-                         Stretch="Fill" 
-                         StretchDirection="Both">
+                <controls:ViewBoxAutosize x:Name="BoardViewBox"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Top"
+                                          Stretch="Fill"
+                                          StretchDirection="Both">
                     <vw:TileBoardView x:Name="BoardView" Grid.Row="0" Grid.Column="0"
-                                          DataContext="{Binding Path=TileBoardViewModel}"/>
+                                      DataContext="{Binding Path=TileBoardViewModel}" />
                 </controls:ViewBoxAutosize>
             </Border>
         </Grid>

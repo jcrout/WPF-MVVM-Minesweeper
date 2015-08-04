@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace WpfMinesweeper.ViewModels
+﻿namespace WpfMinesweeper.ViewModels
 {
-    class MainWindowViewModel : ViewModelBase
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows;
+
+    public class MainWindowViewModel : ViewModelBase
     {
         private WindowState windowState = WindowState.Normal;
         private SizeToContent sizeToContentMode = SizeToContent.WidthAndHeight;
@@ -23,23 +23,24 @@ namespace WpfMinesweeper.ViewModels
 
         public MainWindowViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized(o));
+            Mediator.Instance.Register(ViewModelMessages.TileBoardSizeChanged,
+                o => this.OnTileBoardInitialized(o));
 
-            this.minWidth = Settings.LastWindowMinSize.Width;
+            this.minWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
             this.width = this.minWidth;
-            this.ViewModel = new WpfMinesweeper.ViewModels.MinesweeperViewModel();
+            this.ViewModel = new MinesweeperViewModel();
 
             this.PositionWindow();
         }
 
         private void OnTileBoardInitialized(object paramter)
         {
-            if (!initialized)
+            if (!this.initialized)
             {
                 this.initialized = true;
-                this.MinWidth = Settings.LastWindowMinSize.Width;
-                this.MinHeight = Settings.LastWindowMinSize.Height;
-                this.SizeToContentMode = SizeToContent.Manual;            
+                this.MinWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
+                this.MinHeight = ViewModelBase.Settings.LastWindowMinSize.Height;
+                this.SizeToContentMode = SizeToContent.Manual;
                 return;
             }
 
@@ -50,18 +51,19 @@ namespace WpfMinesweeper.ViewModels
             this.MinHeight = this.height;
             this.SizeToContentMode = SizeToContent.Manual;
 
-            Settings.LastWindowMinSize = new Size(this.width, this.height);
+            ViewModelBase.Settings.LastWindowMinSize = new Size(this.width,
+                this.height);
         }
 
         private void PositionWindow()
         {
-            if (Settings.LastLocation.X < 0 || Settings.LastLocation.Y < 0)
+            if (ViewModelBase.Settings.LastLocation.X < 0 || ViewModelBase.Settings.LastLocation.Y < 0)
             {
                 this.CenterWindow();
             }
             else
             {
-                var point = Settings.LastLocation;
+                var point = ViewModelBase.Settings.LastLocation;
                 this.Left = point.X;
                 this.Top = point.Y;
             }
@@ -69,8 +71,8 @@ namespace WpfMinesweeper.ViewModels
 
         private void CenterWindow()
         {
-            this.Left = (SystemParameters.FullPrimaryScreenWidth - this.width) / 2;
-            this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height) / 2;
+            this.Left = (SystemParameters.FullPrimaryScreenWidth - this.width)/2;
+            this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height)/2;
         }
 
         public ViewModelBase ViewModel
@@ -116,7 +118,8 @@ namespace WpfMinesweeper.ViewModels
                 if (this.windowState != value)
                 {
                     this.windowState = value;
-                    Mediator.Instance.Notify(ViewModelMessages.GameWindowStateChanged, value);
+                    Mediator.Instance.Notify(ViewModelMessages.GameWindowStateChanged,
+                        value);
                     this.OnPropertyChanged();
                 }
             }
@@ -197,7 +200,8 @@ namespace WpfMinesweeper.ViewModels
                 if (this.left != value)
                 {
                     this.left = value;
-                    Settings.LastLocation = new Point(this.left, this.top);
+                    ViewModelBase.Settings.LastLocation = new Point(this.left,
+                        this.top);
                     this.OnPropertyChanged();
                 }
             }
@@ -214,7 +218,8 @@ namespace WpfMinesweeper.ViewModels
                 if (this.top != value)
                 {
                     this.top = value;
-                    Settings.LastLocation = new Point(this.left, this.top);
+                    ViewModelBase.Settings.LastLocation = new Point(this.left,
+                        this.top);
                     this.OnPropertyChanged();
                 }
             }

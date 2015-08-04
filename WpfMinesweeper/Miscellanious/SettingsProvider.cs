@@ -1,81 +1,84 @@
-﻿namespace WpfMinesweeper
+﻿namespace WpfMinesweeper.Miscellanious
 {
-    using System.Xml.Serialization;
-    using System.Runtime.Serialization;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
+    using System.IO;
+    using System.IO.IsolatedStorage;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Media;
-    using WpfMinesweeper.Models;
-    using WpfMinesweeper.Properties;
-    using System.IO;
-    using System.Xml;
-    using System.Collections.Generic;
-    using System.IO.IsolatedStorage;
-    using System;
+    using JonUtility;
+    using Models;
     using Newtonsoft.Json;
-    using System.Threading.Tasks;
-    using System.Collections.ObjectModel;
+    using Properties;
 
     public interface ISettingsProvider
     {
         /// <summary>
-        /// Gets or sets the last main window size.
+        ///     Gets or sets the last main window size.
         /// </summary>
         Size LastWindowMinSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the last main window location.
+        ///     Gets or sets the last main window location.
         /// </summary>
         Point LastLocation { get; set; }
 
         /// <summary>
-        /// Gets or sets the most recent board size used.
+        ///     Gets or sets the most recent board size used.
         /// </summary>
         BoardSize LastBoardSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the color of the tiles on a Minesweeper tile board.
+        ///     Gets or sets the color of the tiles on a Minesweeper tile board.
         /// </summary>
         Color TileColor { get; set; }
 
         /// <summary>
-        /// Gets or sets the brush used to paint the tiles on a Minesweeper tile board.
+        ///     Gets or sets the brush used to paint the tiles on a Minesweeper tile board.
         /// </summary>
         Brush TileBrush { get; set; }
 
         /// <summary>
-        /// Gets or sets the list of individual game statistics. Additionally, the user can directly modify the list itself using standard operations such as Add and Remove.
+        ///     Gets or sets the list of individual game statistics. Additionally, the user can directly modify the list itself
+        ///     using standard operations such as Add and Remove.
         /// </summary>
         ObservableCollection<IStatisticsModule> Statistics { get; set; }
 
         /// <summary>
-        /// Saves all settings.
+        ///     Saves all settings.
         /// </summary>
         void Save();
     }
 
     public class SettingsProvider : ISettingsProvider
     {
-        private const char settingsDelimiter = (char)20;
-
-        private static ISettingsProvider instance = new SettingsProvider();
+        private const char settingsDelimiter = (char) 20;
+        private static readonly ISettingsProvider instance = new SettingsProvider();
         private static string statisticsFileName = "statistics.txt";
-
-        private Settings userSettings = new Settings();
-        private ObservableCollection<IStatisticsModule> statistics = new ObservableCollection<IStatisticsModule>();
-        private List<IStatisticsModule> newModules = new List<IStatisticsModule>();
-        private object statisticsSyncLock = new object();
+        private readonly List<IStatisticsModule> newModules = new List<IStatisticsModule>();
+        private readonly object statisticsSyncLock = new object();
+        private readonly Settings userSettings = new Settings();
         private bool saveAllModules = false;
+        private ObservableCollection<IStatisticsModule> statistics = new ObservableCollection<IStatisticsModule>();
 
         static SettingsProvider()
         {
+        }
 
+        private SettingsProvider()
+        {
+            this.statistics.CollectionChanged += this.statistics_CollectionChanged;
+            this.LoadStatistics();
         }
 
         public static ISettingsProvider Instance
         {
             get
             {
-                return instance;
+                return SettingsProvider.instance;
             }
         }
 
@@ -83,7 +86,7 @@
         {
             get
             {
-                return userSettings.LastBoardSize;
+                return this.userSettings.LastBoardSize;
             }
             set
             {
@@ -91,11 +94,11 @@
             }
         }
 
-        public Size LastWindowMinSize 
+        public Size LastWindowMinSize
         {
             get
             {
-                return userSettings.LastWindowMinSize;
+                return this.userSettings.LastWindowMinSize;
             }
             set
             {
@@ -107,11 +110,11 @@
         {
             get
             {
-                return userSettings.TileColor;
+                return this.userSettings.TileColor;
             }
             set
             {
-                userSettings.TileColor = value;
+                this.userSettings.TileColor = value;
             }
         }
 
@@ -119,11 +122,11 @@
         {
             get
             {
-                return userSettings.LastLocation;
+                return this.userSettings.LastLocation;
             }
             set
             {
-                userSettings.LastLocation = value;
+                this.userSettings.LastLocation = value;
             }
         }
 
@@ -132,25 +135,25 @@
         {
             get
             {
-                if (userSettings.TileBrushSolid != null)
+                if (this.userSettings.TileBrushSolid != null)
                 {
-                    return userSettings.TileBrushSolid;
+                    return this.userSettings.TileBrushSolid;
                 }
                 else
                 {
-                    return userSettings.TileBrushGradient;
+                    return this.userSettings.TileBrushGradient;
                 }
             }
             set
             {
                 var brushType = value.GetType();
-                if (brushType.IsAssignableFrom(typeof(SolidColorBrush)))
+                if (brushType.IsAssignableFrom(typeof (SolidColorBrush)))
                 {
-                    userSettings.TileBrushSolid = value as SolidColorBrush;
+                    this.userSettings.TileBrushSolid = value as SolidColorBrush;
                 }
-                else if (brushType.IsAssignableFrom(typeof(LinearGradientBrush)))
+                else if (brushType.IsAssignableFrom(typeof (LinearGradientBrush)))
                 {
-                    userSettings.TileBrushGradient = value as LinearGradientBrush;
+                    this.userSettings.TileBrushGradient = value as LinearGradientBrush;
                 }
             }
         }
@@ -180,14 +183,8 @@
 
         public async void Save()
         {
-            this.userSettings.Save(); 
+            this.userSettings.Save();
             await Task.Run(() => this.SaveStatistics()).ConfigureAwait(false);
-        }
-
-        private SettingsProvider()
-        {
-            this.statistics.CollectionChanged += statistics_CollectionChanged;
-            this.LoadStatistics();
         }
 
         private void SaveStatistics()
@@ -199,9 +196,13 @@
                     return;
                 }
 
-                using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null))
+                using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly,
+                    null,
+                    null))
                 {
-                    using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(statisticsFileName, this.saveAllModules ? FileMode.Create : FileMode.Append, isoStore))
+                    using (IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName,
+                        this.saveAllModules ? FileMode.Create : FileMode.Append,
+                        isoStore))
                     {
                         using (var writer = new StreamWriter(isoStream))
                         {
@@ -214,8 +215,9 @@
                                     {
                                         using (var sw = new StringWriter())
                                         {
-                                            serializer.Serialize(sw, pair.Value);
-                                            writer.Write(((int)pair.Key).ToString() + ';' + sw.ToString() + settingsDelimiter);
+                                            serializer.Serialize(sw,
+                                                pair.Value);
+                                            writer.Write(((int) pair.Key).ToString() + ';' + sw.ToString() + SettingsProvider.settingsDelimiter);
                                         }
                                     }
 
@@ -244,13 +246,13 @@
 
         private async void LoadStatistics()
         {
-            if (statisticsFileName == null)
+            if (SettingsProvider.statisticsFileName == null)
             {
-                statisticsFileName = "statistics.txt";
+                SettingsProvider.statisticsFileName = "statistics.txt";
             }
 
             long time1 = 0, time2 = 0;
-            JonUtility.Diagnostics.QueryPerformanceCounter(ref time1);
+            Diagnostics.QueryPerformanceCounter(ref time1);
             string[] statLines = await this.LoadStatText();
 
             if (statLines.Length == 0)
@@ -259,7 +261,8 @@
                 return;
             }
 
-            var loadedStatModules = await Task.Factory.StartNew(st => this.LoadStatLines((string[])st), statLines).ConfigureAwait(true);
+            var loadedStatModules = await Task.Factory.StartNew(st => this.LoadStatLines((string[]) st),
+                statLines).ConfigureAwait(true);
             var statisticsList = new ObservableCollection<IStatisticsModule>(loadedStatModules);
             var oldStatList = this.statistics;
 
@@ -267,11 +270,9 @@
             {
                 lock (this.statisticsSyncLock)
                 {
-
-                    this.statistics.CollectionChanged -= statistics_CollectionChanged;
+                    this.statistics.CollectionChanged -= this.statistics_CollectionChanged;
                     if (this.statistics.Count > 0)
                     {
-
                         foreach (var statModule in this.statistics)
                         {
                             statisticsList.Add(statModule);
@@ -279,29 +280,34 @@
                     }
 
                     this.statistics = statisticsList;
-                    this.statistics.CollectionChanged += statistics_CollectionChanged;
+                    this.statistics.CollectionChanged += this.statistics_CollectionChanged;
                 }
             }
 
             Mediator.Instance.Notify(ViewModelMessages.StatisticsLoaded);
-            JonUtility.Diagnostics.QueryPerformanceCounter(ref time2);
+            Diagnostics.QueryPerformanceCounter(ref time2);
         }
 
         private async Task<string[]> LoadStatText()
         {
-            using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null))
+            using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly,
+                null,
+                null))
             {
-                if (!isoStore.FileExists(statisticsFileName))
+                if (!isoStore.FileExists(SettingsProvider.statisticsFileName))
                 {
                     return new string[0];
                 }
 
-                using (var isoStream = new IsolatedStorageFileStream(statisticsFileName, FileMode.Open, isoStore))
+                using (var isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName,
+                    FileMode.Open,
+                    isoStore))
                 {
                     using (var reader = new StreamReader(isoStream))
                     {
                         var statText = await reader.ReadToEndAsync().ConfigureAwait(true);
-                        var statLines = statText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                        var statLines = statText.Split(new string[] {Environment.NewLine},
+                            StringSplitOptions.RemoveEmptyEntries);
                         return statLines;
                     }
                 }
@@ -316,17 +322,20 @@
             foreach (var statLine in statLines)
             {
                 var module = StatisticsModule.Create();
-                var parts = statLine.Split(new char[] { settingsDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = statLine.Split(new char[] {SettingsProvider.settingsDelimiter},
+                    StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts)
                 {
                     int index = part.IndexOf(';');
-                    var key = (Statistic)int.Parse(part.Substring(0, index));
+                    var key = (Statistic) int.Parse(part.Substring(0,
+                        index));
                     var valueString = part.Substring(index + 1);
                     var conversionType = StatisticHelper.GetType(key);
 
                     using (var reader = new StringReader(part.Substring(index + 1)))
                     {
-                        object value = serializer.Deserialize(reader, conversionType);
+                        object value = serializer.Deserialize(reader,
+                            conversionType);
                         module[key] = value;
                         continue;
                     }
@@ -338,9 +347,9 @@
             return list;
         }
 
-        private void statistics_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void statistics_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 lock (this.statisticsSyncLock)
                 {
@@ -348,7 +357,7 @@
                     {
                         if (newModule != null)
                         {
-                            newModules.Add((IStatisticsModule)newModule);
+                            this.newModules.Add((IStatisticsModule) newModule);
                         }
                     }
                 }

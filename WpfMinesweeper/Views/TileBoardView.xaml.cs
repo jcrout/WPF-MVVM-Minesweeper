@@ -22,7 +22,7 @@ namespace WpfMinesweeper.Views
     {
         public TileBoardView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

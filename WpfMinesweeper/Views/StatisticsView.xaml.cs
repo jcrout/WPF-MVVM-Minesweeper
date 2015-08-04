@@ -22,7 +22,7 @@ namespace WpfMinesweeper.Views
     {
         public StatisticsView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

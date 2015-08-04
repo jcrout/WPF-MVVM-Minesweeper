@@ -9,7 +9,7 @@
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Threading;
-    using WpfMinesweeper.Models;
+    using Models;
     using JonUtility;
 
     public class MinesweeperViewModel : MinesweeperComponentViewModel
@@ -17,24 +17,30 @@
         private MinesweeperComponentViewModel displayViewModel;
         private MinesweeperComponentViewModel tileBoardViewModel;
         private ViewModelBase menuViewModel;
-        private WinTimer gameTimer;
+        private readonly WinTimer gameTimer;
         private bool minimized;
         private bool gameStarted;
 
         public MinesweeperViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.GameWindowStateChanged, o => this.OnWindowStateChanged((WindowState)o));
-            Mediator.Instance.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
-            Mediator.Instance.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
-            Mediator.Instance.Register(ViewModelMessages.GameOver, this.OnGameOver);
-            Mediator.Instance.Register(ViewModelMessages.Victory, this.OnVictory);
+            Mediator.Instance.Register(ViewModelMessages.GameWindowStateChanged,
+                o => this.OnWindowStateChanged((WindowState) o));
+            Mediator.Instance.Register(ViewModelMessages.CreateNewBoard,
+                this.OnCreateNewBoard);
+            Mediator.Instance.Register(ViewModelMessages.GameStarted,
+                this.OnGameStarted);
+            Mediator.Instance.Register(ViewModelMessages.GameOver,
+                this.OnGameOver);
+            Mediator.Instance.Register(ViewModelMessages.Victory,
+                this.OnVictory);
 
-            this.gameTimer = new WinTimer(TimerProc, 1000);
+            this.gameTimer = new WinTimer(this.TimerProc,
+                1000);
 
             this.MenuViewModel = new MenuViewModel();
             this.DisplayViewModel = new DisplayPanelViewModel();
             this.TileBoardViewModel = new TileBoardViewModel();
-   
+
             this.Minesweeper = MinesweeperFactory.GetFromSettings();
         }
 
@@ -96,10 +102,14 @@
             var gameStatistics = StatisticsModule.Create();
             var minesweeper = this.Minesweeper;
 
-            Settings.LastBoardSize = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
+            ViewModelBase.Settings.LastBoardSize = new BoardSize(minesweeper.Tiles.Width,
+                minesweeper.Tiles.Height,
+                minesweeper.MineCount);
 
-            gameStatistics[Statistic.BoardSize] = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
-      
+            gameStatistics[Statistic.BoardSize] = new BoardSize(minesweeper.Tiles.Width,
+                minesweeper.Tiles.Height,
+                minesweeper.MineCount);
+
             this.DisplayViewModel.Minesweeper = minesweeper;
             this.TileBoardViewModel.Minesweeper = minesweeper;
 
@@ -107,7 +117,7 @@
             this.DisplayViewModel.GameStatistics = gameStatistics;
             this.TileBoardViewModel.GameStatistics = gameStatistics;
         }
-               
+
         private void OnWindowStateChanged(WindowState state)
         {
             if (!this.gameStarted)
@@ -141,9 +151,9 @@
                 return;
             }
 
-            if (paramter.GetType() == typeof(BoardSize))
+            if (paramter.GetType() == typeof (BoardSize))
             {
-                this.Minesweeper = MinesweeperFactory.Create((BoardSize)paramter);
+                this.Minesweeper = MinesweeperFactory.Create((BoardSize) paramter);
                 return;
             }
             else if (paramter is string)
@@ -155,19 +165,21 @@
             else
             {
                 throw new ArgumentException("paramter must either be of type String or BoardSize.");
-            }            
+            }
         }
 
         private void OnGameOver(object paramter)
         {
             this.EndGame(GameState.GameOver);
-            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
+            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex,
+                SmileyState.GameOver);
         }
 
         private void OnVictory(object paramter)
         {
             this.EndGame(GameState.Victory);
-            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
+            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex,
+                SmileyState.Victory);
         }
 
         private void EndGame(GameState finalState)
@@ -176,11 +188,11 @@
 
             this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
             this.GameStatistics[Statistic.GameState] = finalState;
-            this.GameStatistics[Statistic.MinesRemaining] = Minesweeper.MinesRemaining;
-            this.GameStatistics[Statistic.TimeElapsed] = Minesweeper.TimeElapsed;
+            this.GameStatistics[Statistic.MinesRemaining] = this.Minesweeper.MinesRemaining;
+            this.GameStatistics[Statistic.TimeElapsed] = this.Minesweeper.TimeElapsed;
 
-            Settings.Statistics.Add(this.GameStatistics);
-            Settings.Save();           
+            ViewModelBase.Settings.Statistics.Add(this.GameStatistics);
+            ViewModelBase.Settings.Save();
         }
 
         private void ResetGame()

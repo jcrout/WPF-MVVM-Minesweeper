@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -13,19 +12,22 @@ using WpfMinesweeper.Views;
 
 namespace WpfMinesweeper
 {
+    using Miscellanious;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
         internal static TraceSource Tracer;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             //this.InitializeTracer();
 
             var window = new MainWindow();
-            var view = new WpfMinesweeper.ViewModels.MainWindowViewModel();
+            var view = new ViewModels.MainWindowViewModel();
             window.DataContext = view;
             window.Show();
         }
@@ -33,7 +35,7 @@ namespace WpfMinesweeper
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
-         
+
             SettingsProvider.Instance.Save();
         }
 
@@ -42,34 +44,35 @@ namespace WpfMinesweeper
             Trace.Listeners.Clear();
             Trace.AutoFlush = true;
 
-            Tracer = new TraceSource("Tracer", SourceLevels.All);
-            Tracer.Listeners.Clear();
+            App.Tracer = new TraceSource("Tracer",
+                SourceLevels.All);
+            App.Tracer.Listeners.Clear();
 
-            var fs = new FileStream(System.AppDomain.CurrentDomain.BaseDirectory + @"Log.txt", FileMode.Create, FileAccess.Write, FileShare.None);
+            var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"Log.txt",
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.None);
             var listener = new TextWriterTraceListener(fs);
-            Tracer.Listeners.Add(listener);
+            App.Tracer.Listeners.Add(listener);
         }
     }
-
 }
 
 namespace WpfMinesweeper.Properties
 {
     internal sealed partial class Settings
     {
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9,9,10")]
-        public WpfMinesweeper.Models.BoardSize LastBoardSize
+        [UserScopedSettingAttribute(), DefaultSettingValueAttribute("9,9,10")]
+        public Models.BoardSize LastBoardSize
         {
             get
             {
-                return ((WpfMinesweeper.Models.BoardSize)(this["LastBoardSize"]));
+                return ((Models.BoardSize) (this["LastBoardSize"]));
             }
             set
             {
                 this["LastBoardSize"] = value;
             }
         }
-
     }
 }

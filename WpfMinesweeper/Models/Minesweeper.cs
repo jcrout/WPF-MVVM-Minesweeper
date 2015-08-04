@@ -7,8 +7,9 @@
     using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
-    using WpfMinesweeper.Properties;
+    using Properties;
     using JonUtility;
+    using Miscellanious;
 
     /// <summary>
     /// This interface implements the core aspects of the game Minesweeper.
@@ -38,29 +39,35 @@
 
     public class MinesweeperFactory
     {
-        private static ISettingsProvider settings = SettingsProvider.Instance;
+        private static readonly ISettingsProvider settings = SettingsProvider.Instance;
 
         public static Minesweeper GetFromSettings()
-        {     
+        {
             return Minesweeper.Create(
-                settings.LastBoardSize.Width,
-                settings.LastBoardSize.Height,
-                settings.LastBoardSize.MineCount);
+                MinesweeperFactory.settings.LastBoardSize.Width,
+                MinesweeperFactory.settings.LastBoardSize.Height,
+                MinesweeperFactory.settings.LastBoardSize.MineCount);
         }
 
         public static Minesweeper Create(int width, int height, int mineCount)
         {
-            return Minesweeper.Create(width, height, mineCount);
+            return Minesweeper.Create(width,
+                height,
+                mineCount);
         }
 
         public static Minesweeper Create(BoardSize board)
         {
-            return Minesweeper.Create(board.Width, board.Height, board.MineCount);
+            return Minesweeper.Create(board.Width,
+                board.Height,
+                board.MineCount);
         }
 
         public static Minesweeper Create(IMinesweeper minesweeper)
         {
-            return Minesweeper.Create(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
+            return Minesweeper.Create(minesweeper.Tiles.Width,
+                minesweeper.Tiles.Height,
+                minesweeper.MineCount);
         }
     }
 
@@ -95,18 +102,18 @@
 
         public static Minesweeper Create(int width, int height, int mineCount)
         {
-            if (width < 1 || height < 1)
-            {
-                throw new ArgumentException("Board width and height must be greater than 0.");
-            }
+            string validationResult = MinesweeperBoardValidator.Create().ValidateBoard(width,
+                height,
+                mineCount);
 
-            if (mineCount >= (width * height))
+            if (validationResult != null)
             {
-                mineCount = width * height - 1;
+                throw new ArgumentException(validationResult);
             }
 
             var minesweeper = new Minesweeper();
-            minesweeper.tiles = TileCollection.Create(width, height);
+            minesweeper.tiles = TileCollection.Create(width,
+                height);
             minesweeper.mineCount = mineCount;
             minesweeper.minesLeft = mineCount;
             minesweeper.timeElapsed = 0;
@@ -182,14 +189,14 @@
             }
         }
 
-        protected void RaisePropertyChanged([CallerMemberName]string prop = "")
+        protected void RaisePropertyChanged([CallerMemberName] string prop = "")
         {
             var propertyChanged = this.PropertyChanged;
             if (propertyChanged != null)
             {
-                propertyChanged(this, new PropertyChangedEventArgs(prop));
+                propertyChanged(this,
+                    new PropertyChangedEventArgs(prop));
             }
         }
     }
-
 }

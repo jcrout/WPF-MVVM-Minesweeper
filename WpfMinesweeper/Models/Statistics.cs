@@ -14,35 +14,25 @@
     [Serializable, DataContract]
     public enum Statistic
     {
-        [Statistics(typeof(BoardSize), Description = "The width, height, and mine count of the board.", DisplayText = "Board Size")]
-        BoardSize = 0,
+        [Statistics(typeof (BoardSize), Description = "The width, height, and mine count of the board.", DisplayText = "Board Size")] BoardSize = 0,
 
-        [Statistics(typeof(int), Description = "The number of seconds that have elapsed since the game began.", DisplayText = "Time Elapsed")]
-        TimeElapsed = 1,
+        [Statistics(typeof (int), Description = "The number of seconds that have elapsed since the game began.", DisplayText = "Time Elapsed")] TimeElapsed = 1,
 
-        [Statistics(typeof(int), Description = "The total number of unflagged mines on the board. A negative number indicates that more flags have been placed than there are mines.", DisplayText = "Mines Remaining")]
-        MinesRemaining = 2,
+        [Statistics(typeof (int), Description = "The total number of unflagged mines on the board. A negative number indicates that more flags have been placed than there are mines.", DisplayText = "Mines Remaining")] MinesRemaining = 2,
 
-        [Statistics(typeof(GameState), Description = "The final state of the game, which is either Incomplete, Victory, or Gameover.", DisplayText = "Result")]
-        GameState = 3,
+        [Statistics(typeof (GameState), Description = "The final state of the game, which is either Incomplete, Victory, or Gameover.", DisplayText = "Result")] GameState = 3,
 
-        [Statistics(typeof(int), Description = "Total number of flages placed at the end of the game.", DisplayText = "Flags Placed")]
-        FlagsPlaced = 4,
+        [Statistics(typeof (int), Description = "Total number of flages placed at the end of the game.", DisplayText = "Flags Placed")] FlagsPlaced = 4,
 
-        [Statistics(typeof(int), Description = "Total number of question marks placed on the board, including question marks later removed.", DisplayText = "Question Marks Placed")]
-        QuestionMarksPlacedTotal = 5,
+        [Statistics(typeof (int), Description = "Total number of question marks placed on the board, including question marks later removed.", DisplayText = "Question Marks Placed")] QuestionMarksPlacedTotal = 5,
 
-        [Statistics(typeof(int), Description = "Total number of moves resulting in tiles being revealed.", DisplayText = "Moves")]
-        Moves = 6,
+        [Statistics(typeof (int), Description = "Total number of moves resulting in tiles being revealed.", DisplayText = "Moves")] Moves = 6,
 
-        [Statistics(typeof(DateTime), Description = "The time that the game began.", DisplayText = "Game Start Time")]
-        GameStartTime = 7,
+        [Statistics(typeof (DateTime), Description = "The time that the game began.", DisplayText = "Game Start Time")] GameStartTime = 7,
 
-        [Statistics(typeof(DateTime), Description = "The time that the game ended.", DisplayText = "Game End Time")]
-        GameEndTime = 8,
+        [Statistics(typeof (DateTime), Description = "The time that the game ended.", DisplayText = "Game End Time")] GameEndTime = 8,
 
-        [Statistics(typeof(int), Description = "The total number of matches.", DisplayText = "Count", IsSingleGameStatistic = false)]
-        MatchCount = 9
+        [Statistics(typeof (int), Description = "The total number of matches.", DisplayText = "Count", IsSingleGameStatistic = false)] MatchCount = 9
     }
 
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
@@ -64,7 +54,7 @@
         {
             get
             {
-                return statType;
+                return this.statType;
             }
         }
 
@@ -121,28 +111,30 @@
 
     public static class StatisticHelper
     {
-        private static Dictionary<Statistic, StatisticsAttribute> statData;
+        private static readonly Dictionary<Statistic, StatisticsAttribute> statData;
+
         static StatisticHelper()
         {
-            var fields = typeof(Statistic).GetFields().Skip(1);
-            statData = new Dictionary<Statistic, StatisticsAttribute>();
+            var fields = typeof (Statistic).GetFields().Skip(1);
+            StatisticHelper.statData = new Dictionary<Statistic, StatisticsAttribute>();
 
             foreach (var field in fields)
             {
-                var statEnum = (Statistic)Enum.Parse(typeof(Statistic), field.Name);
-                var statType = typeof(object);
+                var statEnum = (Statistic) Enum.Parse(typeof (Statistic),
+                    field.Name);
+                var statType = typeof (object);
                 var statDescription = string.Empty;
                 var statDisplayText = string.Empty;
                 var statIsSingleGame = true;
 
                 foreach (var customAttribute in field.CustomAttributes)
                 {
-                    if (customAttribute.AttributeType != typeof(StatisticsAttribute))
+                    if (customAttribute.AttributeType != typeof (StatisticsAttribute))
                     {
                         continue;
                     }
 
-                    statType = (Type)customAttribute.ConstructorArguments[0].Value;
+                    statType = (Type) customAttribute.ConstructorArguments[0].Value;
                     foreach (var namedArgument in customAttribute.NamedArguments)
                     {
                         if (namedArgument.MemberName == "Description")
@@ -155,38 +147,39 @@
                         }
                         else if (namedArgument.MemberName == "IsSingleGameStatistic")
                         {
-                            statIsSingleGame = (bool)namedArgument.TypedValue.Value;
+                            statIsSingleGame = (bool) namedArgument.TypedValue.Value;
                         }
                     }
                 }
 
-                statData.Add(
-                     statEnum,
-                     new StatisticsAttribute(statType)
-                     {
-                         Description = statDescription,
-                         DisplayText = statDisplayText,
-                         IsSingleGameStatistic = statIsSingleGame
-                     });
+                StatisticHelper.statData.Add(
+                    statEnum,
+                    new StatisticsAttribute(statType)
+                    {
+                        Description = statDescription,
+                        DisplayText = statDisplayText,
+                        IsSingleGameStatistic = statIsSingleGame
+                    });
             }
         }
 
         public static StatisticsAttribute GetAttribute(Statistic stat)
         {
-            var attribute = statData[stat];
-            return new StatisticsAttribute(attribute.Type) 
-            { 
+            var attribute = StatisticHelper.statData[stat];
+            return new StatisticsAttribute(attribute.Type)
+            {
                 Description = attribute.Description,
-                DisplayText = attribute.DisplayText,        
+                DisplayText = attribute.DisplayText,
                 IsSingleGameStatistic = attribute.IsSingleGameStatistic
             };
         }
 
         public static Statistic FromDisplayText(string displayText)
         {
-            foreach (var pair in statData)
+            foreach (var pair in StatisticHelper.statData)
             {
-                if (String.Equals(pair.Value.DisplayText, displayText))
+                if (String.Equals(pair.Value.DisplayText,
+                    displayText))
                 {
                     return pair.Key;
                 }
@@ -197,30 +190,31 @@
 
         public static Type GetType(Statistic stat)
         {
-            return statData[stat].Type;
+            return StatisticHelper.statData[stat].Type;
         }
 
         public static string GetDescription(Statistic stat)
         {
-            return statData[stat].Description;
+            return StatisticHelper.statData[stat].Description;
         }
 
         public static string GetDisplayText(Statistic stat)
         {
-            return statData[stat].DisplayText;
+            return StatisticHelper.statData[stat].DisplayText;
         }
 
         public static IEnumerable<KeyValuePair<Statistic, object>> GetDefaultValues()
         {
-            foreach (var pair in statData)
+            foreach (var pair in StatisticHelper.statData)
             {
-                yield return new KeyValuePair<Statistic, object>(pair.Key, pair.Value.Type.GetDefaultValue());
+                yield return new KeyValuePair<Statistic, object>(pair.Key,
+                    pair.Value.Type.GetDefaultValue());
             }
         }
 
         public static IEnumerable<Statistic> GetGameStatistics()
         {
-            foreach (var pair in statData)
+            foreach (var pair in StatisticHelper.statData)
             {
                 if (pair.Value.IsSingleGameStatistic)
                 {
@@ -231,7 +225,7 @@
 
         public static IEnumerable<Statistic> GetGlobalStatistics()
         {
-            foreach (var pair in statData)
+            foreach (var pair in StatisticHelper.statData)
             {
                 if (!pair.Value.IsSingleGameStatistic)
                 {
@@ -243,13 +237,13 @@
 
     public class StatisticComparer : IComparer<object>
     {
-        private static StatisticComparer defaultComparer = new StatisticComparer();
+        private static readonly StatisticComparer defaultComparer = new StatisticComparer();
 
         public static StatisticComparer Default
         {
             get
             {
-                return defaultComparer;
+                return StatisticComparer.defaultComparer;
             }
         }
 
@@ -258,13 +252,15 @@
             var objType = x.GetType();
             if (objType.IsPrimitive)
             {
-                double d1 = (double)Convert.ChangeType(x, typeof(double));
-                double d2 = (double)Convert.ChangeType(y, typeof(double));
+                double d1 = (double) Convert.ChangeType(x,
+                    typeof (double));
+                double d2 = (double) Convert.ChangeType(y,
+                    typeof (double));
                 return (d1 > d2 ? 1 : d1 < d2 ? -1 : 0);
             }
-            else if (objType == typeof(BoardSize))
+            else if (objType == typeof (BoardSize))
             {
-                return ((BoardSize)x).CompareTo((BoardSize)y);
+                return ((BoardSize) x).CompareTo((BoardSize) y);
             }
             else if (objType.IsEnum)
             {

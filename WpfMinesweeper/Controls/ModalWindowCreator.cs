@@ -16,15 +16,15 @@
     {
         public static DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
-            typeof(object),
-            typeof(ModalWindowCreator),
+            typeof (object),
+            typeof (ModalWindowCreator),
             new PropertyMetadata(
                 null,
-                ContentChanged));
+                ModalWindowCreator.ContentChanged));
 
         private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var mwc = (ModalWindowCreator)d;
+            var mwc = (ModalWindowCreator) d;
 
             if (e.OldValue != null)
             {
@@ -55,11 +55,12 @@
         {
             get
             {
-                return this.GetValue(ContentProperty);
+                return this.GetValue(ModalWindowCreator.ContentProperty);
             }
             set
             {
-                this.SetValue(ContentProperty, value);
+                this.SetValue(ModalWindowCreator.ContentProperty,
+                    value);
             }
         }
 
@@ -80,7 +81,7 @@
             {
                 window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             }
-                    
+
             window.ShowDialog();
         }
     }

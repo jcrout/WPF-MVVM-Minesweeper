@@ -8,10 +8,10 @@
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
     public struct Tile
-    {  
-        private TileType type;
-        private ExtraTileData extraTileData;
-        private bool shown;
+    {
+        private readonly TileType type;
+        private readonly ExtraTileData extraTileData;
+        private readonly bool shown;
 
         public Tile(TileType type, bool shown, ExtraTileData extraTileData = ExtraTileData.None)
         {
@@ -50,20 +50,20 @@
     /// </summary>
     public struct TileType
     {
-        private static ushort mineCountMaximum = 8;
+        private static readonly ushort mineCountMaximum = 8;
         private const ushort TYPE_EMPTY = 100;
         private const ushort TYPE_MINE = 200;
 
-        private ushort value;
+        private readonly ushort value;
 
         public static int MineCountMaximum
         {
             get
             {
-                return (int)mineCountMaximum;
+                return (int) TileType.mineCountMaximum;
             }
         }
-        
+
         public static TileType Unset
         {
             get
@@ -76,7 +76,7 @@
         {
             get
             {
-                return new TileType(TYPE_EMPTY);
+                return new TileType(TileType.TYPE_EMPTY);
             }
         }
 
@@ -84,7 +84,7 @@
         {
             get
             {
-                return new TileType(TYPE_MINE);
+                return new TileType(TileType.TYPE_MINE);
             }
         }
 
@@ -95,8 +95,8 @@
                 return TileType.EmptySpace;
             }
 
-            ushort usmineCount = (ushort)mineCount;
-            if (usmineCount > mineCountMaximum || usmineCount < 0)
+            ushort usmineCount = (ushort) mineCount;
+            if (usmineCount > TileType.mineCountMaximum || usmineCount < 0)
             {
                 throw new ArgumentOutOfRangeException("mineCount");
             }
@@ -119,17 +119,17 @@
             this.value = value;
         }
 
-        public int  Value
+        public int Value
         {
             get
             {
-                return (int)this.value;
+                return (int) this.value;
             }
         }
 
         public bool IsNumber()
         {
-            return ((this.value > 0) && (this.value <= mineCountMaximum));
+            return ((this.value > 0) && (this.value <= TileType.mineCountMaximum));
         }
 
         public bool IsUnset()
@@ -144,7 +144,7 @@
 
         public override bool Equals(object obj)
         {
-            var t2 = (TileType)obj;
+            var t2 = (TileType) obj;
             return this.value == t2.value;
         }
 
@@ -154,11 +154,11 @@
             {
                 return this.value.ToString();
             }
-            else if (this.value == TYPE_MINE)
+            else if (this.value == TileType.TYPE_MINE)
             {
                 return "MINE";
             }
-            else if (this.value == TYPE_EMPTY)
+            else if (this.value == TileType.TYPE_EMPTY)
             {
                 return "EMPTY";
             }
@@ -166,7 +166,7 @@
             return "UNSET";
         }
     }
-    
+
     /// <summary>
     /// Specifies the extra data associated with a Tile, including whether or not the Tile is flagged or contains a question mark.
     /// </summary>

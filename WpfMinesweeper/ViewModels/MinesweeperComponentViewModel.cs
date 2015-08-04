@@ -49,12 +49,10 @@ namespace WpfMinesweeper.ViewModels
 
         protected virtual void OnMinesweeperChanged()
         {
-
         }
 
         protected virtual void OnGameStatisticsChanged()
         {
-
         }
     }
 }

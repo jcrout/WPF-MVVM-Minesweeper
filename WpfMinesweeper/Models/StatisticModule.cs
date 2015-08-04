@@ -14,14 +14,12 @@
         object this[Statistic statistic] { get; set; }
 
         string GetDescription(Statistic statistic);
-
     }
 
     [Serializable, DataContract]
     public class StatisticsModule : IStatisticsModule
     {
-        [DataMember(Name = "Stats")]
-        private Dictionary<Statistic, object> stats;
+        [DataMember(Name = "Stats")] private Dictionary<Statistic, object> stats;
 
         public static IStatisticsModule Create()
         {
@@ -35,7 +33,8 @@
 
             foreach (var stat in StatisticHelper.GetGameStatistics())
             {
-                this.stats.Add(stat, StatisticHelper.GetType(stat).GetDefaultValue());
+                this.stats.Add(stat,
+                    StatisticHelper.GetType(stat).GetDefaultValue());
             }
         }
 
@@ -53,7 +52,8 @@
                 }
                 else
                 {
-                    this.stats.Add(statistic, value);
+                    this.stats.Add(statistic,
+                        value);
                 }
             }
         }

@@ -1,17 +1,17 @@
 ﻿<UserControl x:Class="WpfMinesweeper.Views.MenuView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WpfMinesweeper"
              xmlns:models="clr-namespace:WpfMinesweeper.Models"
              xmlns:vw="clr-namespace:WpfMinesweeper.Views"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"          
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
              xmlns:ei2="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
-             mc:Ignorable="d"              
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
@@ -26,62 +26,65 @@
     </UserControl.Resources>
 
     <Grid>
-        <controls:PromptBox  x:Name="customBoardWindow" 
-                             DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                             IsModal="True"
-                             Title="Custom Board Size"
-                             CancelButton="Cancel;1">
+        <controls:PromptBox x:Name="customBoardWindow"
+                            DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                            IsModal="True"
+                            Title="Custom Board Size"
+                            CancelButton="Cancel;1">
             <controls:PromptBox.OKButton>
                 <controls:MessageButton RightToLeftIndex="0">
                     <Button Content="OK"
                             Width="80"
                             Height="22"
-                            Command="{Binding Path=SaveCustomBoardCommand}">
-                    </Button>
+                            Command="{Binding Path=SaveCustomBoardCommand}" />
                 </controls:MessageButton>
             </controls:PromptBox.OKButton>
 
             <Grid>
-                <StackPanel HorizontalAlignment="Left" 
-                            VerticalAlignment="Top" 
-                            Orientation="Horizontal" 
+                <StackPanel HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal"
                             Margin="15">
-                    <Label Content="Width:"></Label>
-                    <TextBox Name="txtWidth" 
-                         Width="35" 
-                         Text="{Binding Path=Width,ValidatesOnDataErrors=True}"/>
-                    <Label Content="Height:"></Label>
-                    <TextBox 
-                        Name="txtHeight" 
+                    <Label Content="Width:" />
+                    <TextBox Name="txtWidth"
+                             Width="35"
+                             Text="{Binding Path=Width,ValidatesOnDataErrors=True}" />
+                    <Label Content="Height:" />
+                    <TextBox
+                        Name="txtHeight"
                         Width="35"
-                        Text="{Binding Path=Height,ValidatesOnDataErrors=True}"/>
-                    <Label Content="Mines:"></Label>
-                    <TextBox Name="txtMines" 
-                        Width="35"
-                        Text="{Binding Path=Mines,ValidatesOnDataErrors=True}"/>
+                        Text="{Binding Path=Height,ValidatesOnDataErrors=True}" />
+                    <Label Content="Mines:" />
+                    <TextBox Name="txtMines"
+                             Width="35"
+                             Text="{Binding Path=Mines,ValidatesOnDataErrors=True}" />
                 </StackPanel>
             </Grid>
         </controls:PromptBox>
 
         <controls:PromptBox x:Name="statisticsWindow"
                             Title="Statistics"
-                            IsModal="false" 
+                            IsModal="false"
                             CancelButton="{x:Null}">
-            <vw:StatisticsView DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+            <vw:StatisticsView
+                DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </controls:PromptBox>
 
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
-            <MenuItem  Header="_Game" HorizontalAlignment="Stretch">
-                <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*"></MenuItem>
+            <MenuItem Header="_Game" HorizontalAlignment="Stretch">
+                <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*" />
                 <MenuItem Header="_Difficulty">
-                    <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}" CommandParameter="{Binding Source={x:Static models:BoardSize.Beginner}}"></MenuItem>
-                    <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}" CommandParameter="{Binding Source={x:Static models:BoardSize.Intermediate}}"></MenuItem>
-                    <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}" CommandParameter="{Binding Source={x:Static models:BoardSize.Expert}}"></MenuItem>
+                    <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}"
+                              CommandParameter="{Binding Source={x:Static models:BoardSize.Beginner}}" />
+                    <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}"
+                              CommandParameter="{Binding Source={x:Static models:BoardSize.Intermediate}}" />
+                    <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}"
+                              CommandParameter="{Binding Source={x:Static models:BoardSize.Expert}}" />
                     <MenuItem Header="_Custom">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
-                                <ei:CallMethodAction TargetObject="{Binding ElementName=customBoardWindow}"                                                     
-                                                     MethodName="Show"/>
+                                <ei:CallMethodAction TargetObject="{Binding ElementName=customBoardWindow}"
+                                                     MethodName="Show" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </MenuItem>
@@ -89,26 +92,26 @@
                 <MenuItem Header="E_xit">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <ei:CallMethodAction MethodName="Close" TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"></ei:CallMethodAction>
+                            <ei:CallMethodAction MethodName="Close"
+                                                 TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>
             </MenuItem>
-            <MenuItem  Header="_Edit" HorizontalAlignment="Left">
+            <MenuItem Header="_Edit" HorizontalAlignment="Left">
                 <MenuItem Header="_Tile Color">
-                    <xctk:ColorPicker Name="ColorPicker" 
-                                      Width="80"                                     
+                    <xctk:ColorPicker Name="ColorPicker"
+                                      Width="80"
                                       UsingAlphaChannel="False"
-                                      SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}">
-                    </xctk:ColorPicker>
+                                      SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}" />
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="_Statistics">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <ei:CallMethodAction TargetObject="{Binding ElementName=statisticsWindow}"                                                     
-                                                 MethodName="Show"/>
+                            <ei:CallMethodAction TargetObject="{Binding ElementName=statisticsWindow}"
+                                                 MethodName="Show" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>

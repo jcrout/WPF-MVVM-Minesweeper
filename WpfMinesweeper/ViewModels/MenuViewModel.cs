@@ -14,7 +14,7 @@
 
     public class MenuViewModel : ViewModelBase
     {
-        private static Color defaultSelectedColor = Settings.TileColor;
+        private static readonly Color defaultSelectedColor = ViewModelBase.Settings.TileColor;
 
         private ViewModelBase customBoardViewModel;
         private ViewModelBase statisticsViewModel;
@@ -25,7 +25,7 @@
         public MenuViewModel()
         {
             this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(o));
-            this.selectedColor = defaultSelectedColor;
+            this.selectedColor = MenuViewModel.defaultSelectedColor;
             this.CustomBoardViewModel = new CustomBoardViewModel();
             this.StatisticsViewModel = new StatisticsViewModel();
         }
@@ -73,9 +73,10 @@
                 if (this.selectedColor != value)
                 {
                     this.selectedColor = value;
-                    Settings.TileColor = value;
+                    ViewModelBase.Settings.TileColor = value;
                     var brush = new SolidColorBrush(value);
-                    Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged, brush);
+                    Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged,
+                        brush);
                     this.OnPropertyChanged();
                 }
             }
@@ -115,7 +116,8 @@
 
         private void OnBoardSizeSelected(object paramter)
         {
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, paramter);
+            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard,
+                paramter);
         }
     }
 }

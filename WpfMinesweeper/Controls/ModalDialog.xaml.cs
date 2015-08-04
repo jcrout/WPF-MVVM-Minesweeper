@@ -21,30 +21,31 @@ namespace WpfMinesweeper.Controls
     {
         public static DependencyProperty ReturnValueProperty = DependencyProperty.Register(
             "ReturnValue",
-            typeof(object),
-            typeof(ModalDialog));
+            typeof (object),
+            typeof (ModalDialog));
 
         public ModalDialog()
         {
-            this.ShowInTaskbar = false;          
-            this.SizeToContent = System.Windows.SizeToContent.WidthAndHeight;
-            InitializeComponent();
+            this.ShowInTaskbar = false;
+            this.SizeToContent = SizeToContent.WidthAndHeight;
+            this.InitializeComponent();
         }
 
         public object ReturnValue
         {
             get
             {
-                return this.GetValue(ReturnValueProperty);
+                return this.GetValue(ModalDialog.ReturnValueProperty);
             }
             set
             {
-                this.SetValue(ReturnValueProperty, value);
+                this.SetValue(ModalDialog.ReturnValueProperty,
+                    value);
             }
         }
 
         public void ShowAsModal()
-        {            
+        {
             this.ShowDialog();
         }
     }

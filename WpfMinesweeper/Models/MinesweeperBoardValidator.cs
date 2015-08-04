@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WpfMinesweeper.Models
+﻿namespace WpfMinesweeper.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     public interface IMinesweeperBoardValidator
     {
         string ValidateBoard(int width, int height, int mineCount);
@@ -17,21 +17,21 @@ namespace WpfMinesweeper.Models
     public class MinesweeperBoardValidator : IMinesweeperBoardValidator
     {
         private static readonly IMinesweeperBoardValidator defaultMinesweeperBoardValidator;
-        private static int minimumWidth = 8;
-        private static int minimumHeight = 8;
-        private static int maximumWidth = 100;
-        private static int maximumHeight = 100;
-        private static int minimumMineCount = 1;
-        private static int minimumMineCountDifference = 1;
+        private static readonly int minimumWidth = 8;
+        private static readonly int minimumHeight = 8;
+        private static readonly int maximumWidth = 100;
+        private static readonly int maximumHeight = 100;
+        private static readonly int minimumMineCount = 1;
+        private static readonly int minimumMineCountDifference = 1;
 
         static MinesweeperBoardValidator()
         {
-            defaultMinesweeperBoardValidator = new MinesweeperBoardValidator();
+            MinesweeperBoardValidator.defaultMinesweeperBoardValidator = new MinesweeperBoardValidator();
         }
 
         public static IMinesweeperBoardValidator Create()
         {
-            return defaultMinesweeperBoardValidator;
+            return MinesweeperBoardValidator.defaultMinesweeperBoardValidator;
         }
 
         public string ValidateBoard(int width, int height, int mineCount)
@@ -48,7 +48,9 @@ namespace WpfMinesweeper.Models
                 return validateHeight;
             }
 
-            string validateMineCount = this.ValidateMineCount(mineCount: mineCount, width: width, height: height);
+            string validateMineCount = this.ValidateMineCount(mineCount: mineCount,
+                width: width,
+                height: height);
             if (validateMineCount != null)
             {
                 return validateMineCount;
@@ -59,14 +61,16 @@ namespace WpfMinesweeper.Models
 
         public string ValidateWidth(int width)
         {
-            if (width < minimumWidth)
+            if (width < MinesweeperBoardValidator.minimumWidth)
             {
-                return string.Format("Board width must be greater than {0}.", minimumWidth - 1);
+                return string.Format("Board width must be greater than {0}.",
+                    MinesweeperBoardValidator.minimumWidth - 1);
             }
 
-            if (width > maximumWidth)
+            if (width > MinesweeperBoardValidator.maximumWidth)
             {
-                return string.Format("Board width must be less than {0}.", maximumWidth + 1);
+                return string.Format("Board width must be less than {0}.",
+                    MinesweeperBoardValidator.maximumWidth + 1);
             }
 
             return null;
@@ -74,14 +78,16 @@ namespace WpfMinesweeper.Models
 
         public string ValidateHeight(int height)
         {
-            if (height < minimumHeight)
+            if (height < MinesweeperBoardValidator.minimumHeight)
             {
-                return string.Format("Board height must be greater than {0}.", minimumHeight - 1);
+                return string.Format("Board height must be greater than {0}.",
+                    MinesweeperBoardValidator.minimumHeight - 1);
             }
 
-            if (height > maximumHeight)
+            if (height > MinesweeperBoardValidator.maximumHeight)
             {
-                return string.Format("Board height must be less than {0}.", maximumHeight + 1);
+                return string.Format("Board height must be less than {0}.",
+                    MinesweeperBoardValidator.maximumHeight + 1);
             }
 
             return null;
@@ -89,15 +95,19 @@ namespace WpfMinesweeper.Models
 
         public string ValidateMineCount(int mineCount, int width, int height)
         {
-            if (mineCount < minimumMineCount)
+            if (mineCount < MinesweeperBoardValidator.minimumMineCount)
             {
-                return string.Format("Mine count must be greater than {0}.", minimumMineCount - 1);
+                return string.Format("Mine count must be greater than {0}.",
+                    MinesweeperBoardValidator.minimumMineCount - 1);
             }
 
-            int targetMaximum = width * height - minimumMineCountDifference;
+            int targetMaximum = width*height - MinesweeperBoardValidator.minimumMineCountDifference;
             if (mineCount > targetMaximum)
             {
-                return string.Format("Mine count on a {0}x{1} board must be less than {2}.", width, height, targetMaximum);
+                return string.Format("Mine count on a {0}x{1} board must be less than {2}.",
+                    width,
+                    height,
+                    targetMaximum);
             }
 
             return null;

@@ -7,11 +7,11 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Input;
-    using WpfMinesweeper.Models;
+    using Models;
 
     public class CustomBoardViewModel : ViewModelBase, IDataErrorInfo
     {
-        private IMinesweeperBoardValidator validator;
+        private readonly IMinesweeperBoardValidator validator;
         private ICommand saveCustomBoardCommand;
         private int width;
         private int height;
@@ -23,14 +23,15 @@
             this.height = height;
             this.mines = mines;
             this.validator = MinesweeperBoardValidator.Create();
-            this.saveCustomBoardCommand = new Command(o => this.OnSaveCustomBoard(o), () => this.IsValid);
+            this.saveCustomBoardCommand = new Command(o => this.OnSaveCustomBoard(o),
+                () => this.IsValid);
         }
 
         public int Width
         {
             get
             {
-                return width;
+                return this.width;
             }
             set
             {
@@ -94,7 +95,9 @@
         {
             get
             {
-                bool isValid = this.validator.ValidateBoard(this.width, this.height, this.mines) == null;
+                bool isValid = this.validator.ValidateBoard(this.width,
+                    this.height,
+                    this.mines) == null;
                 return isValid;
             }
         }
@@ -123,7 +126,9 @@
 
                 if (columnName == "Mines")
                 {
-                    return this.validator.ValidateMineCount(mineCount:this.mines, width:this.width, height:this.height);
+                    return this.validator.ValidateMineCount(mineCount: this.mines,
+                        width: this.width,
+                        height: this.height);
                 }
 
                 return null;
@@ -133,7 +138,8 @@
         private void OnSaveCustomBoard(object paramter)
         {
             string customBoard = this.width.ToString() + ',' + this.height.ToString() + ',' + this.mines.ToString();
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, customBoard);
+            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard,
+                customBoard);
         }
     }
 }

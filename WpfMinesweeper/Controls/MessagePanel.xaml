@@ -1,25 +1,25 @@
 ﻿<UserControl x:Class="WpfMinesweeper.Controls.MessagePanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-    
-    <Grid x:Name="MainGrid" 
+
+    <Grid x:Name="MainGrid"
           Background="Transparent">
-        <StackPanel x:Name="ContentPanel" 
-                    Orientation="Vertical" 
-                    HorizontalAlignment="Left" 
+        <StackPanel x:Name="ContentPanel"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Top">
-            <Grid x:Name="ContentGrid" 
+            <Grid x:Name="ContentGrid"
                   Background="Transparent"
-                  MinWidth="132"/>
+                  MinWidth="132" />
             <Border x:Name="ButtonPanelBorder">
-                <WrapPanel x:Name="ButtonPanel" 
-                           Orientation="Horizontal" 
-                           HorizontalAlignment="Right" 
-                           VerticalAlignment="Bottom"/>
+                <WrapPanel x:Name="ButtonPanel"
+                           Orientation="Horizontal"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom" />
             </Border>
         </StackPanel>
     </Grid>

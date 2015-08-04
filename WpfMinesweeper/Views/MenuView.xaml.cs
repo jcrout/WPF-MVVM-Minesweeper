@@ -22,7 +22,7 @@ namespace WpfMinesweeper.Views
     {
         public MenuView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }
