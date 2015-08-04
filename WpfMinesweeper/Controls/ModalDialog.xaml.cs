@@ -7,11 +7,6 @@
     /// </summary>
     public partial class ModalDialog : Window
     {
-        public static DependencyProperty ReturnValueProperty = DependencyProperty.Register(
-            "ReturnValue",
-            typeof (object),
-            typeof (ModalDialog));
-
         public ModalDialog()
         {
             this.ShowInTaskbar = false;
@@ -38,5 +33,10 @@
         {
             this.ShowDialog();
         }
+
+        public static DependencyProperty ReturnValueProperty = DependencyProperty.Register(
+            "ReturnValue",
+            typeof(object),
+            typeof(ModalDialog));
     }
 }

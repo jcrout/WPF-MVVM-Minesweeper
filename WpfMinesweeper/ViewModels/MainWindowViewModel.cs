@@ -1,7 +1,7 @@
 ﻿namespace WpfMinesweeper.ViewModels
 {
     using System.Windows;
-    using WpfMinesweeper.Models;
+    using Models;
 
     public class MainWindowViewModel : ViewModelBase
     {
@@ -28,105 +28,6 @@
             this.ViewModel = new MinesweeperViewModel();
 
             this.PositionWindow();
-        }
-
-        public ViewModelBase ViewModel
-        {
-            get
-            {
-                return this.viewModel;
-            }
-            private set
-            {
-                if (this.viewModel != value)
-                {
-                    this.viewModel = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public SizeToContent SizeToContentMode
-        {
-            get
-            {
-                return this.sizeToContentMode;
-            }
-            set
-            {
-                if (this.sizeToContentMode != value)
-                {
-                    this.sizeToContentMode = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public WindowState WindowState
-        {
-            get
-            {
-                return this.windowState;
-            }
-            set
-            {
-                if (this.windowState != value)
-                {
-                    this.windowState = value;
-                    Mediator.Instance.Notify(
-                        ViewModelMessages.GameWindowStateChanged,
-                        value);
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public double MinWidth
-        {
-            get
-            {
-                return this.minWidth;
-            }
-            set
-            {
-                if (this.minWidth != value)
-                {
-                    this.minWidth = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public double MinHeight
-        {
-            get
-            {
-                return this.minHeight;
-            }
-            set
-            {
-                if (this.minHeight != value)
-                {
-                    this.minHeight = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public double Width
-        {
-            get
-            {
-                return this.width;
-            }
-            set
-            {
-                if (this.width != value)
-                {
-                    this.width = value;
-                    this.OnPropertyChanged();
-                }
-            }
         }
 
         public double Height
@@ -163,6 +64,54 @@
             }
         }
 
+        public double MinHeight
+        {
+            get
+            {
+                return this.minHeight;
+            }
+            set
+            {
+                if (this.minHeight != value)
+                {
+                    this.minHeight = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public double MinWidth
+        {
+            get
+            {
+                return this.minWidth;
+            }
+            set
+            {
+                if (this.minWidth != value)
+                {
+                    this.minWidth = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public SizeToContent SizeToContentMode
+        {
+            get
+            {
+                return this.sizeToContentMode;
+            }
+            set
+            {
+                if (this.sizeToContentMode != value)
+                {
+                    this.sizeToContentMode = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
         public double Top
         {
             get
@@ -179,6 +128,63 @@
                     this.OnPropertyChanged();
                 }
             }
+        }
+
+        public ViewModelBase ViewModel
+        {
+            get
+            {
+                return this.viewModel;
+            }
+            private set
+            {
+                if (this.viewModel != value)
+                {
+                    this.viewModel = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public double Width
+        {
+            get
+            {
+                return this.width;
+            }
+            set
+            {
+                if (this.width != value)
+                {
+                    this.width = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public WindowState WindowState
+        {
+            get
+            {
+                return this.windowState;
+            }
+            set
+            {
+                if (this.windowState != value)
+                {
+                    this.windowState = value;
+                    Mediator.Instance.Notify(
+                        ViewModelMessages.GameWindowStateChanged,
+                        value);
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        private void CenterWindow()
+        {
+            this.Left = (SystemParameters.FullPrimaryScreenWidth - this.width) / 2;
+            this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height) / 2;
         }
 
         private void OnTileBoardInitialized(object parameter)
@@ -215,12 +221,6 @@
                 this.Left = point.X;
                 this.Top = point.Y;
             }
-        }
-
-        private void CenterWindow()
-        {
-            this.Left = (SystemParameters.FullPrimaryScreenWidth - this.width)/2;
-            this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height)/2;
         }
     }
 }

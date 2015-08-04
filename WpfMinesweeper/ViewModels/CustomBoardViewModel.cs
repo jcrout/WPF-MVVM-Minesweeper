@@ -23,19 +23,11 @@
                 () => this.IsValid);
         }
 
-        public int Width
+        public string Error
         {
             get
             {
-                return this.width;
-            }
-            set
-            {
-                if (this.width != value)
-                {
-                    this.width = value;
-                    this.OnPropertyChanged();
-                }
+                return null;
             }
         }
 
@@ -52,6 +44,18 @@
                     this.height = value;
                     this.OnPropertyChanged();
                 }
+            }
+        }
+
+        public bool IsValid
+        {
+            get
+            {
+                var isValid = this.validator.ValidateBoard(
+                    this.width,
+                    this.height,
+                    this.mines) == null;
+                return isValid;
             }
         }
 
@@ -87,23 +91,19 @@
             }
         }
 
-        public bool IsValid
+        public int Width
         {
             get
             {
-                var isValid = this.validator.ValidateBoard(
-                    this.width,
-                    this.height,
-                    this.mines) == null;
-                return isValid;
+                return this.width;
             }
-        }
-
-        public string Error
-        {
-            get
+            set
             {
-                return null;
+                if (this.width != value)
+                {
+                    this.width = value;
+                    this.OnPropertyChanged();
+                }
             }
         }
 

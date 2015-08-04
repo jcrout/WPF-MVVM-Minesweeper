@@ -11,16 +11,6 @@
     public interface IMinesweeper : INotifyPropertyChanged
     {
         /// <summary>
-        ///     Gets the collection of tiles that make up the board.
-        /// </summary>
-        ITileCollection Tiles { get; }
-
-        /// <summary>
-        ///     Gets the total amount of time that has elapsed since the game began.
-        /// </summary>
-        int TimeElapsed { get; set; }
-
-        /// <summary>
         ///     Gets the total number of mines on the board.
         /// </summary>
         int MineCount { get; }
@@ -29,43 +19,16 @@
         ///     Gets the total number of mines remaining (unflagged) on the board.
         /// </summary>
         int MinesRemaining { get; set; }
-    }
 
-    public class MinesweeperFactory
-    {
-        private static readonly ISettingsProvider settings = SettingsProvider.Instance;
+        /// <summary>
+        ///     Gets the collection of tiles that make up the board.
+        /// </summary>
+        ITileCollection Tiles { get; }
 
-        public static Minesweeper GetFromSettings()
-        {
-            return Minesweeper.Create(
-                MinesweeperFactory.settings.LastBoardSize.Width,
-                MinesweeperFactory.settings.LastBoardSize.Height,
-                MinesweeperFactory.settings.LastBoardSize.MineCount);
-        }
-
-        public static Minesweeper Create(int width, int height, int mineCount)
-        {
-            return Minesweeper.Create(
-                width,
-                height,
-                mineCount);
-        }
-
-        public static Minesweeper Create(BoardSize board)
-        {
-            return Minesweeper.Create(
-                board.Width,
-                board.Height,
-                board.MineCount);
-        }
-
-        public static Minesweeper Create(IMinesweeper minesweeper)
-        {
-            return Minesweeper.Create(
-                minesweeper.Tiles.Width,
-                minesweeper.Tiles.Height,
-                minesweeper.MineCount);
-        }
+        /// <summary>
+        ///     Gets the total amount of time that has elapsed since the game began.
+        /// </summary>
+        int TimeElapsed { get; set; }
     }
 
     /// <summary>
@@ -197,6 +160,43 @@
                     this,
                     new PropertyChangedEventArgs(prop));
             }
+        }
+    }
+
+    public class MinesweeperFactory
+    {
+        private static readonly ISettingsProvider settings = SettingsProvider.Instance;
+
+        public static Minesweeper GetFromSettings()
+        {
+            return Minesweeper.Create(
+                MinesweeperFactory.settings.LastBoardSize.Width,
+                MinesweeperFactory.settings.LastBoardSize.Height,
+                MinesweeperFactory.settings.LastBoardSize.MineCount);
+        }
+
+        public static Minesweeper Create(int width, int height, int mineCount)
+        {
+            return Minesweeper.Create(
+                width,
+                height,
+                mineCount);
+        }
+
+        public static Minesweeper Create(BoardSize board)
+        {
+            return Minesweeper.Create(
+                board.Width,
+                board.Height,
+                board.MineCount);
+        }
+
+        public static Minesweeper Create(IMinesweeper minesweeper)
+        {
+            return Minesweeper.Create(
+                minesweeper.Tiles.Width,
+                minesweeper.Tiles.Height,
+                minesweeper.MineCount);
         }
     }
 }

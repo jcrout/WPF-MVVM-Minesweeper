@@ -8,22 +8,6 @@
     [ContentProperty("Content"), DefaultProperty("Content"), Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
     public class ModalWindowCreator : FrameworkElement
     {
-        public static DependencyProperty ContentProperty = DependencyProperty.Register(
-            "Content",
-            typeof (object),
-            typeof (ModalWindowCreator),
-            new PropertyMetadata(
-                null,
-                ModalWindowCreator.ContentChanged));
-
-        protected override int VisualChildrenCount
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
         [Bindable(true)]
         public object Content
         {
@@ -40,26 +24,12 @@
             }
         }
 
-        private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        protected override int VisualChildrenCount
         {
-            var mwc = (ModalWindowCreator)d;
-
-            if (e.OldValue != null)
+            get
             {
-                mwc.RemoveLogicalChild(
-                    e.OldValue);
+                return 0;
             }
-
-            if (e.NewValue != null)
-            {
-                mwc.AddLogicalChild(
-                    e.NewValue);
-            }
-        }
-
-        protected override Visual GetVisualChild(int index)
-        {
-            return null;
         }
 
         public void Show()
@@ -83,5 +53,35 @@
 
             window.ShowDialog();
         }
+
+        protected override Visual GetVisualChild(int index)
+        {
+            return null;
+        }
+
+        private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var mwc = (ModalWindowCreator)d;
+
+            if (e.OldValue != null)
+            {
+                mwc.RemoveLogicalChild(
+                    e.OldValue);
+            }
+
+            if (e.NewValue != null)
+            {
+                mwc.AddLogicalChild(
+                    e.NewValue);
+            }
+        }
+
+        public static DependencyProperty ContentProperty = DependencyProperty.Register(
+            "Content",
+            typeof(object),
+            typeof(ModalWindowCreator),
+            new PropertyMetadata(
+                null,
+                ModalWindowCreator.ContentChanged));
     }
 }

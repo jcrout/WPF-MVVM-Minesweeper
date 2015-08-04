@@ -80,11 +80,35 @@
             }
         }
 
-        public int TimeElapsed
+        public string RepeatAnimation
         {
             get
             {
-                return this.Minesweeper != null ? this.Minesweeper.TimeElapsed : 0;
+                return this.repeatAnimation;
+            }
+            set
+            {
+                if (this.repeatAnimation != value)
+                {
+                    this.repeatAnimation = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public ImageSource SmileyBackground
+        {
+            get
+            {
+                return this.smileyBackground;
+            }
+            set
+            {
+                if (this.smileyBackground != value)
+                {
+                    this.smileyBackground = value;
+                    this.OnPropertyChanged();
+                }
             }
         }
 
@@ -120,61 +144,12 @@
             }
         }
 
-        public string RepeatAnimation
+        public int TimeElapsed
         {
             get
             {
-                return this.repeatAnimation;
+                return this.Minesweeper != null ? this.Minesweeper.TimeElapsed : 0;
             }
-            set
-            {
-                if (this.repeatAnimation != value)
-                {
-                    this.repeatAnimation = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public ImageSource SmileyBackground
-        {
-            get
-            {
-                return this.smileyBackground;
-            }
-            set
-            {
-                if (this.smileyBackground != value)
-                {
-                    this.smileyBackground = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        private void UpdateSmileyBackgroundImage(Brush brush)
-        {
-            var target = new RenderTargetBitmap(23,
-                23,
-                96,
-                96,
-                PixelFormats.Pbgra32);
-            var newImage = new DrawingVisual();
-            using (var dc = newImage.RenderOpen())
-            {
-                dc.DrawRectangle(
-                    brush,
-                    null,
-                    new Rect(0,
-                        0,
-                        23,
-                        23));
-            }
-
-            target.Render(
-                newImage);
-            this.SmileyBorderBrush = brush;
-            this.SmileyBackground = target;
         }
 
         protected override void OnMinesweeperChanged()
@@ -202,16 +177,41 @@
             }
         }
 
+        private void OnBorderSizeCommand()
+        {
+            Mediator.Instance.Notify(
+                ViewModelMessages.CreateNewBoard);
+        }
+
         private void OnUpdateSmileyIndex(SmileyState newState)
         {
             this.SmileyImage = DisplayPanelViewModel.smileyImages[newState];
             this.RepeatAnimation = (newState == SmileyState.GameOver) ? "1x" : "Forever";
         }
 
-        private void OnBorderSizeCommand()
+        private void UpdateSmileyBackgroundImage(Brush brush)
         {
-            Mediator.Instance.Notify(
-                ViewModelMessages.CreateNewBoard);
+            var target = new RenderTargetBitmap(23,
+                23,
+                96,
+                96,
+                PixelFormats.Pbgra32);
+            var newImage = new DrawingVisual();
+            using (var dc = newImage.RenderOpen())
+            {
+                dc.DrawRectangle(
+                    brush,
+                    null,
+                    new Rect(0,
+                        0,
+                        23,
+                        23));
+            }
+
+            target.Render(
+                newImage);
+            this.SmileyBorderBrush = brush;
+            this.SmileyBackground = target;
         }
     }
 }

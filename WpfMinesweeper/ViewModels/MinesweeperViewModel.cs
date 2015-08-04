@@ -43,22 +43,6 @@
             this.Minesweeper = MinesweeperFactory.GetFromSettings();
         }
 
-        public ViewModelBase MenuViewModel
-        {
-            get
-            {
-                return this.menuViewModel;
-            }
-            set
-            {
-                if (this.menuViewModel != value)
-                {
-                    this.menuViewModel = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
         public MinesweeperComponentViewModel DisplayViewModel
         {
             get
@@ -70,6 +54,22 @@
                 if (this.displayViewModel != value)
                 {
                     this.displayViewModel = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public ViewModelBase MenuViewModel
+        {
+            get
+            {
+                return this.menuViewModel;
+            }
+            set
+            {
+                if (this.menuViewModel != value)
+                {
+                    this.menuViewModel = value;
                     this.OnPropertyChanged();
                 }
             }
@@ -117,29 +117,18 @@
             this.TileBoardViewModel.GameStatistics = gameStatistics;
         }
 
-        private void OnWindowStateChanged(WindowState state)
+        private void EndGame(GameResult finalResult)
         {
-            if (!this.gameStarted)
-            {
-                return;
-            }
+            this.gameTimer.Stop();
 
-            if (state == WindowState.Minimized)
-            {
-                this.gameTimer.Stop();
-                this.minimized = true;
-            }
-            else if (this.minimized)
-            {
-                this.gameTimer.Start();
-                this.minimized = false;
-            }
-        }
+            this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
+            this.GameStatistics[Statistic.GameState] = finalResult;
+            this.GameStatistics[Statistic.MinesRemaining] = this.Minesweeper.MinesRemaining;
+            this.GameStatistics[Statistic.TimeElapsed] = this.Minesweeper.TimeElapsed;
 
-        private void OnGameStarted(object parameter)
-        {
-            this.gameStarted = true;
-            this.gameTimer.Start();
+            ViewModelBase.Settings.Statistics.Add(
+                this.GameStatistics);
+            ViewModelBase.Settings.Save();
         }
 
         private void OnCreateNewBoard(object parameter)
@@ -151,7 +140,7 @@
                 return;
             }
 
-            if (parameter.GetType() == typeof (BoardSize))
+            if (parameter.GetType() == typeof(BoardSize))
             {
                 this.Minesweeper = MinesweeperFactory.Create(
                     (BoardSize)parameter);
@@ -178,6 +167,12 @@
                 SmileyState.GameOver);
         }
 
+        private void OnGameStarted(object parameter)
+        {
+            this.gameStarted = true;
+            this.gameTimer.Start();
+        }
+
         private void OnVictory(object parameter)
         {
             this.EndGame(
@@ -187,18 +182,23 @@
                 SmileyState.Victory);
         }
 
-        private void EndGame(GameResult finalResult)
+        private void OnWindowStateChanged(WindowState state)
         {
-            this.gameTimer.Stop();
+            if (!this.gameStarted)
+            {
+                return;
+            }
 
-            this.GameStatistics[Statistic.GameEndTime] = DateTime.Now;
-            this.GameStatistics[Statistic.GameState] = finalResult;
-            this.GameStatistics[Statistic.MinesRemaining] = this.Minesweeper.MinesRemaining;
-            this.GameStatistics[Statistic.TimeElapsed] = this.Minesweeper.TimeElapsed;
-
-            ViewModelBase.Settings.Statistics.Add(
-                this.GameStatistics);
-            ViewModelBase.Settings.Save();
+            if (state == WindowState.Minimized)
+            {
+                this.gameTimer.Stop();
+                this.minimized = true;
+            }
+            else if (this.minimized)
+            {
+                this.gameTimer.Start();
+                this.minimized = false;
+            }
         }
 
         private void ResetGame()

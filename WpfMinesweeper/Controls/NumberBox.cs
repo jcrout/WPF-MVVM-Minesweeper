@@ -8,29 +8,6 @@
     public class NumberBox : FrameworkElement
     {
         private static readonly ImageSource[] bitmaps;
-
-        public static readonly DependencyProperty NumberProperty =
-            DependencyProperty.Register(
-                "Number",
-                typeof (int),
-                typeof (NumberBox),
-                new FrameworkPropertyMetadata(
-                    0,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
-                    NumberBox.OnNumberChanged,
-                    NumberBox.CoerceNumberCallback));
-
-        public static readonly DependencyProperty DigitsProperty =
-            DependencyProperty.Register(
-                "Digits",
-                typeof (int),
-                typeof (NumberBox),
-                new FrameworkPropertyMetadata(
-                    0,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
-                    NumberBox.OnDigitsChanged,
-                    NumberBox.CoerceDigitsCallback));
-
         private int maxNumber = 999;
         private int minNumber = -99;
 
@@ -52,21 +29,6 @@
             this.Digits = 3;
         }
 
-        public int Number
-        {
-            get
-            {
-                return (int)this.GetValue(
-                    NumberBox.NumberProperty);
-            }
-            set
-            {
-                this.SetValue(
-                    NumberBox.NumberProperty,
-                    value);
-            }
-        }
-
         public int Digits
         {
             get
@@ -82,63 +44,19 @@
             }
         }
 
-        private static object CoerceNumberCallback(DependencyObject d, object value)
+        public int Number
         {
-            var numberBox = (NumberBox)d;
-            var current = (int)value;
-
-            if (current > numberBox.maxNumber)
+            get
             {
-                return numberBox.maxNumber;
+                return (int)this.GetValue(
+                    NumberBox.NumberProperty);
             }
-
-            if (current < numberBox.minNumber)
+            set
             {
-                return numberBox.minNumber;
+                this.SetValue(
+                    NumberBox.NumberProperty,
+                    value);
             }
-
-            return current;
-        }
-
-        private static object CoerceDigitsCallback(DependencyObject d, object value)
-        {
-            var current = (int)value;
-            if (current < 1)
-            {
-                return 1;
-            }
-
-            if (current > 6)
-            {
-                return 6;
-            }
-
-            return current;
-        }
-
-        private static void OnNumberChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
-
-        private static void OnDigitsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var numberBox = (NumberBox)d;
-            var newDigits = (int)e.NewValue;
-            numberBox.InitializeNumberBox();
-        }
-
-        private void InitializeNumberBox()
-        {
-            var digits = (int)this.GetValue(
-                NumberBox.DigitsProperty);
-            this.Width = digits*NumberBox.bitmaps[0].Width;
-            this.Height = NumberBox.bitmaps[0].Height;
-            this.maxNumber = (int)Math.Pow(
-                10d,
-                digits) - 1;
-            this.minNumber = -1*(int)Math.Pow(
-                10d,
-                digits - 1) + 1;
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -172,11 +90,92 @@
                 }
                 drawingContext.DrawImage(
                     NumberBox.bitmaps[numIndex],
-                    new Rect((imgWidth*i),
+                    new Rect((imgWidth * i),
                         0d,
                         imgWidth,
                         imgHeight));
             }
         }
+
+        private static object CoerceDigitsCallback(DependencyObject d, object value)
+        {
+            var current = (int)value;
+            if (current < 1)
+            {
+                return 1;
+            }
+
+            if (current > 6)
+            {
+                return 6;
+            }
+
+            return current;
+        }
+
+        private static object CoerceNumberCallback(DependencyObject d, object value)
+        {
+            var numberBox = (NumberBox)d;
+            var current = (int)value;
+
+            if (current > numberBox.maxNumber)
+            {
+                return numberBox.maxNumber;
+            }
+
+            if (current < numberBox.minNumber)
+            {
+                return numberBox.minNumber;
+            }
+
+            return current;
+        }
+
+        private static void OnDigitsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var numberBox = (NumberBox)d;
+            var newDigits = (int)e.NewValue;
+            numberBox.InitializeNumberBox();
+        }
+
+        private static void OnNumberChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        private void InitializeNumberBox()
+        {
+            var digits = (int)this.GetValue(
+                NumberBox.DigitsProperty);
+            this.Width = digits * NumberBox.bitmaps[0].Width;
+            this.Height = NumberBox.bitmaps[0].Height;
+            this.maxNumber = (int)Math.Pow(
+                10d,
+                digits) - 1;
+            this.minNumber = -1 * (int)Math.Pow(
+                10d,
+                digits - 1) + 1;
+        }
+
+        public static readonly DependencyProperty NumberProperty =
+            DependencyProperty.Register(
+                "Number",
+                typeof(int),
+                typeof(NumberBox),
+                new FrameworkPropertyMetadata(
+                    0,
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    NumberBox.OnNumberChanged,
+                    NumberBox.CoerceNumberCallback));
+
+        public static readonly DependencyProperty DigitsProperty =
+            DependencyProperty.Register(
+                "Digits",
+                typeof(int),
+                typeof(NumberBox),
+                new FrameworkPropertyMetadata(
+                    0,
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    NumberBox.OnDigitsChanged,
+                    NumberBox.CoerceDigitsCallback));
     }
 }

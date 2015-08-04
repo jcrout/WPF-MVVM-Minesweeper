@@ -23,8 +23,9 @@
     /// </summary>
     public interface ITileCollection : IEnumerable2D<Tile>, ICloneable
     {
-        int Width { get; }
         int Height { get; }
+
+        int Width { get; }
     }
 
     /// <summary>
@@ -48,6 +49,22 @@
             }
         }
 
+        public int Height
+        {
+            get
+            {
+                return this.height;
+            }
+        }
+
+        public int Width
+        {
+            get
+            {
+                return this.width;
+            }
+        }
+
         public Tile this[int x, int y]
         {
             get
@@ -60,32 +77,16 @@
             }
         }
 
-        public int Width
+        /// <summary>
+        ///     Returns a new ITileCollection with the specified width and height.
+        /// </summary>
+        /// <param name="width">The number of tiles per row.</param>
+        /// <param name="height">The number of tiles per column.</param>
+        /// <returns></returns>
+        public static ITileCollection Create(int width, int height)
         {
-            get
-            {
-                return this.width;
-            }
-        }
-
-        public int Height
-        {
-            get
-            {
-                return this.height;
-            }
-        }
-
-        public IEnumerator<Tile> GetEnumerator()
-        {
-            for (var r = 0; r < this.Width; r++)
-            {
-                for (var c = 0; c < this.Height; c++)
-                {
-                    yield return this[r,
-                        c];
-                }
-            }
+            return new TileCollection(width,
+                height);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -108,16 +109,16 @@
             return newCollection;
         }
 
-        /// <summary>
-        ///     Returns a new ITileCollection with the specified width and height.
-        /// </summary>
-        /// <param name="width">The number of tiles per row.</param>
-        /// <param name="height">The number of tiles per column.</param>
-        /// <returns></returns>
-        public static ITileCollection Create(int width, int height)
+        public IEnumerator<Tile> GetEnumerator()
         {
-            return new TileCollection(width,
-                height);
+            for (var r = 0; r < this.Width; r++)
+            {
+                for (var c = 0; c < this.Height; c++)
+                {
+                    yield return this[r,
+                        c];
+                }
+            }
         }
     }
 }

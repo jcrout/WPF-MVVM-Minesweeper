@@ -1,4 +1,26 @@
-﻿namespace WpfMinesweeper
+﻿namespace WpfMinesweeper.Properties
+{
+    using System.Configuration;
+    using Models;
+
+    internal sealed partial class Settings
+    {
+        [UserScopedSetting, DefaultSettingValue("9,9,10")]
+        public BoardSize LastBoardSize
+        {
+            get
+            {
+                return ((BoardSize)(this["LastBoardSize"]));
+            }
+            set
+            {
+                this["LastBoardSize"] = value;
+            }
+        }
+    }
+}
+
+namespace WpfMinesweeper
 {
     using System;
     using System.Diagnostics;
@@ -13,7 +35,13 @@
     /// </summary>
     public partial class App : Application
     {
-        internal static TraceSource Tracer;
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(
+                e);
+
+            SettingsProvider.Instance.Save();
+        }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -25,14 +53,6 @@
             var view = new MainWindowViewModel();
             window.DataContext = view;
             window.Show();
-        }
-
-        protected override void OnExit(ExitEventArgs e)
-        {
-            base.OnExit(
-                e);
-
-            SettingsProvider.Instance.Save();
         }
 
         private void InitializeTracer()
@@ -52,27 +72,7 @@
             App.Tracer.Listeners.Add(
                 listener);
         }
-    }
-}
 
-namespace WpfMinesweeper.Properties
-{
-    using System.Configuration;
-    using Models;
-
-    internal sealed partial class Settings
-    {
-        [UserScopedSetting, DefaultSettingValue("9,9,10")]
-        public BoardSize LastBoardSize
-        {
-            get
-            {
-                return ((BoardSize)(this["LastBoardSize"]));
-            }
-            set
-            {
-                this["LastBoardSize"] = value;
-            }
-        }
+        internal static TraceSource Tracer;
     }
 }

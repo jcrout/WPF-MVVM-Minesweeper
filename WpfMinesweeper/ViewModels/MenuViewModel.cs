@@ -2,7 +2,7 @@
 {
     using System.Windows.Input;
     using System.Windows.Media;
-    using WpfMinesweeper.Models;
+    using Models;
 
     public class MenuViewModel : ViewModelBase
     {
@@ -37,17 +37,17 @@
             }
         }
 
-        public ICommand TileColorCommand
+        public ViewModelBase CustomBoardViewModel
         {
             get
             {
-                return this.tileColorCommand;
+                return this.customBoardViewModel;
             }
             set
             {
-                if (this.tileColorCommand != value)
+                if (this.customBoardViewModel != value)
                 {
-                    this.tileColorCommand = value;
+                    this.customBoardViewModel = value;
                     this.OnPropertyChanged();
                 }
             }
@@ -74,22 +74,6 @@
             }
         }
 
-        public ViewModelBase CustomBoardViewModel
-        {
-            get
-            {
-                return this.customBoardViewModel;
-            }
-            set
-            {
-                if (this.customBoardViewModel != value)
-                {
-                    this.customBoardViewModel = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
         public ViewModelBase StatisticsViewModel
         {
             get
@@ -101,6 +85,22 @@
                 if (this.statisticsViewModel != value)
                 {
                     this.statisticsViewModel = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
+        public ICommand TileColorCommand
+        {
+            get
+            {
+                return this.tileColorCommand;
+            }
+            set
+            {
+                if (this.tileColorCommand != value)
+                {
+                    this.tileColorCommand = value;
                     this.OnPropertyChanged();
                 }
             }

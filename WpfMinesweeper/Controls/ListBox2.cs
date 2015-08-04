@@ -12,17 +12,6 @@
     public class ListBox2 : ListBox
     {
         /// <summary>
-        ///     This property is a proxy to SelectedItems and updates any bindings.
-        /// </summary>
-        public static DependencyProperty SelectedItemsBindingProperty = DependencyProperty.Register(
-            "SelectedItemsBinding",
-            typeof (IList),
-            typeof (ListBox2),
-            new PropertyMetadata(
-                new List<object>(),
-                ListBox2.SelectedItemsBindingChanged));
-
-        /// <summary>
         ///     Gets or sets the SelectedItems property. This property is a proxy to SelectedItems and updates any bindings.
         /// </summary>
         public IList SelectedItemsBinding
@@ -69,5 +58,16 @@
                     newList);
             }
         }
+
+        /// <summary>
+        ///     This property is a proxy to SelectedItems and updates any bindings.
+        /// </summary>
+        public static DependencyProperty SelectedItemsBindingProperty = DependencyProperty.Register(
+            "SelectedItemsBinding",
+            typeof(IList),
+            typeof(ListBox2),
+            new PropertyMetadata(
+                new List<object>(),
+                ListBox2.SelectedItemsBindingChanged));
     }
 }

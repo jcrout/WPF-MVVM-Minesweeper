@@ -41,11 +41,11 @@
             }
         }
 
-        protected virtual void OnMinesweeperChanged()
+        protected virtual void OnGameStatisticsChanged()
         {
         }
 
-        protected virtual void OnGameStatisticsChanged()
+        protected virtual void OnMinesweeperChanged()
         {
         }
     }

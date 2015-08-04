@@ -10,6 +10,8 @@
         private static readonly ISettingsProvider settings = SettingsProvider.Instance;
         private bool disposed;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public static ISettingsProvider Settings
         {
             get
@@ -31,8 +33,6 @@
             GC.SuppressFinalize(
                 this);
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnDispose(bool disposing)
         {

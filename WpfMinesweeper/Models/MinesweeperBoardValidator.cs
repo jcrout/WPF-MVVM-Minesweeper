@@ -6,7 +6,8 @@
     public interface IMinesweeperBoardValidator
     {
         /// <summary>
-        ///     Validates the board parameters and returns an error message string if there are any errors; otherwise, returns null.
+        ///     Validates the board parameters and returns an error message string if there are any errors; otherwise, returns
+        ///     null.
         /// </summary>
         /// <param name="width">The number of tiles per row.</param>
         /// <param name="height">The number of tiles per column.</param>
@@ -15,38 +16,41 @@
         string ValidateBoard(int width, int height, int mineCount);
 
         /// <summary>
-        /// Validates the number of tiles per row  and returns an error message string if there are any errors; otherwise, returns null.
-        /// </summary>
-        /// <param name="width">The number of tiles per row.</param>
-        /// <returns>An error message if there are any errors; otherwise, null.</returns>
-        string ValidateWidth(int width);
-
-        /// <summary>
-        /// Validates the number of tiles per column  and returns an error message string if there are any errors; otherwise, returns null.
+        ///     Validates the number of tiles per column  and returns an error message string if there are any errors; otherwise,
+        ///     returns null.
         /// </summary>
         /// <param name="height">The number of tiles per column.</param>
         /// <returns>An error message if there are any errors; otherwise, null.</returns>
         string ValidateHeight(int height);
 
         /// <summary>
-        /// Validates the total number of mines, given a board width and height, and returns an error message string if there are any errors; otherwise, returns null. This method does not validate the width and height.
+        ///     Validates the total number of mines, given a board width and height, and returns an error message string if there
+        ///     are any errors; otherwise, returns null. This method does not validate the width and height.
         /// </summary>
         /// <param name="mineCount">The total number of mines on the board.</param>
         /// <param name="width">The number of tiles per row.</param>
         /// <param name="height">The number of tiles per column.</param>
         /// <returns>An error message if there are any errors; otherwise, null.</returns>
         string ValidateMineCount(int mineCount, int width, int height);
+
+        /// <summary>
+        ///     Validates the number of tiles per row  and returns an error message string if there are any errors; otherwise,
+        ///     returns null.
+        /// </summary>
+        /// <param name="width">The number of tiles per row.</param>
+        /// <returns>An error message if there are any errors; otherwise, null.</returns>
+        string ValidateWidth(int width);
     }
 
     public class MinesweeperBoardValidator : IMinesweeperBoardValidator
     {
         private static readonly IMinesweeperBoardValidator defaultMinesweeperBoardValidator;
-        private static readonly int minimumWidth = 8;
-        private static readonly int minimumHeight = 8;
-        private static readonly int maximumWidth = 100;
         private static readonly int maximumHeight = 100;
+        private static readonly int maximumWidth = 100;
+        private static readonly int minimumHeight = 8;
         private static readonly int minimumMineCount = 1;
         private static readonly int minimumMineCountDifference = 1;
+        private static readonly int minimumWidth = 8;
 
         static MinesweeperBoardValidator()
         {
@@ -55,6 +59,11 @@
 
         private MinesweeperBoardValidator()
         {
+        }
+
+        public static IMinesweeperBoardValidator Create()
+        {
+            return MinesweeperBoardValidator.defaultMinesweeperBoardValidator;
         }
 
         public string ValidateBoard(int width, int height, int mineCount)
@@ -77,25 +86,6 @@
             if (validateMineCount != null)
             {
                 return validateMineCount;
-            }
-
-            return null;
-        }
-
-        public string ValidateWidth(int width)
-        {
-            if (width < MinesweeperBoardValidator.minimumWidth)
-            {
-                return string.Format(
-                    "Board width must be greater than {0}.",
-                    MinesweeperBoardValidator.minimumWidth - 1);
-            }
-
-            if (width > MinesweeperBoardValidator.maximumWidth)
-            {
-                return string.Format(
-                    "Board width must be less than {0}.",
-                    MinesweeperBoardValidator.maximumWidth + 1);
             }
 
             return null;
@@ -129,7 +119,7 @@
                     MinesweeperBoardValidator.minimumMineCount - 1);
             }
 
-            var targetMaximum = width*height - MinesweeperBoardValidator.minimumMineCountDifference;
+            var targetMaximum = width * height - MinesweeperBoardValidator.minimumMineCountDifference;
             if (mineCount > targetMaximum)
             {
                 return string.Format(
@@ -142,9 +132,23 @@
             return null;
         }
 
-        public static IMinesweeperBoardValidator Create()
+        public string ValidateWidth(int width)
         {
-            return MinesweeperBoardValidator.defaultMinesweeperBoardValidator;
+            if (width < MinesweeperBoardValidator.minimumWidth)
+            {
+                return string.Format(
+                    "Board width must be greater than {0}.",
+                    MinesweeperBoardValidator.minimumWidth - 1);
+            }
+
+            if (width > MinesweeperBoardValidator.maximumWidth)
+            {
+                return string.Format(
+                    "Board width must be less than {0}.",
+                    MinesweeperBoardValidator.maximumWidth + 1);
+            }
+
+            return null;
         }
     }
 }

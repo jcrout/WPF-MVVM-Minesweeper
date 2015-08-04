@@ -43,15 +43,6 @@
         }
 
         /// <summary>
-        ///     Creates and returns a new IStatisticsModule using the default implementation method.
-        /// </summary>
-        /// <returns>An enumerator that iterates through a collection.</returns>
-        public static IStatisticsModule Create()
-        {
-            return new StatisticsModule();
-        }
-
-        /// <summary>
         ///     Gets or sets the value of the statistic for this module.
         /// </summary>
         /// <param name="statistic">The statistic to use as an indexer to retrieve an associated value.</param>
@@ -78,14 +69,12 @@
         }
 
         /// <summary>
-        ///     Returns an enumerator that iterates through a generic collection.
+        ///     Creates and returns a new IStatisticsModule using the default implementation method.
         /// </summary>
-        public IEnumerator<KeyValuePair<Statistic, object>> GetEnumerator()
+        /// <returns>An enumerator that iterates through a collection.</returns>
+        public static IStatisticsModule Create()
         {
-            foreach (var pair in this.stats)
-            {
-                yield return pair;
-            }
+            return new StatisticsModule();
         }
 
         /// <summary>
@@ -95,6 +84,17 @@
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        /// <summary>
+        ///     Returns an enumerator that iterates through a generic collection.
+        /// </summary>
+        public IEnumerator<KeyValuePair<Statistic, object>> GetEnumerator()
+        {
+            foreach (var pair in this.stats)
+            {
+                yield return pair;
+            }
         }
     }
 }

@@ -8,29 +8,14 @@
     {
         private static readonly DependencyProperty KeepExpandedRatioProperty = DependencyProperty.Register(
             "KeepExpandedRatio",
-            typeof (bool),
-            typeof (ViewBoxAutosize),
+            typeof(bool),
+            typeof(ViewBoxAutosize),
             new PropertyMetadata(
                 false));
 
         private FrameworkElement child;
         private FrameworkElement parent;
         private bool updatedSize;
-
-        public bool KeepExpandedRatio
-        {
-            get
-            {
-                return (bool)this.GetValue(
-                    ViewBoxAutosize.KeepExpandedRatioProperty);
-            }
-            set
-            {
-                this.SetValue(
-                    ViewBoxAutosize.KeepExpandedRatioProperty,
-                    value);
-            }
-        }
 
         public override UIElement Child
         {
@@ -48,12 +33,27 @@
                     this.child = null;
                 }
 
-                if (typeof (FrameworkElement).IsAssignableFrom(
+                if (typeof(FrameworkElement).IsAssignableFrom(
                     value.GetType()))
                 {
                     this.child = value as FrameworkElement;
                     this.child.SizeChanged += this.child_SizeChanged;
                 }
+            }
+        }
+
+        public bool KeepExpandedRatio
+        {
+            get
+            {
+                return (bool)this.GetValue(
+                    ViewBoxAutosize.KeepExpandedRatioProperty);
+            }
+            set
+            {
+                this.SetValue(
+                    ViewBoxAutosize.KeepExpandedRatioProperty,
+                    value);
             }
         }
 
@@ -74,7 +74,7 @@
             }
 
             var currentParentType = this.Parent.GetType();
-            if (typeof (FrameworkElement).IsAssignableFrom(
+            if (typeof(FrameworkElement).IsAssignableFrom(
                 currentParentType))
             {
                 this.parent = (FrameworkElement)this.Parent;
@@ -91,12 +91,12 @@
             {
                 var widthRatio = Math.Max(
                     1d,
-                    this.Width/e.PreviousSize.Width);
+                    this.Width / e.PreviousSize.Width);
                 var heightRatio = Math.Max(
                     1d,
-                    this.Height/e.PreviousSize.Height);
-                this.Width = e.NewSize.Width*widthRatio;
-                this.Height = e.NewSize.Height*heightRatio;
+                    this.Height / e.PreviousSize.Height);
+                this.Width = e.NewSize.Width * widthRatio;
+                this.Height = e.NewSize.Height * heightRatio;
             }
             else
             {
