@@ -88,9 +88,7 @@
                 return true;
             }
 
-            return base.CanConvertFrom(
-                context,
-                sourceType);
+            return base.CanConvertFrom(context, sourceType);
         }
 
         public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
@@ -104,9 +102,7 @@
                 return true;
             }
 
-            return base.CanConvertTo(
-                context,
-                destinationType);
+            return base.CanConvertTo(context, destinationType);
         }
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
@@ -128,22 +124,14 @@
                 var button = new Button {Content = textFragments[0]};
                 var mbutton = new MessageButton {Button = button};
 
-                button.Measure(
-                    new Size(double.PositiveInfinity,
-                        double.PositiveInfinity));
-                button.Width = Math.Max(
-                    80,
-                    button.DesiredSize.Width);
-                button.Height = Math.Max(
-                    22,
-                    button.DesiredSize.Height);
+                button.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+                button.Width = Math.Max(80, button.DesiredSize.Width);
+                button.Height = Math.Max(22, button.DesiredSize.Height);
 
                 if (textFragments.Length > 1)
                 {
                     var rightToLeftIndex = 0;
-                    if (int.TryParse(
-                        textFragments[1],
-                        out rightToLeftIndex))
+                    if (int.TryParse(textFragments[1], out rightToLeftIndex))
                     {
                         mbutton.RightToLeftIndex = rightToLeftIndex;
                     }
@@ -152,33 +140,23 @@
                 if (textFragments.Length > 2)
                 {
                     var resultFragment = textFragments[2].ToUpper();
-                    if (string.Equals(
-                        resultFragment,
-                        "OK"))
+                    if (string.Equals(resultFragment, "OK"))
                     {
                         mbutton.Result = MessageResult.OK;
                     }
-                    else if (string.Equals(
-                        resultFragment,
-                        "CANCEL"))
+                    else if (string.Equals(resultFragment, "CANCEL"))
                     {
                         mbutton.Result = MessageResult.Cancel;
                     }
-                    else if (string.Equals(
-                        resultFragment,
-                        "OTHER"))
+                    else if (string.Equals(resultFragment, "OTHER"))
                     {
                         mbutton.Result = MessageResult.Other;
                     }
-                    else if (string.Equals(
-                        resultFragment,
-                        "NULL"))
+                    else if (string.Equals(resultFragment, "NULL"))
                     {
                         mbutton.Result = null;
                     }
-                    else if (!string.Equals(
-                        resultFragment,
-                        string.Empty))
+                    else if (!string.Equals(resultFragment, string.Empty))
                     {
                         mbutton.Result = textFragments[2];
                     }
@@ -187,10 +165,7 @@
                 return mbutton;
             }
 
-            return base.ConvertFrom(
-                context,
-                culture,
-                value);
+            return base.ConvertFrom(context, culture, value);
         }
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
@@ -204,33 +179,26 @@
     /// </summary>
     public partial class MessagePanel : UserControl
     {
-        private static Thickness nullButtonMargins = new Thickness(0.125,
-            0.521,
-            0.127,
-            0.527);
+        private static Thickness nullButtonMargins = new Thickness(0.125, 0.521, 0.127, 0.527);
 
         public static readonly DependencyProperty InnerContentProperty = DependencyProperty.Register(
             "InnerContent",
             typeof(object),
             typeof(MessagePanel),
-            new PropertyMetadata(
-                null,
-                MessagePanel.InnerContentChanged));
+            new PropertyMetadata(null, MessagePanel.InnerContentChanged));
 
         public static readonly DependencyProperty ButtonsProperty = DependencyProperty.Register(
             "Buttons",
             typeof(ObservableCollection<MessageButton>),
             typeof(MessagePanel),
-            new PropertyMetadata(
-                new ObservableCollection<MessageButton>(),
-                MessagePanel.ButtonsChanged));
+            new PropertyMetadata(new ObservableCollection<MessageButton>(), MessagePanel.ButtonsChanged));
 
-        public static readonly DependencyProperty UseCustomButtonMarginsProperty = DependencyProperty.Register(
-            "UseCustomButtonMargins",
-            typeof(bool),
-            typeof(MessagePanel),
-            new PropertyMetadata(
-                false));
+        public static readonly DependencyProperty UseCustomButtonMarginsProperty =
+            DependencyProperty.Register(
+                "UseCustomButtonMargins",
+                typeof(bool),
+                typeof(MessagePanel),
+                new PropertyMetadata(false));
 
         static MessagePanel()
         {
@@ -239,11 +207,7 @@
         public MessagePanel()
         {
             this.InitializeComponent();
-            this.ButtonPanelBorder.Background = new SolidColorBrush(Color.FromArgb(
-                255,
-                240,
-                240,
-                240));
+            this.ButtonPanelBorder.Background = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
         }
 
         public event EventHandler<MessageResultArgs> ButtonClicked;
@@ -253,14 +217,11 @@
         {
             get
             {
-                return (ObservableCollection<MessageButton>)this.GetValue(
-                    MessagePanel.ButtonsProperty);
+                return (ObservableCollection<MessageButton>)this.GetValue(MessagePanel.ButtonsProperty);
             }
             set
             {
-                this.SetValue(
-                    MessagePanel.ButtonsProperty,
-                    value);
+                this.SetValue(MessagePanel.ButtonsProperty, value);
             }
         }
 
@@ -269,14 +230,11 @@
         {
             get
             {
-                return this.GetValue(
-                    MessagePanel.InnerContentProperty);
+                return this.GetValue(MessagePanel.InnerContentProperty);
             }
             set
             {
-                this.SetValue(
-                    MessagePanel.InnerContentProperty,
-                    value);
+                this.SetValue(MessagePanel.InnerContentProperty, value);
             }
         }
 
@@ -285,29 +243,24 @@
         {
             get
             {
-                return (bool)this.GetValue(
-                    MessagePanel.UseCustomButtonMarginsProperty);
+                return (bool)this.GetValue(MessagePanel.UseCustomButtonMarginsProperty);
             }
             set
             {
-                this.SetValue(
-                    MessagePanel.UseCustomButtonMarginsProperty,
-                    value);
+                this.SetValue(MessagePanel.UseCustomButtonMarginsProperty, value);
             }
         }
 
         private static void ButtonsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var panel = (MessagePanel)d;
-            panel.UpdateButtons(
-                e.NewValue);
+            panel.UpdateButtons(e.NewValue);
         }
 
         private static void InnerContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var panel = (MessagePanel)d;
-            panel.UpdateInnerContent(
-                e.NewValue);
+            panel.UpdateInnerContent(e.NewValue);
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -316,12 +269,9 @@
             if (buttonClicked != null)
             {
                 var button = sender as Button;
-                var messageButton = this.Buttons.FirstOrDefault(
-                    mb => mb.Button == button);
+                var messageButton = this.Buttons.FirstOrDefault(mb => mb.Button == button);
 
-                buttonClicked(
-                    this,
-                    new MessageResultArgs(messageButton));
+                buttonClicked(this, new MessageResultArgs(messageButton));
             }
         }
 
@@ -341,7 +291,8 @@
             var useCustomMargins = this.UseCustomButtonMargins;
             var buttons = buttonList.ToList();
             buttons.Sort(
-                (b1, b2) => b1.RightToLeftIndex > b2.RightToLeftIndex ? 1 : b1.RightToLeftIndex < b2.RightToLeftIndex ? -1 : 0);
+                (b1, b2) =>
+                    b1.RightToLeftIndex > b2.RightToLeftIndex ? 1 : b1.RightToLeftIndex < b2.RightToLeftIndex ? -1 : 0);
 
             var highestIndex = buttons[buttons.Count - 1].RightToLeftIndex;
             foreach (var mb in buttons)
@@ -369,8 +320,7 @@
                 if (button.Parent != null && button.Parent != this)
                 {
                     var frameworkParent = button.Parent as FrameworkElement;
-                    if (frameworkParent != null && !frameworkParent.ForceRemoveChild(
-                        button))
+                    if (frameworkParent != null && !frameworkParent.ForceRemoveChild(button))
                     {
                         continue;
                     }
@@ -378,10 +328,7 @@
 
                 if (!useCustomMargins)
                 {
-                    button.Margin = new Thickness(10,
-                        10,
-                        10,
-                        10);
+                    button.Margin = new Thickness(10, 10, 10, 10);
                 }
 
                 button.HorizontalAlignment = HorizontalAlignment.Right;
@@ -390,8 +337,7 @@
 
                 if (button.Parent == null)
                 {
-                    this.ButtonPanel.Children.Add(
-                        button);
+                    this.ButtonPanel.Children.Add(button);
                 }
             }
         }
@@ -404,23 +350,20 @@
                 return;
             }
 
-            var parent = LogicalTreeHelper.GetParent(
-                element);
+            var parent = LogicalTreeHelper.GetParent(element);
             if (parent != null)
             {
                 var frameworkParent = parent as FrameworkElement;
                 if (frameworkParent != null)
                 {
-                    if (!frameworkParent.ForceRemoveChild(
-                        innerContent))
+                    if (!frameworkParent.ForceRemoveChild(innerContent))
                     {
                         return;
                     }
                 }
                 else if (parent == this)
                 {
-                    this.RemoveLogicalChild(
-                        innerContent);
+                    this.RemoveLogicalChild(innerContent);
                 }
                 else
                 {
@@ -428,8 +371,7 @@
                 }
             }
 
-            this.ContentGrid.Children.Add(
-                element);
+            this.ContentGrid.Children.Add(element);
         }
     }
 

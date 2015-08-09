@@ -151,13 +151,11 @@
             set
             {
                 var brushType = value.GetType();
-                if (brushType.IsAssignableFrom(
-                    typeof(SolidColorBrush)))
+                if (brushType.IsAssignableFrom(typeof(SolidColorBrush)))
                 {
                     this.userSettings.TileBrushSolid = value as SolidColorBrush;
                 }
-                else if (brushType.IsAssignableFrom(
-                    typeof(LinearGradientBrush)))
+                else if (brushType.IsAssignableFrom(typeof(LinearGradientBrush)))
                 {
                     this.userSettings.TileBrushGradient = value as LinearGradientBrush;
                 }
@@ -179,9 +177,7 @@
         public async void Save()
         {
             this.userSettings.Save();
-            await Task.Run(
-                () => this.SaveStatistics()).ConfigureAwait(
-                    false);
+            await Task.Run(() => this.SaveStatistics()).ConfigureAwait(false);
         }
 
         private IEnumerable<IStatisticsModule> GetStatModulesToSave()
@@ -201,24 +197,17 @@
             }
 
             long time1 = 0, time2 = 0;
-            Diagnostics.QueryPerformanceCounter(
-                ref time1);
+            Diagnostics.QueryPerformanceCounter(ref time1);
             var statLines = await this.LoadStatText();
 
             if (statLines.Length == 0)
             {
-                Mediator.Instance.Notify(
-                    ViewModelMessages.StatisticsLoaded);
+                Mediator.Instance.Notify(ViewModelMessages.StatisticsLoaded);
                 return;
             }
 
-            var loadedStatModules = await Task.Factory.StartNew(
-                st => this.LoadStatLines(
-                    (string[])st),
-                statLines).ConfigureAwait(
-                    true);
+            var loadedStatModules = await Task.Factory.StartNew(st => this.LoadStatLines((string[])st), statLines).ConfigureAwait(true);
             var statisticsList = new ObservableCollection<IStatisticsModule>(loadedStatModules);
-            var oldStatList = this.statistics;
 
             if (loadedStatModules.Count > 0)
             {
@@ -229,8 +218,7 @@
                     {
                         foreach (var statModule in this.statistics)
                         {
-                            statisticsList.Add(
-                                statModule);
+                            statisticsList.Add(statModule);
                         }
                     }
 
@@ -239,10 +227,8 @@
                 }
             }
 
-            Mediator.Instance.Notify(
-                ViewModelMessages.StatisticsLoaded);
-            Diagnostics.QueryPerformanceCounter(
-                ref time2);
+            Mediator.Instance.Notify(ViewModelMessages.StatisticsLoaded);
+            Diagnostics.QueryPerformanceCounter(ref time2);
         }
 
         private List<IStatisticsModule> LoadStatLines(string[] statLines)
@@ -253,34 +239,21 @@
             foreach (var statLine in statLines)
             {
                 var module = StatisticsModule.Create();
-                var parts = statLine.Split(
-                    new[] {SettingsProvider.SettingsDelimiter},
-                    StringSplitOptions.RemoveEmptyEntries);
+                var parts = statLine.Split(new[] {SettingsProvider.SettingsDelimiter}, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts)
                 {
-                    var index = part.IndexOf(
-                        ';');
-                    var key = (Statistic)int.Parse(
-                        part.Substring(
-                            0,
-                            index));
-                    var valueString = part.Substring(
-                        index + 1);
-                    var conversionType = StatisticHelper.GetType(
-                        key);
+                    var index = part.IndexOf(';');
+                    var key = (Statistic)int.Parse(part.Substring(0, index));
+                    var conversionType = StatisticHelper.GetType(key);
 
-                    using (var reader = new StringReader(part.Substring(
-                        index + 1)))
+                    using (var reader = new StringReader(part.Substring(index + 1)))
                     {
-                        var value = serializer.Deserialize(
-                            reader,
-                            conversionType);
+                        var value = serializer.Deserialize(reader, conversionType);
                         module[key] = value;
                     }
                 }
 
-                list.Add(
-                    module);
+                list.Add(module);
             }
 
             return list;
@@ -288,28 +261,19 @@
 
         private async Task<string[]> LoadStatText()
         {
-            using (var isoStore = IsolatedStorageFile.GetStore(
-                IsolatedStorageScope.User | IsolatedStorageScope.Assembly,
-                null,
-                null))
+            using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null))
             {
-                if (!isoStore.FileExists(
-                    SettingsProvider.statisticsFileName))
+                if (!isoStore.FileExists(SettingsProvider.statisticsFileName))
                 {
                     return new string[0];
                 }
 
-                using (var isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName,
-                    FileMode.Open,
-                    isoStore))
+                using (var isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName, FileMode.Open, isoStore))
                 {
                     using (var reader = new StreamReader(isoStream))
                     {
-                        var statText = await reader.ReadToEndAsync().ConfigureAwait(
-                            true);
-                        var statLines = statText.Split(
-                            new[] {Environment.NewLine},
-                            StringSplitOptions.RemoveEmptyEntries);
+                        var statText = await reader.ReadToEndAsync().ConfigureAwait(true);
+                        var statLines = statText.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
                         return statLines;
                     }
                 }
@@ -325,14 +289,9 @@
                     return;
                 }
 
-                using (var isoStore = IsolatedStorageFile.GetStore(
-                    IsolatedStorageScope.User | IsolatedStorageScope.Assembly,
-                    null,
-                    null))
+                using (var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly, null, null))
                 {
-                    using (var isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName,
-                        this.saveAllModules ? FileMode.Create : FileMode.Append,
-                        isoStore))
+                    using (var isoStream = new IsolatedStorageFileStream(SettingsProvider.statisticsFileName, this.saveAllModules ? FileMode.Create : FileMode.Append, isoStore))
                     {
                         using (var writer = new StreamWriter(isoStream))
                         {
@@ -345,16 +304,12 @@
                                     {
                                         using (var sw = new StringWriter())
                                         {
-                                            serializer.Serialize(
-                                                sw,
-                                                pair.Value);
-                                            writer.Write(
-                                                ((int)pair.Key).ToString() + ';' + sw + SettingsProvider.SettingsDelimiter);
+                                            serializer.Serialize(sw, pair.Value);
+                                            writer.Write(((int)pair.Key).ToString() + ';' + sw + SettingsProvider.SettingsDelimiter);
                                         }
                                     }
 
-                                    writer.Write(
-                                        Environment.NewLine);
+                                    writer.Write(Environment.NewLine);
                                 }
                             }
                         }
@@ -375,8 +330,7 @@
                     {
                         if (newModule != null)
                         {
-                            this.newModules.Add(
-                                (IStatisticsModule)newModule);
+                            this.newModules.Add((IStatisticsModule)newModule);
                         }
                     }
                 }

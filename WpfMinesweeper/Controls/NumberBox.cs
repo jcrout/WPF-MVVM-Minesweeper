@@ -9,27 +9,25 @@
     {
         private static readonly ImageSource[] bitmaps;
 
-        public static readonly DependencyProperty NumberProperty =
-            DependencyProperty.Register(
-                "Number",
-                typeof(int),
-                typeof(NumberBox),
-                new FrameworkPropertyMetadata(
-                    0,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
-                    NumberBox.OnNumberChanged,
-                    NumberBox.CoerceNumberCallback));
+        public static readonly DependencyProperty NumberProperty = DependencyProperty.Register(
+            "Number",
+            typeof(int),
+            typeof(NumberBox),
+            new FrameworkPropertyMetadata(
+                0,
+                FrameworkPropertyMetadataOptions.AffectsRender,
+                NumberBox.OnNumberChanged,
+                NumberBox.CoerceNumberCallback));
 
-        public static readonly DependencyProperty DigitsProperty =
-            DependencyProperty.Register(
-                "Digits",
-                typeof(int),
-                typeof(NumberBox),
-                new FrameworkPropertyMetadata(
-                    0,
-                    FrameworkPropertyMetadataOptions.AffectsRender,
-                    NumberBox.OnDigitsChanged,
-                    NumberBox.CoerceDigitsCallback));
+        public static readonly DependencyProperty DigitsProperty = DependencyProperty.Register(
+            "Digits",
+            typeof(int),
+            typeof(NumberBox),
+            new FrameworkPropertyMetadata(
+                0,
+                FrameworkPropertyMetadataOptions.AffectsRender,
+                NumberBox.OnDigitsChanged,
+                NumberBox.CoerceDigitsCallback));
 
         private int maxNumber = 999;
         private int minNumber = -99;
@@ -39,12 +37,18 @@
             NumberBox.bitmaps = new ImageSource[11];
             for (var i = 0; i < 10; i++)
             {
-                NumberBox.bitmaps[i] = new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/N" + i + ".png",
-                    UriKind.Absolute));
+                NumberBox.bitmaps[i] =
+                    new BitmapImage(
+                        new Uri(
+                            "pack://application:,,,/WpfMinesweeper;component/Resources/Images/N" + i + ".png",
+                            UriKind.Absolute));
             }
 
-            NumberBox.bitmaps[10] = new BitmapImage(new Uri("pack://application:,,,/WpfMinesweeper;component/Resources/Images/NMinus.png",
-                UriKind.Absolute));
+            NumberBox.bitmaps[10] =
+                new BitmapImage(
+                    new Uri(
+                        "pack://application:,,,/WpfMinesweeper;component/Resources/Images/NMinus.png",
+                        UriKind.Absolute));
         }
 
         public NumberBox()
@@ -56,14 +60,11 @@
         {
             get
             {
-                return (int)this.GetValue(
-                    NumberBox.DigitsProperty);
+                return (int)this.GetValue(NumberBox.DigitsProperty);
             }
             set
             {
-                this.SetValue(
-                    NumberBox.DigitsProperty,
-                    value);
+                this.SetValue(NumberBox.DigitsProperty, value);
             }
         }
 
@@ -71,45 +72,32 @@
         {
             get
             {
-                return (int)this.GetValue(
-                    NumberBox.NumberProperty);
+                return (int)this.GetValue(NumberBox.NumberProperty);
             }
             set
             {
-                this.SetValue(
-                    NumberBox.NumberProperty,
-                    value);
+                this.SetValue(NumberBox.NumberProperty, value);
             }
         }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            base.OnRender(
-                drawingContext);
+            base.OnRender(drawingContext);
 
             var digits = this.Digits;
             var number = this.Number;
             var imgWidth = NumberBox.bitmaps[0].Width;
             var imgHeight = NumberBox.bitmaps[0].Height;
 
-            var numberText = number < 0 ? number.ToString(
-                "0".PadRight(
-                    digits - 1,
-                    '0')) : number.ToString(
-                        "0".PadRight(
-                            digits,
-                            '0'));
+            var numberText = number < 0
+                ? number.ToString("0".PadRight(digits - 1, '0'))
+                : number.ToString("0".PadRight(digits, '0'));
 
             for (var i = 0; i < digits; i++)
             {
                 var numIndex = numberText[i] == '-' ? 10 : numberText[i] - 48;
 
-                drawingContext.DrawImage(
-                    NumberBox.bitmaps[numIndex],
-                    new Rect((imgWidth * i),
-                        0d,
-                        imgWidth,
-                        imgHeight));
+                drawingContext.DrawImage(NumberBox.bitmaps[numIndex], new Rect((imgWidth * i), 0d, imgWidth, imgHeight));
             }
         }
 
@@ -150,7 +138,6 @@
         private static void OnDigitsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var numberBox = (NumberBox)d;
-            var newDigits = (int)e.NewValue;
             numberBox.InitializeNumberBox();
         }
 
@@ -160,16 +147,11 @@
 
         private void InitializeNumberBox()
         {
-            var digits = (int)this.GetValue(
-                NumberBox.DigitsProperty);
+            var digits = (int)this.GetValue(NumberBox.DigitsProperty);
             this.Width = digits * NumberBox.bitmaps[0].Width;
             this.Height = NumberBox.bitmaps[0].Height;
-            this.maxNumber = (int)Math.Pow(
-                10d,
-                digits) - 1;
-            this.minNumber = -1 * (int)Math.Pow(
-                10d,
-                digits - 1) + 1;
+            this.maxNumber = (int)Math.Pow(10d, digits) - 1;
+            this.minNumber = -1 * (int)Math.Pow(10d, digits - 1) + 1;
         }
     }
 }

@@ -18,10 +18,7 @@
 
         public MainWindowViewModel()
         {
-            Mediator.Instance.Register(
-                ViewModelMessages.TileBoardSizeChanged,
-                o => this.OnTileBoardInitialized(
-                    o));
+            Mediator.Instance.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized());
 
             this.minWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
             this.width = this.minWidth;
@@ -57,8 +54,7 @@
                 if (this.left != value)
                 {
                     this.left = value;
-                    ViewModelBase.Settings.LastLocation = new Point(this.left,
-                        this.top);
+                    ViewModelBase.Settings.LastLocation = new Point(this.left, this.top);
                     this.OnPropertyChanged();
                 }
             }
@@ -123,8 +119,7 @@
                 if (this.top != value)
                 {
                     this.top = value;
-                    ViewModelBase.Settings.LastLocation = new Point(this.left,
-                        this.top);
+                    ViewModelBase.Settings.LastLocation = new Point(this.left, this.top);
                     this.OnPropertyChanged();
                 }
             }
@@ -173,9 +168,7 @@
                 if (this.windowState != value)
                 {
                     this.windowState = value;
-                    Mediator.Instance.Notify(
-                        ViewModelMessages.GameWindowStateChanged,
-                        value);
+                    Mediator.Instance.Notify(ViewModelMessages.GameWindowStateChanged, value);
                     this.OnPropertyChanged();
                 }
             }
@@ -187,7 +180,7 @@
             this.Top = (SystemParameters.FullPrimaryScreenHeight - this.height) / 2;
         }
 
-        private void OnTileBoardInitialized(object parameter)
+        private void OnTileBoardInitialized()
         {
             if (!this.initialized)
             {
@@ -205,8 +198,7 @@
             this.MinHeight = this.height;
             this.SizeToContentMode = SizeToContent.Manual;
 
-            ViewModelBase.Settings.LastWindowMinSize = new Size(this.width,
-                this.height);
+            ViewModelBase.Settings.LastWindowMinSize = new Size(this.width, this.height);
         }
 
         private void PositionWindow()

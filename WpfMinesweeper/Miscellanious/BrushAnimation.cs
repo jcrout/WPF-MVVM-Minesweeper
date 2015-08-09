@@ -11,31 +11,20 @@ namespace WpfMinesweeper.Miscellanious
 
     public class BrushAnimation : AnimationTimeline
     {
-        public static readonly DependencyProperty FromProperty =
-            DependencyProperty.Register(
-                "From",
-                typeof(Brush),
-                typeof(BrushAnimation));
+        public static readonly DependencyProperty FromProperty = DependencyProperty.Register("From", typeof(Brush), typeof(BrushAnimation));
 
-        public static readonly DependencyProperty ToProperty =
-            DependencyProperty.Register(
-                "To",
-                typeof(Brush),
-                typeof(BrushAnimation));
+        public static readonly DependencyProperty ToProperty = DependencyProperty.Register("To", typeof(Brush), typeof(BrushAnimation));
 
         //we must define From and To, AnimationTimeline does not have this properties
         public Brush From
         {
             get
             {
-                return (Brush)this.GetValue(
-                    BrushAnimation.FromProperty);
+                return (Brush)this.GetValue(BrushAnimation.FromProperty);
             }
             set
             {
-                this.SetValue(
-                    BrushAnimation.FromProperty,
-                    value);
+                this.SetValue(BrushAnimation.FromProperty, value);
             }
         }
 
@@ -51,30 +40,20 @@ namespace WpfMinesweeper.Miscellanious
         {
             get
             {
-                return (Brush)this.GetValue(
-                    BrushAnimation.ToProperty);
+                return (Brush)this.GetValue(BrushAnimation.ToProperty);
             }
             set
             {
-                this.SetValue(
-                    BrushAnimation.ToProperty,
-                    value);
+                this.SetValue(BrushAnimation.ToProperty, value);
             }
         }
 
-        public override object GetCurrentValue(object defaultOriginValue,
-            object defaultDestinationValue,
-            AnimationClock animationClock)
+        public override object GetCurrentValue(object defaultOriginValue, object defaultDestinationValue, AnimationClock animationClock)
         {
-            return this.GetCurrentValue(
-                defaultOriginValue as Brush,
-                defaultDestinationValue as Brush,
-                animationClock);
+            return this.GetCurrentValue(defaultOriginValue as Brush, defaultDestinationValue as Brush, animationClock);
         }
 
-        public object GetCurrentValue(Brush defaultOriginValue,
-            Brush defaultDestinationValue,
-            AnimationClock animationClock)
+        public object GetCurrentValue(Brush defaultOriginValue, Brush defaultDestinationValue, AnimationClock animationClock)
         {
             if (!animationClock.CurrentProgress.HasValue)
             {
@@ -95,17 +74,7 @@ namespace WpfMinesweeper.Miscellanious
                 return defaultDestinationValue;
             }
 
-            return new VisualBrush(new Border
-            {
-                Width = 1,
-                Height = 1,
-                Background = defaultOriginValue,
-                Child = new Border
-                {
-                    Background = defaultDestinationValue,
-                    Opacity = animationClock.CurrentProgress.Value
-                }
-            });
+            return new VisualBrush(new Border {Width = 1, Height = 1, Background = defaultOriginValue, Child = new Border {Background = defaultDestinationValue, Opacity = animationClock.CurrentProgress.Value}});
         }
 
         protected override Freezable CreateInstanceCore()

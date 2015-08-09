@@ -86,8 +86,7 @@
         /// <returns></returns>
         public static ITileCollection Create(int width, int height)
         {
-            return new TileCollection(width,
-                height);
+            return new TileCollection(width, height);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -97,8 +96,7 @@
 
         public object Clone()
         {
-            var newCollection = new TileCollection(this.width,
-                this.height);
+            var newCollection = new TileCollection(this.width, this.height);
             for (var r = 0; r < this.Width; r++)
             {
                 for (var c = 0; c < this.Height; c++)
@@ -116,8 +114,7 @@
             {
                 for (var c = 0; c < this.Height; c++)
                 {
-                    yield return this[r,
-                        c];
+                    yield return this[r, c];
                 }
             }
         }

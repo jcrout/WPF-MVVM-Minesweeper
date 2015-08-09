@@ -74,11 +74,7 @@
         {
             get
             {
-                return string.Format(
-                    @"{0}x{1}, {2} mines",
-                    this.width,
-                    this.height,
-                    this.mineCount);
+                return string.Format(@"{0}x{1}, {2} mines", this.width, this.height, this.mineCount);
             }
         }
 
@@ -152,25 +148,16 @@
             var parts = text.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 2)
             {
-                int indexOfFirstDelimiter = parts[0].IndexOf("x");
-                int indexOfSecondDelimiter = parts[1].IndexOf(" mines");
+                int indexOfFirstDelimiter = parts[0].IndexOf("x", StringComparison.Ordinal);
+                int indexOfSecondDelimiter = parts[1].IndexOf(" mines", StringComparison.Ordinal);
 
-                return new BoardSize(
-                    int.Parse(parts[0].Substring(0, indexOfFirstDelimiter)),
-                    int.Parse(parts[0].Substring(indexOfFirstDelimiter + 1)),
-                    int.Parse(parts[1].Substring(0, indexOfSecondDelimiter)));
+                return new BoardSize(int.Parse(parts[0].Substring(0, indexOfFirstDelimiter)), int.Parse(parts[0].Substring(indexOfFirstDelimiter + 1)), int.Parse(parts[1].Substring(0, indexOfSecondDelimiter)));
             }
             if (parts.Length == 3)
             {
-                return new BoardSize(
-                    int.Parse(parts[0]),
-                    int.Parse(parts[1]),
-                    int.Parse(parts[2]));
+                return new BoardSize(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]));
             }
-            throw new FormatException("text must either be equal to one of the following: " +
-                                      "the value of one of the static BoardSize properties; " +
-                                      "a BoardSize.Description string; " +
-                                      "a string including the width, height, and mine count delineated by commas between the numbers.");
+            throw new FormatException("text must either be equal to one of the following: " + "the value of one of the static BoardSize properties; " + "a BoardSize.Description string; " + "a string including the width, height, and mine count delineated by commas between the numbers.");
         }
 
         /// <summary>
@@ -181,9 +168,7 @@
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(BoardSize bs1, BoardSize bs2)
         {
-            return bs1.width == bs2.width &&
-                   bs1.height == bs2.height &&
-                   bs1.mineCount == bs2.mineCount;
+            return bs1.width == bs2.width && bs1.height == bs2.height && bs1.mineCount == bs2.mineCount;
         }
 
         /// <summary>
@@ -194,9 +179,7 @@
         /// <returns>The result of the operator.</returns>
         public static bool operator !=(BoardSize bs1, BoardSize bs2)
         {
-            return bs1.width != bs2.width ||
-                   bs1.height != bs2.height ||
-                   bs1.mineCount != bs2.mineCount;
+            return bs1.width != bs2.width || bs1.height != bs2.height || bs1.mineCount != bs2.mineCount;
         }
 
         /// <summary>
@@ -291,9 +274,7 @@
                 return true;
             }
 
-            return base.CanConvertFrom(
-                context,
-                sourceType);
+            return base.CanConvertFrom(context, sourceType);
         }
 
         /// <summary>
@@ -309,9 +290,7 @@
                 return true;
             }
 
-            return base.CanConvertTo(
-                context,
-                destinationType);
+            return base.CanConvertTo(context, destinationType);
         }
 
         /// <summary>
@@ -334,10 +313,7 @@
                 return BoardSize.Parse(value.ToString());
             }
 
-            return base.ConvertFrom(
-                context,
-                culture,
-                value);
+            return base.ConvertFrom(context, culture, value);
         }
 
         /// <summary>
@@ -356,18 +332,10 @@
             var boardSize = (BoardSize)value;
             if (destinationType == typeof(string))
             {
-                return string.Format(
-                    "{0},{1},{2}",
-                    boardSize.Width,
-                    boardSize.Height,
-                    boardSize.MineCount);
+                return string.Format("{0},{1},{2}", boardSize.Width, boardSize.Height, boardSize.MineCount);
             }
 
-            return base.ConvertTo(
-                context,
-                culture,
-                value,
-                destinationType);
+            return base.ConvertTo(context, culture, value, destinationType);
         }
 
         /// <summary>

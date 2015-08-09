@@ -23,14 +23,11 @@
         {
             get
             {
-                return this.GetValue(
-                    ModalDialog.ReturnValueProperty);
+                return this.GetValue(ModalDialog.ReturnValueProperty);
             }
             set
             {
-                this.SetValue(
-                    ModalDialog.ReturnValueProperty,
-                    value);
+                this.SetValue(ModalDialog.ReturnValueProperty, value);
             }
         }
 

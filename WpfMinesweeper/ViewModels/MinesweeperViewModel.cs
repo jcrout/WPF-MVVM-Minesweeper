@@ -5,90 +5,27 @@
     using JonUtility;
     using Models;
 
-    public class MinesweeperViewModel : MinesweeperComponentViewModel
+    public class MinesweeperViewModel : MinesweeperViewModelBase
     {
         private readonly WinTimer gameTimer;
-        private MinesweeperComponentViewModel displayViewModel;
         private bool gameStarted;
-        private ViewModelBase menuViewModel;
         private bool minimized;
-        private MinesweeperComponentViewModel tileBoardViewModel;
 
         public MinesweeperViewModel()
         {
-            Mediator.Instance.Register(
-                ViewModelMessages.GameWindowStateChanged,
-                o => this.OnWindowStateChanged(
-                    (WindowState)o));
-            Mediator.Instance.Register(
-                ViewModelMessages.CreateNewBoard,
-                this.OnCreateNewBoard);
-            Mediator.Instance.Register(
-                ViewModelMessages.GameStarted,
-                this.OnGameStarted);
-            Mediator.Instance.Register(
-                ViewModelMessages.GameOver,
-                this.OnGameOver);
-            Mediator.Instance.Register(
-                ViewModelMessages.Victory,
-                this.OnVictory);
+            Mediator.Instance.Register(ViewModelMessages.GameWindowStateChanged, o => this.OnWindowStateChanged((WindowState)o));
+            Mediator.Instance.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
+            Mediator.Instance.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
+            Mediator.Instance.Register(ViewModelMessages.GameOver, this.OnGameOver);
+            Mediator.Instance.Register(ViewModelMessages.Victory, this.OnVictory);
 
-            this.gameTimer = new WinTimer(this.TimerProc,
-                1000);
+            this.gameTimer = new WinTimer(this.TimerProc, 1000);
 
             this.MenuViewModel = new MenuViewModel();
             this.DisplayViewModel = new DisplayPanelViewModel();
             this.TileBoardViewModel = new TileBoardViewModel();
 
             this.Minesweeper = MinesweeperFactory.GetFromSettings();
-        }
-
-        public MinesweeperComponentViewModel DisplayViewModel
-        {
-            get
-            {
-                return this.displayViewModel;
-            }
-            set
-            {
-                if (this.displayViewModel != value)
-                {
-                    this.displayViewModel = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public ViewModelBase MenuViewModel
-        {
-            get
-            {
-                return this.menuViewModel;
-            }
-            set
-            {
-                if (this.menuViewModel != value)
-                {
-                    this.menuViewModel = value;
-                    this.OnPropertyChanged();
-                }
-            }
-        }
-
-        public MinesweeperComponentViewModel TileBoardViewModel
-        {
-            get
-            {
-                return this.tileBoardViewModel;
-            }
-            set
-            {
-                if (this.tileBoardViewModel != value)
-                {
-                    this.tileBoardViewModel = value;
-                    this.OnPropertyChanged();
-                }
-            }
         }
 
         protected override void OnMinesweeperChanged()
@@ -101,13 +38,9 @@
             var gameStatistics = StatisticsModule.Create();
             var minesweeper = this.Minesweeper;
 
-            ViewModelBase.Settings.LastBoardSize = new BoardSize(minesweeper.Tiles.Width,
-                minesweeper.Tiles.Height,
-                minesweeper.MineCount);
+            ViewModelBase.Settings.LastBoardSize = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
 
-            gameStatistics[Statistic.BoardSize] = new BoardSize(minesweeper.Tiles.Width,
-                minesweeper.Tiles.Height,
-                minesweeper.MineCount);
+            gameStatistics[Statistic.BoardSize] = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
 
             this.DisplayViewModel.Minesweeper = minesweeper;
             this.TileBoardViewModel.Minesweeper = minesweeper;
@@ -126,8 +59,7 @@
             this.GameStatistics[Statistic.MinesRemaining] = this.Minesweeper.MinesRemaining;
             this.GameStatistics[Statistic.TimeElapsed] = this.Minesweeper.TimeElapsed;
 
-            ViewModelBase.Settings.Statistics.Add(
-                this.GameStatistics);
+            ViewModelBase.Settings.Statistics.Add(this.GameStatistics);
             ViewModelBase.Settings.Save();
         }
 
@@ -135,36 +67,29 @@
         {
             if (parameter == null)
             {
-                this.Minesweeper = MinesweeperFactory.Create(
-                    this.Minesweeper);
+                this.Minesweeper = MinesweeperFactory.Create(this.Minesweeper);
                 return;
             }
 
-            if (parameter.GetType() == typeof(BoardSize))
+            if (parameter is BoardSize)
             {
-                this.Minesweeper = MinesweeperFactory.Create(
-                    (BoardSize)parameter);
+                this.Minesweeper = MinesweeperFactory.Create((BoardSize)parameter);
             }
-            if (parameter is string)
+            else if (parameter is string)
             {
-                var boardSize = BoardSize.Parse(
-                    parameter.ToString());
-                this.Minesweeper = MinesweeperFactory.Create(
-                    boardSize);
+                var boardSize = BoardSize.Parse(parameter.ToString());
+                this.Minesweeper = MinesweeperFactory.Create(boardSize);
             }
             else
             {
-                throw new ArgumentException("parameter must either be of type String or BoardSize.");
+                throw new ArgumentException("parameter must either be of type String or BoardSize, or be set to null.");
             }
         }
 
         private void OnGameOver(object parameter)
         {
-            this.EndGame(
-                GameResult.GameOver);
-            Mediator.Instance.Notify(
-                ViewModelMessages.UpdateSmileyIndex,
-                SmileyState.GameOver);
+            this.EndGame(GameResult.GameOver);
+            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
         }
 
         private void OnGameStarted(object parameter)
@@ -175,11 +100,8 @@
 
         private void OnVictory(object parameter)
         {
-            this.EndGame(
-                GameResult.Victory);
-            Mediator.Instance.Notify(
-                ViewModelMessages.UpdateSmileyIndex,
-                SmileyState.Victory);
+            this.EndGame(GameResult.Victory);
+            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
         }
 
         private void OnWindowStateChanged(WindowState state)
@@ -209,7 +131,18 @@
 
         private void TimerProc()
         {
+            //Console.WriteLine("Thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
             this.Minesweeper.TimeElapsed++;
+            //if (this.Minesweeper.TimeElapsed % 3 == 0)
+            //{
+              
+            //    Mediator.Instance.Notify(
+            //        ViewModelMessages.TileColorsChanged,
+            //        new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.DarkBlue));
+            //    //    this.TileShadingMode = Controls.TileShadingMode.AllTiles;
+            //    //this.TileBrush = new LinearGradientBrush(Color.FromArgb(100, 255, 0, 0), Color.FromArgb(100, 0, 0, 255), new Point(0, 0), new Point(.75, .75));
+
+            //}
         }
     }
 }

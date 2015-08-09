@@ -45,32 +45,26 @@
 
         public void Notify(ViewModelMessages message, object parameter = null)
         {
-            if (!this.callbacks.ContainsKey(
-                message))
+            if (!this.callbacks.ContainsKey(message))
             {
                 return;
             }
 
             foreach (var callback in this.callbacks[message])
             {
-                callback(
-                    parameter);
+                callback(parameter);
             }
         }
 
         public void Register(ViewModelMessages message, Action<object> callback)
         {
-            if (!this.callbacks.ContainsKey(
-                message))
+            if (!this.callbacks.ContainsKey(message))
             {
-                this.callbacks.Add(
-                    message,
-                    new List<Action<object>>(1) {callback});
+                this.callbacks.Add(message, new List<Action<object>>(1) {callback});
             }
             else
             {
-                this.callbacks[message].Add(
-                    callback);
+                this.callbacks[message].Add(callback);
             }
         }
     }

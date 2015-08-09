@@ -39,16 +39,14 @@ namespace WpfMinesweeper
 
         protected override void OnExit(ExitEventArgs e)
         {
-            base.OnExit(
-                e);
+            base.OnExit(e);
 
             SettingsProvider.Instance.Save();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(
-                e);
+            base.OnStartup(e);
             //this.InitializeTracer();
 
             var window = new MainWindow();
@@ -62,17 +60,12 @@ namespace WpfMinesweeper
             Trace.Listeners.Clear();
             Trace.AutoFlush = true;
 
-            App.Tracer = new TraceSource("Tracer",
-                SourceLevels.All);
+            App.Tracer = new TraceSource("Tracer", SourceLevels.All);
             App.Tracer.Listeners.Clear();
 
-            var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"Log.txt",
-                FileMode.Create,
-                FileAccess.Write,
-                FileShare.None);
+            var fs = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"Log.txt", FileMode.Create, FileAccess.Write, FileShare.None);
             var listener = new TextWriterTraceListener(fs);
-            App.Tracer.Listeners.Add(
-                listener);
+            App.Tracer.Listeners.Add(listener);
         }
     }
 }

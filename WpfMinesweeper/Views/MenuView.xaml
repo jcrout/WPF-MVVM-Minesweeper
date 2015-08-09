@@ -3,14 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:WpfMinesweeper"
              xmlns:models="clr-namespace:WpfMinesweeper.Models"
              xmlns:vw="clr-namespace:WpfMinesweeper.Views"
              xmlns:controls="clr-namespace:WpfMinesweeper.Controls"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
-             xmlns:ei2="clr-namespace:Microsoft.Expression.Interactivity.Media;assembly=Microsoft.Expression.Interactions"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
 
@@ -66,8 +64,7 @@
                             Title="Statistics"
                             IsModal="false"
                             CancelButton="{x:Null}">
-            <vw:StatisticsView
-                DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+            <vw:StatisticsView DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </controls:PromptBox>
 
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">

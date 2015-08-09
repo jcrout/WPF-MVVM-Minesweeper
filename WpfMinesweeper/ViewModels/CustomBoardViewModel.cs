@@ -18,9 +18,7 @@
             this.height = height;
             this.mines = mines;
             this.validator = MinesweeperBoardValidator.Create();
-            this.saveCustomBoardCommand = new Command(o => this.OnSaveCustomBoard(
-                o),
-                () => this.IsValid);
+            this.saveCustomBoardCommand = new Command(this.OnSaveCustomBoard, () => this.IsValid);
         }
 
         public string Error
@@ -51,10 +49,7 @@
         {
             get
             {
-                var isValid = this.validator.ValidateBoard(
-                    this.width,
-                    this.height,
-                    this.mines) == null;
+                var isValid = this.validator.ValidateBoard(this.width, this.height, this.mines) == null;
                 return isValid;
             }
         }
@@ -113,14 +108,12 @@
             {
                 if (columnName == "Width")
                 {
-                    return this.validator.ValidateWidth(
-                        this.width);
+                    return this.validator.ValidateWidth(this.width);
                 }
 
                 if (columnName == "Height")
                 {
-                    return this.validator.ValidateHeight(
-                        this.height);
+                    return this.validator.ValidateHeight(this.height);
                 }
 
                 if (columnName == "Mines")
@@ -132,12 +125,10 @@
             }
         }
 
-        private void OnSaveCustomBoard(object parameter)
+        private void OnSaveCustomBoard()
         {
             var customBoard = this.width.ToString() + ',' + this.height + ',' + this.mines;
-            Mediator.Instance.Notify(
-                ViewModelMessages.CreateNewBoard,
-                customBoard);
+            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, customBoard);
         }
     }
 }

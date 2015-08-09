@@ -28,10 +28,8 @@
             }
 
             this.disposed = true;
-            this.OnDispose(
-                true);
-            GC.SuppressFinalize(
-                this);
+            this.OnDispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void OnDispose(bool disposing)
@@ -49,9 +47,7 @@
             if (propChangedEvent != null)
             {
                 var propChangedEventArgs = new PropertyChangedEventArgs(prop);
-                propChangedEvent(
-                    this,
-                    propChangedEventArgs);
+                propChangedEvent(this, propChangedEventArgs);
             }
         }
     }

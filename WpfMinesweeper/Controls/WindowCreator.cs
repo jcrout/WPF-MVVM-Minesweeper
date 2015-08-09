@@ -5,30 +5,26 @@
     using System.Windows.Markup;
     using System.Windows.Media;
 
-    [ContentProperty("Content"), DefaultProperty("Content"), Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
-    public class ModalWindowCreator : FrameworkElement
+    [ContentProperty("Content"), DefaultProperty("Content"),
+     Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
+    public class WindowCreator : FrameworkElement
     {
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
             typeof(object),
-            typeof(ModalWindowCreator),
-            new PropertyMetadata(
-                null,
-                ModalWindowCreator.ContentChanged));
+            typeof(WindowCreator),
+            new PropertyMetadata(null, WindowCreator.ContentChanged));
 
         [Bindable(true)]
         public object Content
         {
             get
             {
-                return this.GetValue(
-                    ModalWindowCreator.ContentProperty);
+                return this.GetValue(WindowCreator.ContentProperty);
             }
             set
             {
-                this.SetValue(
-                    ModalWindowCreator.ContentProperty,
-                    value);
+                this.SetValue(WindowCreator.ContentProperty, value);
             }
         }
 
@@ -42,16 +38,17 @@
 
         public void Show()
         {
-            var window = new Window();
-            window.SizeToContent = SizeToContent.WidthAndHeight;
-            window.ResizeMode = ResizeMode.NoResize;
-            window.ShowInTaskbar = false;
-            window.Content = this.Content;
+            var window = new Window
+            {
+                SizeToContent = SizeToContent.WidthAndHeight,
+                ResizeMode = ResizeMode.NoResize,
+                ShowInTaskbar = false,
+                Content = this.Content
+            };
 
             if (this.Parent != null)
             {
-                window.Owner = Window.GetWindow(
-                    this.Parent);
+                window.Owner = Window.GetWindow(this.Parent);
                 window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
             else
@@ -69,18 +66,16 @@
 
         private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var mwc = (ModalWindowCreator)d;
+            var mwc = (WindowCreator)d;
 
             if (e.OldValue != null)
             {
-                mwc.RemoveLogicalChild(
-                    e.OldValue);
+                mwc.RemoveLogicalChild(e.OldValue);
             }
 
             if (e.NewValue != null)
             {
-                mwc.AddLogicalChild(
-                    e.NewValue);
+                mwc.AddLogicalChild(e.NewValue);
             }
         }
     }

@@ -25,6 +25,12 @@
         private readonly bool shown;
         private readonly TileType type;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Tile" /> struct.
+        /// </summary>
+        /// <param name="type">The type of the tile.</param>
+        /// <param name="shown">Indicates whether the Tile is shown on the board or not..</param>
+        /// <param name="extraTileData">The extra tile data enumeration value.</param>
         public Tile(TileType type, bool shown, ExtraTileData extraTileData = ExtraTileData.None)
         {
             this.type = type;
@@ -32,6 +38,10 @@
             this.extraTileData = extraTileData;
         }
 
+        /// <summary>
+        ///     Gets the extra tile data set on this tile.
+        /// </summary>
+        /// <value>The extra tile data enumeration value.</value>
         public ExtraTileData ExtraTileData
         {
             get
@@ -40,6 +50,10 @@
             }
         }
 
+        /// <summary>
+        ///     Gets a value indicating whether this <see cref="Tile" /> is shown on the board.
+        /// </summary>
+        /// <value><c>true</c> if shown; otherwise, <c>false</c>.</value>
         public bool Shown
         {
             get
@@ -48,12 +62,29 @@
             }
         }
 
+        /// <summary>
+        ///     Gets the type of the tile.
+        /// </summary>
+        /// <value>The TileType value.</value>
         public TileType Type
         {
             get
             {
                 return this.type;
             }
+        }
+
+        /// <summary>
+        ///     Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        public override string ToString()
+        {
+            return string.Format(
+                @"{0}; {1}{2}",
+                this.type,
+                this.shown ? "Shown" : "Not Shown",
+                this.extraTileData != ExtraTileData.None ? "; " + this.extraTileData : string.Empty);
         }
     }
 

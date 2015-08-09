@@ -66,9 +66,7 @@
                     this.selectedColor = value;
                     ViewModelBase.Settings.TileColor = value;
                     var brush = new SolidColorBrush(value);
-                    Mediator.Instance.Notify(
-                        ViewModelMessages.TileColorsChanged,
-                        brush);
+                    Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged, brush);
                     this.OnPropertyChanged();
                 }
             }
@@ -108,9 +106,7 @@
 
         private void OnBoardSizeSelected(object parameter)
         {
-            Mediator.Instance.Notify(
-                ViewModelMessages.CreateNewBoard,
-                parameter);
+            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, parameter);
         }
     }
 }

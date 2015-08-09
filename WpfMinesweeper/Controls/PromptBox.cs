@@ -10,89 +10,71 @@
     using System.Windows.Markup;
     using System.Windows.Media;
 
-    [ContentProperty("Content"), DefaultProperty("Content"), Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
+    [ContentProperty("Content"), DefaultProperty("Content"),
+     Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
     public class PromptBox : FrameworkElement
     {
-        public static readonly DependencyProperty ButtonBorderBackgroundProperty = DependencyProperty.RegisterAttached(
-            "ButtonBorderBackground",
-            typeof(Brush),
-            typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.ButtonBorderBackgroundChanged));
+        public static readonly DependencyProperty ButtonBorderBackgroundProperty =
+            DependencyProperty.RegisterAttached(
+                "ButtonBorderBackground",
+                typeof(Brush),
+                typeof(PromptBox),
+                new PropertyMetadata(null, PromptBox.ButtonBorderBackgroundChanged));
 
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
             typeof(object),
             typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.ContentChanged));
+            new PropertyMetadata(null, PromptBox.ContentChanged));
 
         public static readonly DependencyProperty OKButtonProperty = DependencyProperty.Register(
             "OKButton",
             typeof(MessageButton),
             typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.OKButtonChanged));
+            new PropertyMetadata(null, PromptBox.OKButtonChanged));
 
         public static readonly DependencyProperty CancelButtonProperty = DependencyProperty.Register(
             "CancelButton",
             typeof(MessageButton),
             typeof(PromptBox),
-            new PropertyMetadata(
-                null,
-                PromptBox.CancelButtonChanged));
+            new PropertyMetadata(null, PromptBox.CancelButtonChanged));
 
         public static readonly DependencyProperty OtherButtonsProperty = DependencyProperty.Register(
             "OtherButtons",
             typeof(ObservableCollection<MessageButton>),
             typeof(PromptBox),
-            new PropertyMetadata(
-                new ObservableCollection<MessageButton>(),
-                PromptBox.OtherButtonsChanged));
+            new PropertyMetadata(new ObservableCollection<MessageButton>(), PromptBox.OtherButtonsChanged));
 
         public static readonly DependencyProperty IsModalProperty = DependencyProperty.Register(
             "IsModal",
             typeof(bool),
             typeof(PromptBox));
 
-        public static readonly DependencyProperty ResultCancelCommandProperty = DependencyProperty.Register(
-            "ResultCancelCommand",
-            typeof(ICommand),
-            typeof(PromptBox));
+        public static readonly DependencyProperty ResultCancelCommandProperty =
+            DependencyProperty.Register("ResultCancelCommand", typeof(ICommand), typeof(PromptBox));
 
         public static readonly DependencyProperty ResultCommandProperty = DependencyProperty.Register(
             "ResultCommand",
             typeof(ICommand),
             typeof(PromptBox));
 
-        public static readonly DependencyProperty ResultOKCommandProperty = DependencyProperty.Register(
-            "ResultOKCommand",
-            typeof(ICommand),
-            typeof(PromptBox));
+        public static readonly DependencyProperty ResultOKCommandProperty =
+            DependencyProperty.Register("ResultOKCommand", typeof(ICommand), typeof(PromptBox));
 
-        public static readonly DependencyProperty ResultOtherCommandProperty = DependencyProperty.Register(
-            "ResultOtherCommand",
-            typeof(ICommand),
-            typeof(PromptBox));
+        public static readonly DependencyProperty ResultOtherCommandProperty =
+            DependencyProperty.Register("ResultOtherCommand", typeof(ICommand), typeof(PromptBox));
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title",
             typeof(string),
             typeof(PromptBox),
-            new PropertyMetadata(
-                string.Empty,
-                PromptBox.TitleChanged));
+            new PropertyMetadata(string.Empty, PromptBox.TitleChanged));
 
         public static readonly DependencyProperty WindowStyleProperty = DependencyProperty.Register(
             "WindowStyle",
             typeof(WindowStyle),
             typeof(PromptBox),
-            new PropertyMetadata(
-                WindowStyle.SingleBorderWindow,
-                PromptBox.WindowStyleChanged));
+            new PropertyMetadata(WindowStyle.SingleBorderWindow, PromptBox.WindowStyleChanged));
 
         private readonly List<MessageButton> buttons = new List<MessageButton>();
         private bool obtainedResultBeforeClosing;
@@ -111,14 +93,11 @@
         {
             get
             {
-                return (Brush)this.GetValue(
-                    PromptBox.ButtonBorderBackgroundProperty);
+                return (Brush)this.GetValue(PromptBox.ButtonBorderBackgroundProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.ButtonBorderBackgroundProperty,
-                    value);
+                this.SetValue(PromptBox.ButtonBorderBackgroundProperty, value);
             }
         }
 
@@ -127,14 +106,11 @@
         {
             get
             {
-                return (MessageButton)this.GetValue(
-                    PromptBox.CancelButtonProperty);
+                return (MessageButton)this.GetValue(PromptBox.CancelButtonProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.CancelButtonProperty,
-                    value);
+                this.SetValue(PromptBox.CancelButtonProperty, value);
             }
         }
 
@@ -143,14 +119,11 @@
         {
             get
             {
-                return this.GetValue(
-                    PromptBox.ContentProperty);
+                return this.GetValue(PromptBox.ContentProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.ContentProperty,
-                    value);
+                this.SetValue(PromptBox.ContentProperty, value);
             }
         }
 
@@ -159,14 +132,11 @@
         {
             get
             {
-                return (bool)this.GetValue(
-                    PromptBox.IsModalProperty);
+                return (bool)this.GetValue(PromptBox.IsModalProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.IsModalProperty,
-                    value);
+                this.SetValue(PromptBox.IsModalProperty, value);
             }
         }
 
@@ -175,14 +145,11 @@
         {
             get
             {
-                return (MessageButton)this.GetValue(
-                    PromptBox.OKButtonProperty);
+                return (MessageButton)this.GetValue(PromptBox.OKButtonProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.OKButtonProperty,
-                    value);
+                this.SetValue(PromptBox.OKButtonProperty, value);
             }
         }
 
@@ -191,14 +158,11 @@
         {
             get
             {
-                return (ObservableCollection<MessageButton>)this.GetValue(
-                    PromptBox.OtherButtonsProperty);
+                return (ObservableCollection<MessageButton>)this.GetValue(PromptBox.OtherButtonsProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.OtherButtonsProperty,
-                    value);
+                this.SetValue(PromptBox.OtherButtonsProperty, value);
             }
         }
 
@@ -207,14 +171,11 @@
         {
             get
             {
-                return (ICommand)this.GetValue(
-                    PromptBox.ResultCancelCommandProperty);
+                return (ICommand)this.GetValue(PromptBox.ResultCancelCommandProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.ResultCancelCommandProperty,
-                    value);
+                this.SetValue(PromptBox.ResultCancelCommandProperty, value);
             }
         }
 
@@ -223,14 +184,11 @@
         {
             get
             {
-                return (ICommand)this.GetValue(
-                    PromptBox.ResultCommandProperty);
+                return (ICommand)this.GetValue(PromptBox.ResultCommandProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.ResultCommandProperty,
-                    value);
+                this.SetValue(PromptBox.ResultCommandProperty, value);
             }
         }
 
@@ -239,14 +197,11 @@
         {
             get
             {
-                return (ICommand)this.GetValue(
-                    PromptBox.ResultOKCommandProperty);
+                return (ICommand)this.GetValue(PromptBox.ResultOKCommandProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.ResultOKCommandProperty,
-                    value);
+                this.SetValue(PromptBox.ResultOKCommandProperty, value);
             }
         }
 
@@ -255,14 +210,11 @@
         {
             get
             {
-                return (ICommand)this.GetValue(
-                    PromptBox.ResultOtherCommandProperty);
+                return (ICommand)this.GetValue(PromptBox.ResultOtherCommandProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.ResultOtherCommandProperty,
-                    value);
+                this.SetValue(PromptBox.ResultOtherCommandProperty, value);
             }
         }
 
@@ -271,14 +223,11 @@
         {
             get
             {
-                return (string)this.GetValue(
-                    PromptBox.TitleProperty);
+                return (string)this.GetValue(PromptBox.TitleProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.TitleProperty,
-                    value);
+                this.SetValue(PromptBox.TitleProperty, value);
             }
         }
 
@@ -287,14 +236,11 @@
         {
             get
             {
-                return (WindowStyle)this.GetValue(
-                    PromptBox.WindowStyleProperty);
+                return (WindowStyle)this.GetValue(PromptBox.WindowStyleProperty);
             }
             set
             {
-                this.SetValue(
-                    PromptBox.WindowStyleProperty,
-                    value);
+                this.SetValue(PromptBox.WindowStyleProperty, value);
             }
         }
 
@@ -351,8 +297,7 @@
 
             if (e.OldValue != null)
             {
-                pb.buttons.Remove(
-                    (MessageButton)e.OldValue);
+                pb.buttons.Remove((MessageButton)e.OldValue);
             }
 
             if (e.NewValue == null)
@@ -364,8 +309,7 @@
             mb.Result = MessageResult.Cancel;
             mb.Button.IsCancel = true;
             mb.Button.IsDefault = false;
-            pb.buttons.Add(
-                mb);
+            pb.buttons.Add(mb);
         }
 
         private static void ContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -374,14 +318,12 @@
 
             if (e.OldValue != null)
             {
-                pb.RemoveLogicalChild(
-                    e.OldValue);
+                pb.RemoveLogicalChild(e.OldValue);
             }
 
             if (e.NewValue != null)
             {
-                pb.AddLogicalChild(
-                    e.NewValue);
+                pb.AddLogicalChild(e.NewValue);
             }
         }
 
@@ -391,8 +333,7 @@
 
             if (e.OldValue != null)
             {
-                pb.buttons.Remove(
-                    (MessageButton)e.OldValue);
+                pb.buttons.Remove((MessageButton)e.OldValue);
             }
 
             if (e.NewValue == null)
@@ -404,8 +345,7 @@
             mb.Result = MessageResult.OK;
             mb.Button.IsCancel = false;
             mb.Button.IsDefault = true;
-            pb.buttons.Add(
-                mb);
+            pb.buttons.Add(mb);
         }
 
         private static void OtherButtonsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -417,8 +357,7 @@
                 var oldButtons = (ObservableCollection<MessageButton>)e.OldValue;
                 foreach (var button in oldButtons)
                 {
-                    pb.buttons.Remove(
-                        button);
+                    pb.buttons.Remove(button);
                 }
             }
 
@@ -427,8 +366,7 @@
                 var newButtons = (ObservableCollection<MessageButton>)e.NewValue;
                 foreach (var button in newButtons)
                 {
-                    pb.buttons.Add(
-                        button);
+                    pb.buttons.Add(button);
                 }
             }
         }
@@ -474,13 +412,7 @@
 
         private MessageButton GetDefaultCancelButton()
         {
-            var button = new Button
-            {
-                Width = 80,
-                Height = 22,
-                Content = "Cancel",
-                IsCancel = true
-            };
+            var button = new Button {Width = 80, Height = 22, Content = "Cancel", IsCancel = true};
 
             var messageButton = new MessageButton();
             messageButton.Button = button;
@@ -492,18 +424,14 @@
 
         private MessageButton GetDefaultOKButton()
         {
-            var button = new Button
-            {
-                Width = 80,
-                Height = 22,
-                Content = "OK",
-                IsDefault = true
-            };
+            var button = new Button {Width = 80, Height = 22, Content = "OK", IsDefault = true};
 
-            var messageButton = new MessageButton();
-            messageButton.Button = button;
-            messageButton.RightToLeftIndex = 0;
-            messageButton.Result = MessageResult.OK;
+            var messageButton = new MessageButton
+            {
+                Button = button,
+                RightToLeftIndex = 0,
+                Result = MessageResult.OK
+            };
 
             return messageButton;
         }
@@ -522,9 +450,8 @@
             if (this.Content != null)
             {
                 var content = this.Content;
-                contentContext = (content as FrameworkElement != null) ? (content as FrameworkElement).DataContext : null;
-                this.RemoveLogicalChild(
-                    content);
+                contentContext = (content is FrameworkElement) ? ((FrameworkElement)content).DataContext : null;
+                this.RemoveLogicalChild(content);
 
                 this.panel.InnerContent = content;
             }
@@ -548,8 +475,7 @@
 
             if (this.Parent != null)
             {
-                newWindow.Owner = Window.GetWindow(
-                    this.Parent);
+                newWindow.Owner = Window.GetWindow(this.Parent);
                 newWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             }
             else
@@ -562,30 +488,22 @@
 
         private void InvokeCommands(MessageButton button, MessageResult result)
         {
-            var buttonResult = (button != null)
-                ? button.Result ?? result
-                : result;
+            var buttonResult = (button != null) ? button.Result ?? result : result;
 
             switch (result)
             {
                 case MessageResult.OK:
-                    this.ResultOKCommand.ExecuteIfAbleTo(
-                        buttonResult);
+                    this.ResultOKCommand.ExecuteIfAbleTo(buttonResult);
                     break;
                 case MessageResult.Cancel:
-                    this.ResultCancelCommand.ExecuteIfAbleTo(
-                        buttonResult);
+                    this.ResultCancelCommand.ExecuteIfAbleTo(buttonResult);
                     break;
                 case MessageResult.Other:
-                    this.ResultOtherCommand.ExecuteIfAbleTo(
-                        buttonResult);
-                    break;
-                default:
+                    this.ResultOtherCommand.ExecuteIfAbleTo(buttonResult);
                     break;
             }
 
-            this.ResultCommand.ExecuteIfAbleTo(
-                buttonResult);
+            this.ResultCommand.ExecuteIfAbleTo(buttonResult);
         }
 
         private void OtherButtons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -596,8 +514,7 @@
                 {
                     if (button != null)
                     {
-                        this.buttons.Add(
-                            button);
+                        this.buttons.Add(button);
                     }
                 }
             }
@@ -607,8 +524,7 @@
                 {
                     if (button != null)
                     {
-                        this.buttons.Remove(
-                            button);
+                        this.buttons.Remove(button);
                     }
                 }
             }
@@ -621,8 +537,7 @@
                     var newButton = (MessageButton)newItemEnumerator.Current;
                     if (button != null)
                     {
-                        var index = this.buttons.IndexOf(
-                            button);
+                        var index = this.buttons.IndexOf(button);
                         this.buttons[index] = newButton;
                     }
                 }
@@ -635,9 +550,7 @@
 
         private void panel_ButtonClicked(object sender, MessageResultArgs e)
         {
-            this.InvokeCommands(
-                e.Button,
-                e.Result);
+            this.InvokeCommands(e.Button, e.Result);
             this.ClearPanel();
 
             if (this.window != null)
@@ -655,9 +568,7 @@
 
             if (!this.obtainedResultBeforeClosing)
             {
-                this.InvokeCommands(
-                    this.CancelButton,
-                    MessageResult.Cancel);
+                this.InvokeCommands(this.CancelButton, MessageResult.Cancel);
                 this.ClearPanel();
                 this.window = null;
             }

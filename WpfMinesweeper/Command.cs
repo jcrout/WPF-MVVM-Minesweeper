@@ -155,8 +155,7 @@
                 {
                     return true;
                 }
-                return this.canExecuteWithArgument(
-                    parameter);
+                return this.canExecuteWithArgument(parameter);
             }
             return this.canExecute();
         }
@@ -172,8 +171,7 @@
         {
             if (this.execute == null)
             {
-                this.executeWithArgument(
-                    parameter);
+                this.executeWithArgument(parameter);
             }
             else
             {
@@ -326,8 +324,7 @@
                 {
                     return true;
                 }
-                return this.canExecuteWithArgument(
-                    (T)parameter);
+                return this.canExecuteWithArgument((T)parameter);
             }
             return this.canExecute();
         }
@@ -343,8 +340,7 @@
         {
             if (this.execute == null)
             {
-                this.executeWithArgument(
-                    (T)parameter);
+                this.executeWithArgument((T)parameter);
             }
             else
             {
@@ -375,11 +371,9 @@
                 return;
             }
 
-            if (@this.CanExecute(
-                parameter))
+            if (@this.CanExecute(parameter))
             {
-                @this.Execute(
-                    parameter);
+                @this.Execute(parameter);
             }
         }
     }

@@ -40,9 +40,7 @@
 
             foreach (var stat in StatisticHelper.GetGameStatistics())
             {
-                this.stats.Add(
-                    stat,
-                    StatisticHelper.GetType(stat).GetDefaultValue());
+                this.stats.Add(stat, StatisticHelper.GetType(stat).GetDefaultValue());
             }
         }
 
@@ -65,9 +63,7 @@
                 }
                 else
                 {
-                    this.stats.Add(
-                        statistic,
-                        value);
+                    this.stats.Add(statistic, value);
                 }
             }
         }

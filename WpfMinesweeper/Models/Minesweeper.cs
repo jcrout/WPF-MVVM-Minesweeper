@@ -131,23 +131,20 @@
 
         public static Minesweeper Create(int width, int height, int mineCount)
         {
-            var validationResult = MinesweeperBoardValidator.Create().ValidateBoard(
-                width,
-                height,
-                mineCount);
+            var validationResult = MinesweeperBoardValidator.Create().ValidateBoard(width, height, mineCount);
 
             if (validationResult != null)
             {
                 throw new ArgumentException(validationResult);
             }
 
-            var minesweeper = new Minesweeper();
-            minesweeper.tiles = TileCollection.Create(
-                width,
-                height);
-            minesweeper.mineCount = mineCount;
-            minesweeper.minesLeft = mineCount;
-            minesweeper.timeElapsed = 0;
+            var minesweeper = new Minesweeper
+            {
+                tiles = TileCollection.Create(width, height),
+                mineCount = mineCount,
+                minesLeft = mineCount,
+                timeElapsed = 0
+            };
 
             return minesweeper;
         }
@@ -157,9 +154,7 @@
             var propertyChanged = this.PropertyChanged;
             if (propertyChanged != null)
             {
-                propertyChanged(
-                    this,
-                    new PropertyChangedEventArgs(prop));
+                propertyChanged(this, new PropertyChangedEventArgs(prop));
             }
         }
     }
@@ -170,34 +165,22 @@
 
         public static Minesweeper GetFromSettings()
         {
-            return Minesweeper.Create(
-                MinesweeperFactory.settings.LastBoardSize.Width,
-                MinesweeperFactory.settings.LastBoardSize.Height,
-                MinesweeperFactory.settings.LastBoardSize.MineCount);
+            return Minesweeper.Create(MinesweeperFactory.settings.LastBoardSize.Width, MinesweeperFactory.settings.LastBoardSize.Height, MinesweeperFactory.settings.LastBoardSize.MineCount);
         }
 
         public static Minesweeper Create(int width, int height, int mineCount)
         {
-            return Minesweeper.Create(
-                width,
-                height,
-                mineCount);
+            return Minesweeper.Create(width, height, mineCount);
         }
 
         public static Minesweeper Create(BoardSize board)
         {
-            return Minesweeper.Create(
-                board.Width,
-                board.Height,
-                board.MineCount);
+            return Minesweeper.Create(board.Width, board.Height, board.MineCount);
         }
 
         public static Minesweeper Create(IMinesweeper minesweeper)
         {
-            return Minesweeper.Create(
-                minesweeper.Tiles.Width,
-                minesweeper.Tiles.Height,
-                minesweeper.MineCount);
+            return Minesweeper.Create(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
         }
     }
 }

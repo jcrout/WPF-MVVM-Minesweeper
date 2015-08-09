@@ -15,13 +15,12 @@
         /// <summary>
         ///     This property is a proxy to SelectedItems and updates any bindings.
         /// </summary>
-        public static readonly DependencyProperty SelectedItemsBindingProperty = DependencyProperty.Register(
-            "SelectedItemsBinding",
-            typeof(IList),
-            typeof(ListBox2),
-            new PropertyMetadata(
-                new List<object>(),
-                ListBox2.SelectedItemsBindingChanged));
+        public static readonly DependencyProperty SelectedItemsBindingProperty =
+            DependencyProperty.Register(
+                "SelectedItemsBinding",
+                typeof(IList),
+                typeof(ListBox2),
+                new PropertyMetadata(new List<object>(), ListBox2.SelectedItemsBindingChanged));
 
         /// <summary>
         ///     Gets or sets the SelectedItems property. This property is a proxy to SelectedItems and updates any bindings.
@@ -30,14 +29,11 @@
         {
             get
             {
-                return (IList)this.GetValue(
-                    ListBox2.SelectedItemsBindingProperty);
+                return (IList)this.GetValue(ListBox2.SelectedItemsBindingProperty);
             }
             set
             {
-                this.SetValue(
-                    ListBox2.SelectedItemsBindingProperty,
-                    value);
+                this.SetValue(ListBox2.SelectedItemsBindingProperty, value);
             }
         }
 
@@ -48,8 +44,7 @@
         /// <param name="e">The SelectionChanged EventArgs.</param>
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            base.OnSelectionChanged(
-                e);
+            base.OnSelectionChanged(e);
             this.SelectedItemsBinding = this.SelectedItems;
         }
 
@@ -63,12 +58,9 @@
             var listBox2 = (ListBox2)d;
             var newList = (IEnumerable)e.NewValue;
 
-            if (!object.ReferenceEquals(
-                listBox2.SelectedItems,
-                newList))
+            if (listBox2.SelectedItems != newList)
             {
-                listBox2.SetSelectedItems(
-                    newList);
+                listBox2.SetSelectedItems(newList);
             }
         }
     }

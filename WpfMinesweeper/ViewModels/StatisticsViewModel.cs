@@ -22,23 +22,18 @@
 
         static StatisticsViewModel()
         {
-            StatisticsViewModel.emptyPage = new StatValueViewModel(StatisticsViewModel.DefaultStatText);
-            StatisticsViewModel.emptyPage.StatisticValues = new List<object>(1) {"No values to display."};
+            StatisticsViewModel.emptyPage = new StatValueViewModel(StatisticsViewModel.DefaultStatText)
+            {
+                StatisticValues = new List<object>(1) {"No values to display."}
+            };
         }
 
         public StatisticsViewModel()
         {
-            Mediator.Instance.Register(
-                ViewModelMessages.StatisticsLoaded,
-                o => this.StatisticsLoaded());
+            Mediator.Instance.Register(ViewModelMessages.StatisticsLoaded, o => this.StatisticsLoaded());
 
-            var statList = StatisticHelper.GetGameStatistics().Select(
-                s => StatisticHelper.GetDisplayText(
-                    s)).OrderBy(
-                        s => s).ToList();
-            statList.Insert(
-                0,
-                StatisticsViewModel.DefaultStatText);
+            var statList = StatisticHelper.GetGameStatistics().Select(s => StatisticHelper.GetDisplayText(s)).OrderBy(s => s).ToList();
+            statList.Insert(0, StatisticsViewModel.DefaultStatText);
 
             this.Pages = new List<StatValueViewModel>();
             this.sortByList = new List<Statistic>();
@@ -54,9 +49,7 @@
             }
             set
             {
-                if (double.IsNaN(
-                    this.columnWidth) && double.IsNaN(
-                        value))
+                if (double.IsNaN(this.columnWidth) && double.IsNaN(value))
                 {
                     this.columnWidth = 30.53d;
                     this.OnPropertyChanged();
@@ -175,40 +168,22 @@
                 return modules.Count().ToString();
             }
 
-            var statType = StatisticHelper.GetType(
-                stat);
+            var statType = StatisticHelper.GetType(stat);
             if (statType.IsPrimitive)
             {
-                var average = modules.Average(
-                    module => (double)Convert.ChangeType(
-                        module[stat],
-                        typeof(double)));
-                return average.ToString(
-                    "0.00");
+                var average = modules.Average(module => (double)Convert.ChangeType(module[stat], typeof(double)));
+                return average.ToString("0.00");
             }
             if (statType == typeof(DateTime))
             {
-                var average = (int)modules.Select(
-                    module => (((DateTime)module[stat]).Hour * 60) + ((DateTime)module[stat]).Minute).Average();
-                var time = new DateTime(1,
-                    1,
-                    1,
-                    (int)Math.Floor(
-                        average / 60d),
-                    average % 60,
-                    0,
-                    DateTimeKind.Local);
-                return time.ToString(
-                    "h:mm tt",
-                    CultureInfo.CurrentCulture.DateTimeFormat);
+                var average = (int)modules.Select(module => (((DateTime)module[stat]).Hour * 60) + ((DateTime)module[stat]).Minute).Average();
+                var time = new DateTime(1, 1, 1, (int)Math.Floor(average / 60d), average % 60, 0, DateTimeKind.Local);
+                return time.ToString("h:mm tt", CultureInfo.CurrentCulture.DateTimeFormat);
             }
             else
             {
-                var average = modules.GroupBy(
-                    module => module[stat]).OrderByDescending(
-                        g => g.Count());
-                return average.ElementAt(
-                    0).Key.ToString();
+                var average = modules.GroupBy(module => module[stat]).OrderByDescending(g => g.Count());
+                return average.ElementAt(0).Key.ToString();
             }
         }
 
@@ -230,17 +205,9 @@
                 }
             }
 
-            defaultList.Add(
-                new StatDisplay(
-                    "Wins",
-                    wins.ToString(),
-                    "Total number of wins."));
+            defaultList.Add(new StatDisplay("Wins", wins.ToString(), "Total number of wins."));
 
-            defaultList.Add(
-                new StatDisplay(
-                    "Losses",
-                    losses.ToString(),
-                    "Total number of losses."));
+            defaultList.Add(new StatDisplay("Losses", losses.ToString(), "Total number of losses."));
 
             //defaultList.Sort((o1, o2) => o1.Label.CompareTo(o2.Label));
             return defaultList;
@@ -248,18 +215,7 @@
 
         private IEnumerable<Statistic> GetStatDisplayList()
         {
-            var displayStats = StatisticHelper.GetGlobalStatistics()
-                                              .OrderBy(
-                                                  stat => StatisticHelper.GetDisplayText(
-                                                      stat))
-                                              .Concat(
-                                                  StatisticHelper.GetGameStatistics()
-                                                                 .Where(
-                                                                     stat => !this.IsSelected(
-                                                                         stat))
-                                                                 .OrderBy(
-                                                                     stat => StatisticHelper.GetDisplayText(
-                                                                         stat)));
+            var displayStats = StatisticHelper.GetGlobalStatistics().OrderBy(stat => StatisticHelper.GetDisplayText(stat)).Concat(StatisticHelper.GetGameStatistics().Where(stat => !this.IsSelected(stat)).OrderBy(stat => StatisticHelper.GetDisplayText(stat)));
 
             return displayStats;
         }
@@ -269,8 +225,7 @@
             foreach (var kvp in values)
             {
                 var value = module[kvp.Key];
-                if (!value.Equals(
-                    kvp.Value))
+                if (!value.Equals(kvp.Value))
                 {
                     return false;
                 }
@@ -281,8 +236,7 @@
 
         private bool IsSelected(Statistic stat)
         {
-            var index = this.sortByList.IndexOf(
-                stat);
+            var index = this.sortByList.IndexOf(stat);
             if (index < 0)
             {
                 return false;
@@ -316,7 +270,7 @@
                 var selectedValue = this.pages[i].SelectedValue;
                 if (selectedValue != null)
                 {
-                    stats.Add(new KeyValuePair<Statistic, object>(this.sortByList[i],selectedValue));
+                    stats.Add(new KeyValuePair<Statistic, object>(this.sortByList[i], selectedValue));
                 }
             }
 
@@ -327,35 +281,26 @@
                 return;
             }
 
-            var moduleList = ViewModelBase.Settings.Statistics
-                .Where(st => this.HasAllValues(st, stats));
-
+            var moduleList = ViewModelBase.Settings.Statistics.Where(st => this.HasAllValues(st, stats)).ToArray();
             var statList = new List<StatDisplay>();
-            if (moduleList.Count() == 0)
+
+            if (moduleList.Length == 0)
             {
                 var statDisplay = new StatDisplay(
-                    StatisticHelper.GetDisplayText(
-                        Statistic.MatchCount),
-                    "0",
-                    StatisticHelper.GetDescription(
-                        Statistic.MatchCount));
-                statList.Add(
-                    statDisplay);
+                    StatisticHelper.GetDisplayText(Statistic.MatchCount), 
+                    "0", 
+                    StatisticHelper.GetDescription(Statistic.MatchCount));
+                statList.Add(statDisplay);
             }
             else
             {
                 foreach (var stat in this.GetStatDisplayList())
                 {
                     var statDisplay = new StatDisplay(
-                        StatisticHelper.GetDisplayText(
-                            stat),
-                        this.GetAverageValue(
-                            moduleList,
-                            stat),
-                        StatisticHelper.GetDescription(
-                            stat));
-                    statList.Add(
-                        statDisplay);
+                        StatisticHelper.GetDisplayText(stat),
+                        this.GetAverageValue(moduleList, stat), 
+                        StatisticHelper.GetDescription(stat));
+                    statList.Add(statDisplay);
                 }
             }
 
@@ -370,43 +315,28 @@
                 return;
             }
 
-            if (this.statisticNameSelectedItems.Count == 0 || this.statisticNameSelectedItems.Contains(
-                StatisticsViewModel.DefaultStatText))
+            if (this.statisticNameSelectedItems.Count == 0 || this.statisticNameSelectedItems.Contains(StatisticsViewModel.DefaultStatText))
             {
                 this.LoadDefaultList();
             }
             else
             {
-                this.sortByList = this.statisticNameSelectedItems.Select(
-                    o => StatisticHelper.FromDisplayText(
-                        o.ToString())).ToList();
+                this.sortByList = this.statisticNameSelectedItems.Select(o => StatisticHelper.FromDisplayText(o.ToString())).ToList();
                 var newPages = new List<StatValueViewModel>(this.sortByList.Count);
 
                 foreach (var stat in this.sortByList)
                 {
-                    var newPage = new StatValueViewModel(StatisticHelper.GetDisplayText(
-                        stat));
-                    var statList = ViewModelBase.Settings.Statistics.Select(
-                        st => st[stat]).Distinct().ToList();
-                    statList.Sort(
-                        (o1, o2) => StatisticComparer.Default.Compare(
-                            o1,
-                            o2));
+                    var newPage = new StatValueViewModel(StatisticHelper.GetDisplayText(stat));
+                    var statList = ViewModelBase.Settings.Statistics.Select(st => st[stat]).Distinct().ToList();
+                    statList.Sort((o1, o2) => StatisticComparer.Default.Compare(o1, o2));
                     newPage.StatisticValues = statList;
                     newPage.PropertyChanged += this.newPage_PropertyChanged;
-                    newPages.Add(
-                        newPage);
+                    newPages.Add(newPage);
                 }
 
                 this.Pages = newPages;
                 this.SelectedPage = newPages[0];
             }
-        }
-
-        private void SelectFirstDropDownStat()
-        {
-            var firstElement = this.dropDownStatisticsList.ElementAt(
-                0);
         }
 
         private void StatisticsLoaded()
@@ -416,8 +346,7 @@
 
         private void StatSelectionChanged()
         {
-            if (this.statisticNameSelectedItems.Count > 1 && this.statisticNameSelectedItems.Contains(
-                StatisticsViewModel.DefaultStatText))
+            if (this.statisticNameSelectedItems.Count > 1 && this.statisticNameSelectedItems.Contains(StatisticsViewModel.DefaultStatText))
             {
                 this.StatisticNameSelectedItems = new List<object> {StatisticsViewModel.DefaultStatText};
             }

@@ -6,12 +6,12 @@
 
     public class ViewBoxAutosize : Viewbox
     {
-        private static readonly DependencyProperty KeepExpandedRatioProperty = DependencyProperty.Register(
-            "KeepExpandedRatio",
-            typeof(bool),
-            typeof(ViewBoxAutosize),
-            new PropertyMetadata(
-                false));
+        private static readonly DependencyProperty KeepExpandedRatioProperty =
+            DependencyProperty.Register(
+                "KeepExpandedRatio",
+                typeof(bool),
+                typeof(ViewBoxAutosize),
+                new PropertyMetadata(false));
 
         private FrameworkElement child;
         private FrameworkElement parent;
@@ -45,21 +45,17 @@
         {
             get
             {
-                return (bool)this.GetValue(
-                    ViewBoxAutosize.KeepExpandedRatioProperty);
+                return (bool)this.GetValue(ViewBoxAutosize.KeepExpandedRatioProperty);
             }
             set
             {
-                this.SetValue(
-                    ViewBoxAutosize.KeepExpandedRatioProperty,
-                    value);
+                this.SetValue(ViewBoxAutosize.KeepExpandedRatioProperty, value);
             }
         }
 
         protected override void OnVisualParentChanged(DependencyObject oldParent)
         {
-            base.OnVisualParentChanged(
-                oldParent);
+            base.OnVisualParentChanged(oldParent);
 
             if (this.parent != null)
             {
@@ -73,8 +69,7 @@
             }
 
             var currentParentType = this.Parent.GetType();
-            if (typeof(FrameworkElement).IsAssignableFrom(
-                currentParentType))
+            if (typeof(FrameworkElement).IsAssignableFrom(currentParentType))
             {
                 this.parent = (FrameworkElement)this.Parent;
                 this.parent.SizeChanged += this.parent_SizeChanged;
@@ -84,16 +79,10 @@
         private void child_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             this.updatedSize = true;
-            if (this.KeepExpandedRatio && !double.IsNaN(
-                this.Width) && !double.IsNaN(
-                    this.Height))
+            if (this.KeepExpandedRatio && !double.IsNaN(this.Width) && !double.IsNaN(this.Height))
             {
-                var widthRatio = Math.Max(
-                    1d,
-                    this.Width / e.PreviousSize.Width);
-                var heightRatio = Math.Max(
-                    1d,
-                    this.Height / e.PreviousSize.Height);
+                var widthRatio = Math.Max(1d, this.Width / e.PreviousSize.Width);
+                var heightRatio = Math.Max(1d, this.Height / e.PreviousSize.Height);
                 this.Width = e.NewSize.Width * widthRatio;
                 this.Height = e.NewSize.Height * heightRatio;
             }
@@ -117,12 +106,8 @@
                 return;
             }
 
-            this.Width = Math.Max(
-                0,
-                this.Width + e.NewSize.Width - e.PreviousSize.Width);
-            this.Height = Math.Max(
-                0,
-                this.Height + e.NewSize.Height - e.PreviousSize.Height);
+            this.Width = Math.Max(0, this.Width + e.NewSize.Width - e.PreviousSize.Width);
+            this.Height = Math.Max(0, this.Height + e.NewSize.Height - e.PreviousSize.Height);
         }
     }
 }
