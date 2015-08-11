@@ -78,7 +78,7 @@
             HoverBrush="{Binding Path=HoverBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             SelectedTiles="{Binding Path=SelectedTiles, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             SelectionBrush="{Binding Path=SelectionBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-            TileTapCommand="{Binding Path=TileTapCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+            TilePressCommand="{Binding Path=TileTapCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             TilesToUpdate="{Binding Path=TilesToUpdate, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             TileBrush="{Binding Path=TileBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             DrawPressedTile="{Binding Path=IsTilePressed, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"

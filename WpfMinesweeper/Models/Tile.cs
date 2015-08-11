@@ -152,7 +152,7 @@
 
             if (mineCount > TileType.mineCountMaximum || mineCount < 0)
             {
-                throw new ArgumentOutOfRangeException("mineCount");
+                throw new ArgumentOutOfRangeException(nameof(mineCount));
             }
 
             return new TileType((ushort)mineCount);

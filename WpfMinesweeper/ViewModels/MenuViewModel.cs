@@ -1,22 +1,24 @@
 ﻿namespace WpfMinesweeper.ViewModels
 {
+    using System;
     using System.Windows.Input;
     using System.Windows.Media;
     using Models;
 
     public class MenuViewModel : ViewModelBase
     {
-        private static readonly Color defaultSelectedColor = ViewModelBase.Settings.TileColor;
         private ICommand boardSizeCommand;
         private ViewModelBase customBoardViewModel;
         private Color selectedColor;
         private ViewModelBase statisticsViewModel;
         private ICommand tileColorCommand;
+        private ICommand statisticsPromptCommand;
 
         public MenuViewModel()
         {
-            this.boardSizeCommand = new Command(o => this.OnBoardSizeSelected(o));
-            this.selectedColor = MenuViewModel.defaultSelectedColor;
+            this.BoardSizeCommand = new Command(this.OnBoardSizeSelected);
+            this.StatisticsPromptCommand = new Command<string>(this.OnStatisticsPromptCommand);
+            this.selectedColor = this.Settings.TileColor;
             this.CustomBoardViewModel = new CustomBoardViewModel();
             this.StatisticsViewModel = new StatisticsViewModel();
         }
@@ -32,6 +34,21 @@
                 if (this.boardSizeCommand != value)
                 {
                     this.boardSizeCommand = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+        public ICommand StatisticsPromptCommand
+        {
+            get
+            {
+                return this.statisticsPromptCommand;
+            }
+            set
+            {
+                if (this.statisticsPromptCommand != value)
+                {
+                    this.statisticsPromptCommand = value;
                     this.OnPropertyChanged();
                 }
             }
@@ -64,9 +81,9 @@
                 if (this.selectedColor != value)
                 {
                     this.selectedColor = value;
-                    ViewModelBase.Settings.TileColor = value;
+                    this.Settings.TileColor = value;
                     var brush = new SolidColorBrush(value);
-                    Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged, brush);
+                    Mediator.Notify(ViewModelMessages.TileColorsChanged, brush);
                     this.OnPropertyChanged();
                 }
             }
@@ -104,9 +121,33 @@
             }
         }
 
+        private void OnStatisticsPromptCommand(string result)
+        {
+            if (!string.Equals(result, "Clear"))
+            {
+                return;
+            }
+
+            var decision = System.Windows.MessageBox.Show(
+                "Clear all recorded statistics to this point?",
+                "Clear Statistics",
+                System.Windows.MessageBoxButton.YesNo,
+                System.Windows.MessageBoxImage.Question,
+                System.Windows.MessageBoxResult.No);
+            
+            if (decision == System.Windows.MessageBoxResult.No)
+            {
+                return;
+            }
+
+            Settings.Statistics.Clear();
+            Settings.Save();
+            Mediator.Notify(ViewModelMessages.StatisticsLoaded);
+        }
+
         private void OnBoardSizeSelected(object parameter)
         {
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, parameter);
+            Mediator.Notify(ViewModelMessages.CreateNewBoard, parameter);
         }
     }
 }

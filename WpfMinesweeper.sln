@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JonUtility", "..\JonUtility\JonUtility\JonUtility.csproj", "{AFCF9D3A-F066-40D7-8518-F57A4B4600BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YagnaColor", "..\..\..\Downloads\YagnaColor\YagnaColor\YagnaColor\YagnaColor.csproj", "{FC8A4F9A-7892-41EE-AE1D-D2536690E43D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfMInesweeperUnitTests", "WpfMInesweeperUnitTests\WpfMInesweeperUnitTests.csproj", "{ADFCE8CF-0470-40C3-A502-BF5BD257DAF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{AFCF9D3A-F066-40D7-8518-F57A4B4600BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFCF9D3A-F066-40D7-8518-F57A4B4600BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFCF9D3A-F066-40D7-8518-F57A4B4600BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC8A4F9A-7892-41EE-AE1D-D2536690E43D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC8A4F9A-7892-41EE-AE1D-D2536690E43D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC8A4F9A-7892-41EE-AE1D-D2536690E43D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC8A4F9A-7892-41EE-AE1D-D2536690E43D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADFCE8CF-0470-40C3-A502-BF5BD257DAF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADFCE8CF-0470-40C3-A502-BF5BD257DAF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADFCE8CF-0470-40C3-A502-BF5BD257DAF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADFCE8CF-0470-40C3-A502-BF5BD257DAF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

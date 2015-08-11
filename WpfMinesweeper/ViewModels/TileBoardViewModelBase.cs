@@ -14,7 +14,7 @@
     {
         private static readonly Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(110, 255, 255, 255));
         private static readonly Brush defaultSelectionBrush = new SolidColorBrush(Color.FromArgb(150, 150, 150, 150));
-        private static readonly Brush defaultTileBrush = ViewModelBase.Settings.TileBrush;
+        private static readonly Brush defaultTileBrush = DefaultSettings.TileBrush;
         private static readonly Point<int> emptyPoint = new Point<int>(-1, -1);
         private ICommand boardInitializedCommand;
         private Brush hoverBrush = TileBoardViewModelBase.defaultHoverBrush;
@@ -28,6 +28,11 @@
         private ICommand tileHoverCommand;
         private AnimatedTilesCollection tilesToUpdate;
         private ICommand tileTapCommand;
+
+        protected TileBoardViewModelBase()
+        {
+            this.tileBrush = this.Settings.TileBrush;
+        }
 
         public ICommand BoardInitializedCommand
         {
@@ -104,7 +109,7 @@
                 if (this.isTilePressed != value)
                 {
                     this.isTilePressed = value;
-                    Mediator.Instance.Notify(
+                    Mediator.Notify(
                         ViewModelMessages.UpdateSmileyIndex,
                         value ? SmileyState.TapDown : SmileyState.Default);
                     this.OnPropertyChanged();
@@ -171,7 +176,7 @@
                 if (this.tileBrush != value)
                 {
                     this.tileBrush = value;
-                    ViewModelBase.Settings.TileBrush = value ?? TileBoardViewModelBase.defaultTileBrush;
+                    this.Settings.TileBrush = value ?? TileBoardViewModelBase.defaultTileBrush;
                     this.OnPropertyChanged();
                 }
             }

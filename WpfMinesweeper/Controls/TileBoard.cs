@@ -243,7 +243,7 @@
             }
         }
 
-        private async void DrawBoard()
+        private void DrawBoard()
         {
             if (this.boardBitmap == null)
             {
@@ -482,7 +482,7 @@
                 this.proxy = new WpfExtensionMethods.WriteableBitmapProxy(this.boardBitmap);
             }
 
-            this.Visuals.ForEach(v => this.RemoveVisualChild(v));
+            this.Visuals.ForEach(this.RemoveVisualChild);
             this.Visuals.Clear();
 
             time1 = sw.Elapsed.TotalMilliseconds;

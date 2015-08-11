@@ -18,9 +18,9 @@
 
         public MainWindowViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized());
+            Mediator.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized());
 
-            this.minWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
+            this.minWidth = this.Settings.LastWindowMinSize.Width;
             this.width = this.minWidth;
             this.ViewModel = new MinesweeperViewModel();
 
@@ -54,7 +54,7 @@
                 if (this.left != value)
                 {
                     this.left = value;
-                    ViewModelBase.Settings.LastLocation = new Point(this.left, this.top);
+                    this.Settings.LastLocation = new Point(this.left, this.top);
                     this.OnPropertyChanged();
                 }
             }
@@ -119,7 +119,7 @@
                 if (this.top != value)
                 {
                     this.top = value;
-                    ViewModelBase.Settings.LastLocation = new Point(this.left, this.top);
+                    this.Settings.LastLocation = new Point(this.left, this.top);
                     this.OnPropertyChanged();
                 }
             }
@@ -168,7 +168,7 @@
                 if (this.windowState != value)
                 {
                     this.windowState = value;
-                    Mediator.Instance.Notify(ViewModelMessages.GameWindowStateChanged, value);
+                    Mediator.Notify(ViewModelMessages.GameWindowStateChanged, value);
                     this.OnPropertyChanged();
                 }
             }
@@ -185,8 +185,8 @@
             if (!this.initialized)
             {
                 this.initialized = true;
-                this.MinWidth = ViewModelBase.Settings.LastWindowMinSize.Width;
-                this.MinHeight = ViewModelBase.Settings.LastWindowMinSize.Height;
+                this.MinWidth = this.Settings.LastWindowMinSize.Width;
+                this.MinHeight = this.Settings.LastWindowMinSize.Height;
                 this.SizeToContentMode = SizeToContent.Manual;
                 return;
             }
@@ -198,18 +198,18 @@
             this.MinHeight = this.height;
             this.SizeToContentMode = SizeToContent.Manual;
 
-            ViewModelBase.Settings.LastWindowMinSize = new Size(this.width, this.height);
+            this.Settings.LastWindowMinSize = new Size(this.width, this.height);
         }
 
         private void PositionWindow()
         {
-            if (ViewModelBase.Settings.LastLocation.X < 0 || ViewModelBase.Settings.LastLocation.Y < 0)
+            if (this.Settings.LastLocation.X < 0 || this.Settings.LastLocation.Y < 0)
             {
                 this.CenterWindow();
             }
             else
             {
-                var point = ViewModelBase.Settings.LastLocation;
+                var point = this.Settings.LastLocation;
                 this.Left = point.X;
                 this.Top = point.Y;
             }

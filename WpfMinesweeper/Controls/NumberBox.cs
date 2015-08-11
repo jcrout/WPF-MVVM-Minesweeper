@@ -5,10 +5,17 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
 
+    /// <summary>
+    ///     Represents a box control that displays number images based on the current Number value and with the number of
+    ///     Digits specified.
+    /// </summary>
     public class NumberBox : FrameworkElement
     {
         private static readonly ImageSource[] bitmaps;
 
+        /// <summary>
+        ///     Identifies the <see cref="Number" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty NumberProperty = DependencyProperty.Register(
             "Number",
             typeof(int),
@@ -19,6 +26,9 @@
                 NumberBox.OnNumberChanged,
                 NumberBox.CoerceNumberCallback));
 
+        /// <summary>
+        ///     Identifies the <see cref="Digits" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty DigitsProperty = DependencyProperty.Register(
             "Digits",
             typeof(int),
@@ -56,6 +66,10 @@
             this.Digits = 3;
         }
 
+        /// <summary>
+        ///     Gets or sets the number of digits to display.
+        /// </summary>
+        /// <value>The digit count. If unspecified, the default value is 3.</value>
         public int Digits
         {
             get
@@ -68,6 +82,14 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the current number displayed.
+        /// </summary>
+        /// <value>
+        ///     The number displayed in the control. If the value is set to a number higher than or lower than the
+        ///     maximum/minimum values allowed by the digit count, then the maximum or minimum value respectively is displayed
+        ///     instead. The default value is zero.
+        /// </value>
         public int Number
         {
             get
@@ -79,7 +101,7 @@
                 this.SetValue(NumberBox.NumberProperty, value);
             }
         }
-
+        
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
@@ -145,6 +167,9 @@
         {
         }
 
+        /// <summary>
+        ///     Deferred graphical initialization that occurs when the digits property is set, thus enabling the rendering of the Number property with the specified number of digits.
+        /// </summary>
         private void InitializeNumberBox()
         {
             var digits = (int)this.GetValue(NumberBox.DigitsProperty);

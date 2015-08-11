@@ -26,8 +26,8 @@
 
         public DisplayPanelViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
-            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateSmileyBackgroundImage((Brush)o));
+            Mediator.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
+            Mediator.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateSmileyBackgroundImage((Brush)o));
 
             this.borderSizeCommand = new Command(this.OnBorderSizeCommand);
         }
@@ -150,7 +150,7 @@
 
         private void OnBorderSizeCommand()
         {
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard);
+            Mediator.Notify(ViewModelMessages.CreateNewBoard);
         }
 
         private void OnUpdateSmileyIndex(SmileyState newState)

@@ -24,12 +24,12 @@
         private int rightToLeftIndex = -1;
 
         /// <summary>
-        ///     Gets or sets Button.
+        ///     Gets or sets the Button.
         /// </summary>
         public Button Button { get; set; }
 
         /// <summary>
-        ///     Gets or sets Result.
+        ///     Gets or sets the object Result that is returned.
         /// </summary>
         public object Result { get; set; }
 
@@ -62,6 +62,8 @@
                 this.rightToLeftIndex = value;
             }
         }
+
+        public bool CloseOnClick { get; set; } = true;
 
         public override string ToString()
         {
@@ -109,20 +111,20 @@
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             var valueType = value.GetType();
             if (valueType == typeof(Button))
             {
                 var button = (Button)value;
-                return new MessageButton {Button = button};
+                return new MessageButton {Button = button };
             }
             if (valueType == typeof(string))
             {
                 var textFragments = value.ToString().Split(';');
                 var button = new Button {Content = textFragments[0]};
-                var mbutton = new MessageButton {Button = button};
+                var mbutton = new MessageButton { Button = button };
 
                 button.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                 button.Width = Math.Max(80, button.DesiredSize.Width);
@@ -210,7 +212,7 @@
             this.ButtonPanelBorder.Background = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
         }
 
-        public event EventHandler<MessageResultArgs> ButtonClicked;
+        public event EventHandler<MessageResultEventArgs> ButtonClicked;
 
         [Bindable(true)]
         public ObservableCollection<MessageButton> Buttons
@@ -271,7 +273,7 @@
                 var button = sender as Button;
                 var messageButton = this.Buttons.FirstOrDefault(mb => mb.Button == button);
 
-                buttonClicked(this, new MessageResultArgs(messageButton));
+                buttonClicked(this, new MessageResultEventArgs(messageButton));
             }
         }
 
@@ -375,9 +377,9 @@
         }
     }
 
-    public class MessageResultArgs : EventArgs
+    public class MessageResultEventArgs : EventArgs
     {
-        public MessageResultArgs(MessageButton button)
+        public MessageResultEventArgs(MessageButton button)
         {
             this.Button = button;
 

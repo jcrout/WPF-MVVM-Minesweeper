@@ -42,7 +42,7 @@
         {
             if (executionDelegate == null)
             {
-                throw new ArgumentNullException("executionDelegate");
+                throw new ArgumentNullException(nameof(executionDelegate));
             }
 
             this.execute = executionDelegate;
@@ -60,7 +60,7 @@
         {
             if (executionDelegate == null)
             {
-                throw new ArgumentNullException("executionDelegate");
+                throw new ArgumentNullException(nameof(executionDelegate));
             }
 
             this.executeWithArgument = executionDelegate;
@@ -223,7 +223,7 @@
         {
             if (executionDelegate == null)
             {
-                throw new ArgumentNullException("executionDelegate");
+                throw new ArgumentNullException(nameof(executionDelegate));
             }
 
             this.executeWithArgument = executionDelegate;
@@ -287,7 +287,7 @@
         {
             if (executionDelegate == null)
             {
-                throw new ArgumentNullException("executionDelegate");
+                throw new ArgumentNullException(nameof(executionDelegate));
             }
 
             this.execute = executionDelegate;

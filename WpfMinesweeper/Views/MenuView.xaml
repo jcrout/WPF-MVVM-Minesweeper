@@ -24,6 +24,15 @@
     </UserControl.Resources>
 
     <Grid>
+        <controls:PromptBox x:Name="CustomWindow"
+                            DataContext="{Binding Path=CustomWindowContext, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                            IsModal="True"
+                            Title="Prompt Title"
+                            CancelButton="Cancel Me.">
+            <Grid Margin="15">
+                <TextBlock Text="Prompt Text."/>
+            </Grid>
+        </controls:PromptBox>
         <controls:PromptBox x:Name="CustomBoardWindow"
                             DataContext="{Binding Path=CustomBoardViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
                             IsModal="True"
@@ -63,7 +72,17 @@
         <controls:PromptBox x:Name="StatisticsWindow"
                             Title="Statistics"
                             IsModal="false"
-                            CancelButton="{x:Null}">
+                            CancelButton="{x:Null}"
+                            OKButton="{x:Null}"
+                            ResultOtherCommand="{Binding Path=StatisticsPromptCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+            <controls:PromptBox.OtherButtons>
+                <controls:MessageButton Result="Clear" CloseOnClick="False">
+                    <Button Content="Clear" Width="80" Height="22" />
+                </controls:MessageButton>
+                <controls:MessageButton Result="Close">
+                    <Button Content="Close" Width="80" Height="22" />
+                </controls:MessageButton>
+            </controls:PromptBox.OtherButtons>
             <vw:StatisticsView DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </controls:PromptBox>
 

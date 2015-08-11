@@ -43,18 +43,18 @@
                 this.CanInteractWithBoard);
             this.BoardInitializedCommand = new Command(this.OnTileBoardInitialized);
 
-            //var testGradientBrush = new LinearGradientBrush();
-            //testGradientBrush.GradientStops = new GradientStopCollection();
-            //testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 135, 50, 160), 0d));
-            //testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 170, 120, 20), .25d));
-            //testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(120, 0, 230, 23), .5d));
-            //testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 120, 170, 250), .75d));
-            //testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 20, 20, 70), 1d));
+            var testGradientBrush = new LinearGradientBrush();
+            testGradientBrush.GradientStops = new GradientStopCollection();
+            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 135, 50, 160), 0d));
+            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 170, 120, 20), .25d));
+            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(120, 0, 230, 23), .5d));
+            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 120, 170, 250), .75d));
+            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 20, 20, 70), 1d));
 
-            //this.TileBrush = testGradientBrush;
+            this.TileBrush = testGradientBrush;
 
-            Mediator.Instance.Notify(ViewModelMessages.TileColorsChanged, this.TileBrush);
-            Mediator.Instance.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateTileBrush((Brush)o));
+            Mediator.Notify(ViewModelMessages.TileColorsChanged, this.TileBrush);
+            Mediator.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateTileBrush((Brush)o));
         }
 
         protected override void OnMinesweeperChanged()
@@ -272,7 +272,7 @@
                 }
             }
 
-            Mediator.Instance.Notify(ViewModelMessages.GameOver);
+            Mediator.Notify(ViewModelMessages.GameOver);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@
             if (this.Minesweeper.Tiles.Width != this.boardWidth ||
                 this.Minesweeper.Tiles.Height != this.boardHeight)
             {
-                Mediator.Instance.Notify(ViewModelMessages.TileBoardSizeChanged, parameter);
+                Mediator.Notify(ViewModelMessages.TileBoardSizeChanged, parameter);
 
                 this.boardWidth = this.boardTiles.Width;
                 this.boardHeight = this.boardTiles.Height;
@@ -507,31 +507,8 @@
             }
         }
 
-        bool shownOnce = false;
         private void OnTileTap(TileTapEventArgs e)
         {
-            //if (!shownOnce)
-            //{
-            //    shownOnce = true;
-            //    var window = new Window();
-            //    var tempGrid = new System.Windows.Controls.Grid();
-            //    var tempGradient = new Controls.GradientPicker();
-            //    tempGrid.Children.Add(tempGradient);
-
-            //    window.Width = 589;
-            //    window.Height = 440;
-            //    window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //    window.Content = tempGrid;
-
-            //    window.ShowDialog();
-
-            //    //var brush = tempGradient.SelectedBrush;
-            //    //if (brush != null)
-            //    //{
-            //    //    this.TileBrush = brush;
-            //    //}
-            //}
-
             if (e.Button == InputButtons.Left && e.PressedDown)
             {
                 this.leftMouseDown = true;
@@ -714,7 +691,7 @@
             if (!this.boardInitialized && this.CanInteractWithBoard())
             {
                 this.boardInitialized = true;
-                Mediator.Instance.Notify(ViewModelMessages.GameStarted);
+                Mediator.Notify(ViewModelMessages.GameStarted);
             }
         }
 
@@ -803,7 +780,7 @@
             }
 
             this.IsVictory = true;
-            Mediator.Instance.Notify(ViewModelMessages.Victory);
+            Mediator.Notify(ViewModelMessages.Victory);
         }
     }
 }

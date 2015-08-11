@@ -128,7 +128,7 @@
         private void OnSaveCustomBoard()
         {
             var customBoard = this.width.ToString() + ',' + this.height + ',' + this.mines;
-            Mediator.Instance.Notify(ViewModelMessages.CreateNewBoard, customBoard);
+            Mediator.Notify(ViewModelMessages.CreateNewBoard, customBoard);
         }
     }
 }

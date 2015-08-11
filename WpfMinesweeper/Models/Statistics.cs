@@ -201,7 +201,7 @@
         {
             if (statType == null)
             {
-                throw new ArgumentNullException("statType");
+                throw new ArgumentNullException(nameof(statType));
             }
 
             this.Type = statType;

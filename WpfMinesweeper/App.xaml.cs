@@ -1,4 +1,6 @@
-﻿namespace WpfMinesweeper.Properties
+﻿[assembly:System.Runtime.CompilerServices.InternalsVisibleTo("WpfMInesweeperUnitTests")]
+
+namespace WpfMinesweeper.Properties
 {
     using System.Configuration;
     using Models;

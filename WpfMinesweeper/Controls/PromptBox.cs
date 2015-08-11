@@ -10,10 +10,23 @@
     using System.Windows.Markup;
     using System.Windows.Media;
 
+    /// <summary>
+    ///     Represents a bindable Window that can be created in and modified in XAML.
+    /// </summary>
+    /// <remarks>
+    ///     This class is useful in XAML coding because it can be bound to the content of a Control or to a content container like a
+    ///     Grid.
+    ///     To display the window, call the <see cref="Show"/> or <see cref="ShowDialog"/> method from a trigger action, such
+    ///     as an <see cref="EventTrigger" /> that uses a
+    ///     <see cref="Microsoft.Expression.Interactivity.Core.CallMethodAction"/>.
+    /// </remarks>
     [ContentProperty("Content"), DefaultProperty("Content"),
      Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]
     public class PromptBox : FrameworkElement
     {
+        /// <summary>
+        ///     Identifies the <see cref="ButtonBorderBackground" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ButtonBorderBackgroundProperty =
             DependencyProperty.RegisterAttached(
                 "ButtonBorderBackground",
@@ -21,66 +34,124 @@
                 typeof(PromptBox),
                 new PropertyMetadata(null, PromptBox.ButtonBorderBackgroundChanged));
 
+        /// <summary>
+        ///     Identifies the <see cref="Content" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content",
             typeof(object),
             typeof(PromptBox),
             new PropertyMetadata(null, PromptBox.ContentChanged));
 
+        /// <summary>
+        ///     Identifies the <see cref="OKButton" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty OKButtonProperty = DependencyProperty.Register(
             "OKButton",
             typeof(MessageButton),
             typeof(PromptBox),
             new PropertyMetadata(null, PromptBox.OKButtonChanged));
 
+        /// <summary>
+        ///     Identifies the <see cref="CancelButton" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty CancelButtonProperty = DependencyProperty.Register(
             "CancelButton",
             typeof(MessageButton),
             typeof(PromptBox),
             new PropertyMetadata(null, PromptBox.CancelButtonChanged));
 
+        /// <summary>
+        ///     Identifies the <see cref="OtherButtons" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty OtherButtonsProperty = DependencyProperty.Register(
             "OtherButtons",
             typeof(ObservableCollection<MessageButton>),
             typeof(PromptBox),
             new PropertyMetadata(new ObservableCollection<MessageButton>(), PromptBox.OtherButtonsChanged));
 
+        /// <summary>
+        ///     Identifies the <see cref="IsModal" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty IsModalProperty = DependencyProperty.Register(
             "IsModal",
             typeof(bool),
             typeof(PromptBox));
 
+        /// <summary>
+        ///     Identifies the <see cref="ResultCancelCommand" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ResultCancelCommandProperty =
             DependencyProperty.Register("ResultCancelCommand", typeof(ICommand), typeof(PromptBox));
 
+        /// <summary>
+        ///     Identifies the <see cref="ResultCommand" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ResultCommandProperty = DependencyProperty.Register(
             "ResultCommand",
             typeof(ICommand),
             typeof(PromptBox));
 
+        /// <summary>
+        ///     Identifies the <see cref="ResultOKCommand" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ResultOKCommandProperty =
             DependencyProperty.Register("ResultOKCommand", typeof(ICommand), typeof(PromptBox));
 
+        /// <summary>
+        ///     Identifies the <see cref="ResultOtherCommand" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ResultOtherCommandProperty =
             DependencyProperty.Register("ResultOtherCommand", typeof(ICommand), typeof(PromptBox));
 
+        /// <summary>
+        ///     Identifies the <see cref="Title" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title",
             typeof(string),
             typeof(PromptBox),
             new PropertyMetadata(string.Empty, PromptBox.TitleChanged));
 
+        /// <summary>
+        ///     Identifies the <see cref="WindowStyle" /> dependency property.
+        /// </summary>
         public static readonly DependencyProperty WindowStyleProperty = DependencyProperty.Register(
             "WindowStyle",
             typeof(WindowStyle),
             typeof(PromptBox),
             new PropertyMetadata(WindowStyle.SingleBorderWindow, PromptBox.WindowStyleChanged));
 
+        /// <summary>
+        ///     The buttons
+        /// </summary>
         private readonly List<MessageButton> buttons = new List<MessageButton>();
+
+        /// <summary>
+        ///     True if the <see cref="MessageResult" /> was obtained from a button click on the <see cref="MessagePanel" />;
+        ///     otherwise, if the <see cref="MessageResult" /> was obtained from clicking the X button on the <see cref="Window" />
+        ///     , false.
+        /// </summary>
         private bool obtainedResultBeforeClosing;
+
+        /// <summary>
+        ///     The <see cref="MessagePanel" /> containing the specified <see cref="MessageButton" /> instances.
+        /// </summary>
         private MessagePanel panel;
+
+        /// <summary>
+        ///     The <see cref="MessageResult" /> to return from the static <see cref="ShowPrompt(PromptBox)" /> method.
+        /// </summary>
+        private MessageResult result;
+
+        /// <summary>
+        ///     The <see cref="Window" /> displayed to the user.
+        /// </summary>
         private Window window;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PromptBox" /> class.
+        /// </summary>
         public PromptBox()
         {
             this.OKButton = this.GetDefaultOKButton();
@@ -88,6 +159,10 @@
             this.OtherButtons.CollectionChanged += this.OtherButtons_CollectionChanged;
         }
 
+        /// <summary>
+        ///     Gets or sets the background brush used for the panel containing the <see cref="MessageButton.Button" /> instances.
+        /// </summary>
+        /// <value>The background bush used for the <see cref="MessagePanel" />.</value>
         [Bindable(false)]
         public Brush ButtonBorderBackground
         {
@@ -101,6 +176,14 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the <see cref="MessageButton" /> to use as the Cancel button.
+        /// </summary>
+        /// <value>
+        ///     The Cancel <see cref="MessageButton" />. This <see cref="MessageButton" /> indicates the default negative user
+        ///     response. The default value is a <see cref="MessageButton" /> containing a <see cref="Button" /> with the text
+        ///     "Cancel" and a result of <see cref="MessageResult.Cancel" />.
+        /// </value>
         [Bindable(true)]
         public MessageButton CancelButton
         {
@@ -114,6 +197,10 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the content.
+        /// </summary>
+        /// <value>The content.</value>
         [Bindable(true)]
         public object Content
         {
@@ -127,6 +214,11 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether the prompt <see cref="Window" /> should be displayed as a modal
+        ///     <see cref="Window" />.
+        /// </summary>
+        /// <value><c>true</c> if the <see cref="Window" /> shown is modal; otherwise, <c>false</c>.</value>
         [Bindable(true)]
         public bool IsModal
         {
@@ -140,6 +232,14 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the <see cref="MessageButton" /> to use as the OK button.
+        /// </summary>
+        /// <value>
+        ///     The OK <see cref="MessageButton" />. This <see cref="MessageButton" /> indicates the default positive user
+        ///     response. The default value is a <see cref="MessageButton" /> containing a <see cref="Button" /> with the text "OK"
+        ///     and a result of <see cref="MessageResult.OK" />
+        /// </value>
         [Bindable(true)]
         public MessageButton OKButton
         {
@@ -153,6 +253,11 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the collection of <see cref="MessageButton" /> instances to use in place of or in addition to the
+        ///     <see cref="OKButton" /> and/or the <see cref="CancelButton" />.
+        /// </summary>
+        /// <value>The other collection of other <see cref="MessageButton" /> instances.</value>
         [Bindable(true)]
         public ObservableCollection<MessageButton> OtherButtons
         {
@@ -166,6 +271,14 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the <see cref="ICommand" /> to invoke when the <see cref="CancelButton" /> or <see cref="Window" />
+        ///     close button is pressed
+        /// </summary>
+        /// <value>
+        ///     A command to invoke when the <see cref="CancelButton" /> or <see cref="Window" /> close button is pressed. The
+        ///     default value is null.
+        /// </value>
         [Bindable(true)]
         public ICommand ResultCancelCommand
         {
@@ -179,6 +292,11 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the <see cref="ICommand" /> to invoke when any <see cref="MessageButton" /> or the
+        ///     <see cref="Window" /> close button is pressed.
+        /// </summary>
+        /// <value>A command to invoke when any <see cref="MessageButton" /> is pressed. The default value is null.</value>
         [Bindable(true)]
         public ICommand ResultCommand
         {
@@ -192,6 +310,10 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the <see cref="ICommand" /> to invoke when the <see cref="OKButton" /> is pressed.
+        /// </summary>
+        /// <value>A command to invoke when the <see cref="OKButton" /> is pressed. The default value is null.</value>
         [Bindable(true)]
         public ICommand ResultOKCommand
         {
@@ -205,6 +327,15 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the <see cref="ICommand" /> to invoke when a button is pressed that either has
+        ///     <see cref="MessageResult.Other" /> as the result or does not have <see cref="MessageResult.OK" /> or
+        ///     <see cref="MessageResult.Cancel" /> as the result.
+        /// </summary>
+        /// <value>
+        ///     A command to invoke when an <see cref="OtherButtons" /> <see cref="MessageButton" /> is pressed. The default
+        ///     value is null.
+        /// </value>
         [Bindable(true)]
         public ICommand ResultOtherCommand
         {
@@ -218,6 +349,13 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the prompt <see cref="Window.Title" /> property.
+        /// </summary>
+        /// <value>
+        ///     The title string to display in the caption bar at the top of the prompt window. The default value is
+        ///     <see cref="System.String.Empty" />
+        /// </value>
         [Bindable(true)]
         public string Title
         {
@@ -231,6 +369,10 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets the prompt <see cref="Window.WindowStyle" /> property.
+        /// </summary>
+        /// <value>The window style of the prompt.</value>
         [Bindable(true)]
         public WindowStyle WindowStyle
         {
@@ -244,14 +386,53 @@
             }
         }
 
-        protected override int VisualChildrenCount
+        /// <summary>
+        ///     Overrides the <see cref="VisualChildrenCount" /> method to always return zero.
+        /// </summary>
+        /// <returns>
+        ///     The number of visual child elements for this element. This value is always zero.
+        /// </returns>
+        protected override int VisualChildrenCount => 0;
+
+        /// <summary>
+        ///     Displays the <see cref="PromptBox" /> window to the user and returns the <see cref="MessageResult" /> from the
+        ///     button clicked.
+        /// </summary>
+        /// <param name="messageText">The prompt message text.</param>
+        /// <param name="windowTitle">The prompt window title.</param>
+        /// <returns>MessageResult.</returns>
+        public static MessageResult ShowPrompt(string messageText, string windowTitle)
         {
-            get
+            var prompt = new PromptBox();
+
+            if (!string.IsNullOrEmpty(messageText))
             {
-                return 0;
+                var grid = new Grid {Margin = new Thickness(15)};
+                var text = new TextBlock {Text = messageText};
+                grid.Children.Add(text);
+                prompt.Content = grid;
             }
+
+            prompt.Title = windowTitle ?? string.Empty;
+
+            return PromptBox.ShowPrompt(prompt);
         }
 
+        /// <summary>
+        ///     Displays the <see cref="PromptBox" /> window to the user and returns the <see cref="MessageResult" /> from the
+        ///     button clicked.
+        /// </summary>
+        /// <param name="prompt">The prompt.</param>
+        /// <returns>MessageResult.</returns>
+        public static MessageResult ShowPrompt(PromptBox prompt)
+        {
+            prompt.ShowDialog();
+            return prompt.result;
+        }
+
+        /// <summary>
+        ///     Displays the <see cref="PromptBox" /> window to the user.
+        /// </summary>
         public void Show()
         {
             if (this.window != null)
@@ -271,12 +452,20 @@
             }
         }
 
+        /// <summary>
+        ///     Displays the <see cref="PromptBox" /> window to the user as a modal window.
+        /// </summary>
         public void ShowDialog()
         {
             this.window = this.GetNewWindow();
             this.window.ShowDialog();
         }
 
+        /// <summary>
+        ///     Overrides the <see cref="GetVisualChild(int)" /> method to return null.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns>Visual.</returns>
         protected override Visual GetVisualChild(int index)
         {
             return null;
@@ -395,6 +584,9 @@
             }
         }
 
+        /// <summary>
+        ///     Clears the <see cref="panel" /> by removing event handlers and setting the <see cref="panel" /> field to null.
+        /// </summary>
         private void ClearPanel()
         {
             if (this.panel != null)
@@ -404,24 +596,35 @@
             }
         }
 
+        /// <summary>
+        ///     Returns a new <see cref="ObservableCollection{MessageButton}" /> from the <see cref="buttons" /> field.
+        /// </summary>
+        /// <returns>ObservableCollection&lt;MessageButton&gt;.</returns>
         private ObservableCollection<MessageButton> GetButtons()
         {
             var buttonList = new ObservableCollection<MessageButton>(this.buttons);
             return buttonList;
         }
 
+        /// <summary>
+        ///     Gets the default Cancel <see cref="MessageButton" />.
+        /// </summary>
+        /// <returns>MessageButton.</returns>
         private MessageButton GetDefaultCancelButton()
         {
             var button = new Button {Width = 80, Height = 22, Content = "Cancel", IsCancel = true};
 
-            var messageButton = new MessageButton();
-            messageButton.Button = button;
+            var messageButton = new MessageButton {Button = button};
             messageButton.RightToLeftIndex = 1;
             messageButton.Result = MessageResult.Cancel;
 
             return messageButton;
         }
 
+        /// <summary>
+        ///     Gets the default OK <see cref="MessageButton" />.
+        /// </summary>
+        /// <returns>MessageButton.</returns>
         private MessageButton GetDefaultOKButton()
         {
             var button = new Button {Width = 80, Height = 22, Content = "OK", IsDefault = true};
@@ -436,6 +639,10 @@
             return messageButton;
         }
 
+        /// <summary>
+        ///     Creates and returns a new Window to use as the prompt window.
+        /// </summary>
+        /// <returns>Window.</returns>
         private Window GetNewWindow()
         {
             var newWindow = new Window();
@@ -486,11 +693,16 @@
             return newWindow;
         }
 
-        private void InvokeCommands(MessageButton button, MessageResult result)
+        /// <summary>
+        ///     Invokes the commands.
+        /// </summary>
+        /// <param name="buttonClicked">The <see cref="MessageButton" /> containing the button that was clicked.</param>
+        /// <param name="resultOfButtonClick">The <see cref="MessageResult" /> associated with the button clicked.</param>
+        private void InvokeCommands(MessageButton buttonClicked, MessageResult resultOfButtonClick)
         {
-            var buttonResult = (button != null) ? button.Result ?? result : result;
+            var buttonResult = (buttonClicked != null) ? buttonClicked.Result ?? resultOfButtonClick : resultOfButtonClick;
 
-            switch (result)
+            switch (resultOfButtonClick)
             {
                 case MessageResult.OK:
                     this.ResultOKCommand.ExecuteIfAbleTo(buttonResult);
@@ -504,8 +716,14 @@
             }
 
             this.ResultCommand.ExecuteIfAbleTo(buttonResult);
+            this.result = resultOfButtonClick;
         }
 
+        /// <summary>
+        ///     Handles the CollectionChanged event of the <see cref="OtherButtons" /> property.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="NotifyCollectionChangedEventArgs" /> instance containing the event data.</param>
         private void OtherButtons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -548,11 +766,21 @@
             }
         }
 
-        private void panel_ButtonClicked(object sender, MessageResultArgs e)
+        /// <summary>
+        ///     Handles a buttonClicked click within the MessagePanel control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="MessageResultEventArgs" /> instance containing the event data.</param>
+        private void panel_ButtonClicked(object sender, MessageResultEventArgs e)
         {
             this.InvokeCommands(e.Button, e.Result);
-            this.ClearPanel();
 
+            if (!e.Button.CloseOnClick)
+            {
+                return;
+            }
+
+            this.ClearPanel();
             if (this.window != null)
             {
                 this.obtainedResultBeforeClosing = true;
@@ -562,6 +790,11 @@
             }
         }
 
+        /// <summary>
+        ///     Handles the Closing event of the window control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="CancelEventArgs" /> instance containing the event data.</param>
         private void window_Closing(object sender, CancelEventArgs e)
         {
             this.window.Closing -= this.window_Closing;

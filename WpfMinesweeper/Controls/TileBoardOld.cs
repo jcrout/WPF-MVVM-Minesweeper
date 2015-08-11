@@ -91,7 +91,7 @@
             }
             else
             {
-                this.Visuals.ForEach(v => this.RemoveVisualChild(v));
+                this.Visuals.ForEach(this.RemoveVisualChild);
                 this.Visuals.Clear();
                 this.boardWidth = this.Minesweeper.Tiles.Width;
                 this.boardHeight = this.Minesweeper.Tiles.Height;
@@ -346,7 +346,7 @@
                 return;
             }
 
-            this.Visuals.ForEach(v => this.RemoveVisualChild(v));
+            this.Visuals.ForEach(this.RemoveVisualChild);
             this.Visuals.Clear();
             this.DrawBoard();
 

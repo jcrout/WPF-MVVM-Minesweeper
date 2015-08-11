@@ -53,7 +53,7 @@
         void Save();
     }
 
-    public class SettingsProvider : ISettingsProvider
+    public sealed class SettingsProvider : ISettingsProvider
     {
         private const char SettingsDelimiter = (char)20;
         private static readonly ISettingsProvider instance = new SettingsProvider();
@@ -316,6 +316,7 @@
                     }
                 }
 
+                this.saveAllModules = false;
                 this.newModules.Clear();
             }
         }

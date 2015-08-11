@@ -14,7 +14,7 @@
     using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
     [DebuggerStepThrough]
-    public class TileBoardInputBase : TileBoardBase
+    public abstract class TileBoardInputBase : TileBoardBase
     {
         private static readonly long doubleClickInterval = SystemInformation.DoubleClickTime *
                                                    Stopwatch.Frequency / 1000;
@@ -92,7 +92,7 @@
         {
             var allButtons = e != null ? this.GetStateOfAllMouseButtons(e) : InputButtons.None;
 
-            this.TileTapCommand.ExecuteIfAbleTo(
+            this.TilePressCommand.ExecuteIfAbleTo(
                 new TileTapEventArgs(
                     this.GetTileEventArgsFromBoardPoint(tapPoint),
                     button,

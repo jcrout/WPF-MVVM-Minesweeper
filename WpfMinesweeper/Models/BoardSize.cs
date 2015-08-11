@@ -127,7 +127,7 @@
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             if (string.Equals(text, BoardSize.beginner.ToString()))
@@ -305,7 +305,7 @@
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             if (value.GetType() == typeof(string))

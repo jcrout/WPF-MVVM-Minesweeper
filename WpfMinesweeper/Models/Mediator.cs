@@ -19,7 +19,14 @@
         StatisticsLoaded
     }
 
-    public sealed class Mediator
+    public interface IMediator
+    {
+        void Notify(ViewModelMessages message, object parameter = null);
+
+        void Register(ViewModelMessages message, Action<object> callback);
+    }
+
+    public sealed class Mediator : IMediator
     {
         private static readonly Mediator instance = new Mediator();
         private readonly Dictionary<ViewModelMessages, List<Action<object>>> callbacks;

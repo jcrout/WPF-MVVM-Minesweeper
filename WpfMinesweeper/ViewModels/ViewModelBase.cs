@@ -4,20 +4,24 @@
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using Miscellanious;
+    using Models;
 
     public abstract class ViewModelBase : IDisposable, INotifyPropertyChanged
     {
-        private static readonly ISettingsProvider settings = SettingsProvider.Instance;
+        protected internal static ISettingsProvider DefaultSettings { get; } = SettingsProvider.Instance;
+        protected internal static IMediator DefaultMediator { get; } = WpfMinesweeper.Models.Mediator.Instance;
+
         private bool disposed;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public static ISettingsProvider Settings
+        internal IMediator Mediator { get; } = ViewModelBase.DefaultMediator;
+
+        internal ISettingsProvider Settings { get; } = ViewModelBase.DefaultSettings;
+
+        protected ViewModelBase()
         {
-            get
-            {
-                return ViewModelBase.settings;
-            }
+            
         }
 
         public void Dispose()

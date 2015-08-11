@@ -22,7 +22,7 @@
         int MinesRemaining { get; set; }
 
         /// <summary>
-        ///     Gets the collection of tiles that make up the board.
+        ///     Gets the collection of <see cref="Tile"/>s that make up the board.
         /// </summary>
         ITileCollection Tiles { get; }
 
@@ -33,38 +33,33 @@
     }
 
     /// <summary>
-    ///     THe default implementation of the <see cref="IMinesweeper" /> interface.
+    ///     The default implementation of the <see cref="IMinesweeper" /> interface.
     /// </summary>
     public class Minesweeper : IMinesweeper
     {
-        /// <summary>
-        ///     Total number of mines on the board.
-        /// </summary>
         private int mineCount;
 
-        /// <summary>
-        ///     Total number of mines remaining (unflagged) on the board.
-        /// </summary>
         private int minesLeft;
 
-        /// <summary>
-        ///     The collection of <see cref="WpfMinesweeper.Models.Minesweeper.tiles" /> that make up the board.
-        /// </summary>
         private ITileCollection tiles;
 
-        //private IEnumerable<>
-
-        /// <summary>
-        ///     Total amount of time that has elapsed since the game began.
-        /// </summary>
         private int timeElapsed;
 
+        /// <summary>
+        ///     Prevents a default instance of the <see cref="Minesweeper"/> class from being created.
+        /// </summary>
         private Minesweeper()
         {
         }
 
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        ///     Gets the total number of mines on the board.
+        /// </summary>
         public int MineCount
         {
             get
@@ -81,6 +76,9 @@
             }
         }
 
+        /// <summary>
+        ///     Gets the total number of mines remaining (unflagged) on the board.
+        /// </summary>
         public int MinesRemaining
         {
             get
@@ -97,6 +95,9 @@
             }
         }
 
+        /// <summary>
+        ///     Gets the collection of <see cref="Tile"/>s that make up the board.
+        /// </summary>
         public ITileCollection Tiles
         {
             get
@@ -113,6 +114,9 @@
             }
         }
 
+        /// <summary>
+        ///     Gets the total amount of time that has elapsed since the game began.
+        /// </summary>
         public int TimeElapsed
         {
             get
@@ -129,7 +133,15 @@
             }
         }
 
-        public static Minesweeper Create(int width, int height, int mineCount)
+        /// <summary>
+        ///     Creates the a new IMinesweeper instance.
+        /// </summary>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <param name="mineCount">The mine count.</param>
+        /// <returns>Minesweeper.</returns>
+        /// <exception cref="System.ArgumentException"></exception>
+        public static IMinesweeper Create(int width, int height, int mineCount)
         {
             var validationResult = MinesweeperBoardValidator.Create().ValidateBoard(width, height, mineCount);
 
@@ -137,7 +149,7 @@
             {
                 throw new ArgumentException(validationResult);
             }
-
+        
             var minesweeper = new Minesweeper
             {
                 tiles = TileCollection.Create(width, height),
@@ -163,22 +175,22 @@
     {
         private static readonly ISettingsProvider settings = SettingsProvider.Instance;
 
-        public static Minesweeper GetFromSettings()
+        public static IMinesweeper GetFromSettings()
         {
             return Minesweeper.Create(MinesweeperFactory.settings.LastBoardSize.Width, MinesweeperFactory.settings.LastBoardSize.Height, MinesweeperFactory.settings.LastBoardSize.MineCount);
         }
 
-        public static Minesweeper Create(int width, int height, int mineCount)
+        public static IMinesweeper Create(int width, int height, int mineCount)
         {
             return Minesweeper.Create(width, height, mineCount);
         }
 
-        public static Minesweeper Create(BoardSize board)
+        public static IMinesweeper Create(BoardSize board)
         {
             return Minesweeper.Create(board.Width, board.Height, board.MineCount);
         }
 
-        public static Minesweeper Create(IMinesweeper minesweeper)
+        public static IMinesweeper Create(IMinesweeper minesweeper)
         {
             return Minesweeper.Create(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
         }

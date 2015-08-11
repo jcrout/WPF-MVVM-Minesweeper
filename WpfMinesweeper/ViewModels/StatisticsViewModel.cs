@@ -30,9 +30,9 @@
 
         public StatisticsViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.StatisticsLoaded, o => this.StatisticsLoaded());
+            Mediator.Register(ViewModelMessages.StatisticsLoaded, o => this.StatisticsLoaded());
 
-            var statList = StatisticHelper.GetGameStatistics().Select(s => StatisticHelper.GetDisplayText(s)).OrderBy(s => s).ToList();
+            var statList = StatisticHelper.GetGameStatistics().Select(StatisticHelper.GetDisplayText).OrderBy(s => s).ToList();
             statList.Insert(0, StatisticsViewModel.DefaultStatText);
 
             this.Pages = new List<StatValueViewModel>();
@@ -192,7 +192,7 @@
             var defaultList = new List<StatDisplay>();
             var wins = 0;
             var losses = 0;
-            foreach (var module in ViewModelBase.Settings.Statistics)
+            foreach (var module in this.Settings.Statistics)
             {
                 var finalState = (GameResult)module[Statistic.GameState];
                 if (finalState == GameResult.GameOver)
@@ -215,7 +215,7 @@
 
         private IEnumerable<Statistic> GetStatDisplayList()
         {
-            var displayStats = StatisticHelper.GetGlobalStatistics().OrderBy(stat => StatisticHelper.GetDisplayText(stat)).Concat(StatisticHelper.GetGameStatistics().Where(stat => !this.IsSelected(stat)).OrderBy(stat => StatisticHelper.GetDisplayText(stat)));
+            var displayStats = StatisticHelper.GetGlobalStatistics().OrderBy(StatisticHelper.GetDisplayText).Concat(StatisticHelper.GetGameStatistics().Where(stat => !this.IsSelected(stat)).OrderBy(StatisticHelper.GetDisplayText));
 
             return displayStats;
         }
@@ -281,7 +281,7 @@
                 return;
             }
 
-            var moduleList = ViewModelBase.Settings.Statistics.Where(st => this.HasAllValues(st, stats)).ToArray();
+            var moduleList = this.Settings.Statistics.Where(st => this.HasAllValues(st, stats)).ToArray();
             var statList = new List<StatDisplay>();
 
             if (moduleList.Length == 0)
@@ -327,7 +327,7 @@
                 foreach (var stat in this.sortByList)
                 {
                     var newPage = new StatValueViewModel(StatisticHelper.GetDisplayText(stat));
-                    var statList = ViewModelBase.Settings.Statistics.Select(st => st[stat]).Distinct().ToList();
+                    var statList = this.Settings.Statistics.Select(st => st[stat]).Distinct().ToList();
                     statList.Sort((o1, o2) => StatisticComparer.Default.Compare(o1, o2));
                     newPage.StatisticValues = statList;
                     newPage.PropertyChanged += this.newPage_PropertyChanged;

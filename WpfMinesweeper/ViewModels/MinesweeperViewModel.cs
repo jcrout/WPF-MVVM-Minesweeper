@@ -13,11 +13,11 @@
 
         public MinesweeperViewModel()
         {
-            Mediator.Instance.Register(ViewModelMessages.GameWindowStateChanged, o => this.OnWindowStateChanged((WindowState)o));
-            Mediator.Instance.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
-            Mediator.Instance.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
-            Mediator.Instance.Register(ViewModelMessages.GameOver, this.OnGameOver);
-            Mediator.Instance.Register(ViewModelMessages.Victory, this.OnVictory);
+            Mediator.Register(ViewModelMessages.GameWindowStateChanged, o => this.OnWindowStateChanged((WindowState)o));
+            Mediator.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
+            Mediator.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
+            Mediator.Register(ViewModelMessages.GameOver, this.OnGameOver);
+            Mediator.Register(ViewModelMessages.Victory, this.OnVictory);
 
             this.gameTimer = new WinTimer(this.TimerProc, 1000);
 
@@ -38,7 +38,7 @@
             var gameStatistics = StatisticsModule.Create();
             var minesweeper = this.Minesweeper;
 
-            ViewModelBase.Settings.LastBoardSize = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
+            this.Settings.LastBoardSize = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
 
             gameStatistics[Statistic.BoardSize] = new BoardSize(minesweeper.Tiles.Width, minesweeper.Tiles.Height, minesweeper.MineCount);
 
@@ -59,8 +59,8 @@
             this.GameStatistics[Statistic.MinesRemaining] = this.Minesweeper.MinesRemaining;
             this.GameStatistics[Statistic.TimeElapsed] = this.Minesweeper.TimeElapsed;
 
-            ViewModelBase.Settings.Statistics.Add(this.GameStatistics);
-            ViewModelBase.Settings.Save();
+            this.Settings.Statistics.Add(this.GameStatistics);
+            this.Settings.Save();
         }
 
         private void OnCreateNewBoard(object parameter)
@@ -89,7 +89,7 @@
         private void OnGameOver(object parameter)
         {
             this.EndGame(GameResult.GameOver);
-            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
+            Mediator.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
         }
 
         private void OnGameStarted(object parameter)
@@ -101,7 +101,7 @@
         private void OnVictory(object parameter)
         {
             this.EndGame(GameResult.Victory);
-            Mediator.Instance.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
+            Mediator.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
         }
 
         private void OnWindowStateChanged(WindowState state)
@@ -136,7 +136,7 @@
             //if (this.Minesweeper.TimeElapsed % 3 == 0)
             //{
               
-            //    Mediator.Instance.Notify(
+            //    Mediator.Notify(
             //        ViewModelMessages.TileColorsChanged,
             //        new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.DarkBlue));
             //    //    this.TileShadingMode = Controls.TileShadingMode.AllTiles;
