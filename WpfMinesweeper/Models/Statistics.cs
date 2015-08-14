@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Runtime.Serialization;
     using JonUtility;
-    using System.Reflection;
 
     [Serializable, DataContract]
     public enum Statistic
@@ -119,7 +118,7 @@
                     }
                 }
 
-                StatisticHelper.statData.Add(statEnum, new StatisticsAttribute(statType) { Description = statDescription, DisplayLabel = statDisplayText, IsAggregate = statIsAggregate});
+                StatisticHelper.statData.Add(statEnum, new StatisticsAttribute(statType) {Description = statDescription, DisplayLabel = statDisplayText, IsAggregate = statIsAggregate});
             }
         }
 
@@ -189,7 +188,7 @@
     }
 
     /// <summary>
-    ///     Specifies meta-data for a <see cref="Statistic"/> enumeration field.
+    ///     Specifies meta-data for a <see cref="Statistic" /> enumeration field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
     public sealed class StatisticsAttribute : Attribute
@@ -210,7 +209,7 @@
         /// <summary>
         ///     Gets or sets a description of the stat.
         /// </summary>
-        /// <value>The description string. This value defaults to an empty string on <see langword="null"/>.</value>
+        /// <value>The description string. This value defaults to an empty string on <see langword="null" />.</value>
         public string Description
         {
             get
@@ -226,7 +225,7 @@
         /// <summary>
         ///     Gets or sets the display label of the stat.
         /// </summary>
-        /// <value>The display label string. This value defaults to an empty string on <see langword="null"/>.</value>
+        /// <value>The display label string. This value defaults to an empty string on <see langword="null" />.</value>
         public string DisplayLabel
         {
             get
@@ -240,11 +239,11 @@
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether this <see cref="Statistic"/> is recorded during individual games.
+        ///     Gets or sets a value indicating whether this <see cref="Statistic" /> is recorded during individual games.
         /// </summary>
         /// <value><c>true</c> if this instance is single game statistic; otherwise, <c>false</c>.</value>
         public bool IsAggregate { get; set; }
 
-        public Type Type { get; private set; }
+        public Type Type { get; }
     }
 }

@@ -21,10 +21,6 @@
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
     public struct Tile
     {
-        private readonly ExtraTileData extraTileData;
-        private readonly bool shown;
-        private readonly TileType type;
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="Tile" /> struct.
         /// </summary>
@@ -33,46 +29,28 @@
         /// <param name="extraTileData">The extra tile data enumeration value.</param>
         public Tile(TileType type, bool shown, ExtraTileData extraTileData = ExtraTileData.None)
         {
-            this.type = type;
-            this.shown = shown;
-            this.extraTileData = extraTileData;
+            this.Type = type;
+            this.Shown = shown;
+            this.ExtraTileData = extraTileData;
         }
 
         /// <summary>
         ///     Gets the extra tile data set on this tile.
         /// </summary>
         /// <value>The extra tile data enumeration value.</value>
-        public ExtraTileData ExtraTileData
-        {
-            get
-            {
-                return this.extraTileData;
-            }
-        }
+        public ExtraTileData ExtraTileData { get; }
 
         /// <summary>
         ///     Gets a value indicating whether this <see cref="Tile" /> is shown on the board.
         /// </summary>
         /// <value><c>true</c> if shown; otherwise, <c>false</c>.</value>
-        public bool Shown
-        {
-            get
-            {
-                return this.shown;
-            }
-        }
+        public bool Shown { get; }
 
         /// <summary>
         ///     Gets the type of the tile.
         /// </summary>
         /// <value>The TileType value.</value>
-        public TileType Type
-        {
-            get
-            {
-                return this.type;
-            }
-        }
+        public TileType Type { get; }
 
         /// <summary>
         ///     Returns a <see cref="System.String" /> that represents this instance.
@@ -82,9 +60,9 @@
         {
             return string.Format(
                 @"{0}; {1}{2}",
-                this.type,
-                this.shown ? "Shown" : "Not Shown",
-                this.extraTileData != ExtraTileData.None ? "; " + this.extraTileData : string.Empty);
+                this.Type,
+                this.Shown ? "Shown" : "Not Shown",
+                this.ExtraTileData != ExtraTileData.None ? "; " + this.ExtraTileData : string.Empty);
         }
     }
 

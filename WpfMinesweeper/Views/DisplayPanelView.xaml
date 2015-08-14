@@ -9,8 +9,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Style x:Key="MyButtonStyle" TargetType="Button">
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Margin" Value="5" />
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -21,20 +21,20 @@
                             <Border.Background>
                                 <ImageBrush
                                     ImageSource="{Binding Path=SmileyBackground, UpdateSourceTrigger=PropertyChanged}"
-                                    Stretch="Fill" />
+                                    Stretch="Fill"/>
                             </Border.Background>
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Background" TargetName="border">
                                     <Setter.Value>
-                                        <SolidColorBrush Color="Black" />
+                                        <SolidColorBrush Color="Black"/>
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="Maroon" />
+                                <Setter TargetName="border" Property="BorderBrush" Value="Maroon"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -45,13 +45,13 @@
 
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <controls:NumberBox Grid.Column="0" x:Name="MinesRemainingBox"
                             Number="{Binding Path=MinesRemaining, UpdateSourceTrigger=PropertyChanged}"
-                            HorizontalAlignment="Left" />
+                            HorizontalAlignment="Left"/>
         <Button Grid.Column="1"
                 Name="SmileyButton"
                 HorizontalAlignment="Center"
@@ -62,10 +62,10 @@
                 Style="{StaticResource MyButtonStyle}">
             <Image Stretch="None"
                    gif:ImageBehavior.AnimatedSource="{Binding Path=SmileyImage, UpdateSourceTrigger=PropertyChanged}"
-                   gif:ImageBehavior.RepeatBehavior="{Binding Path=RepeatAnimation, UpdateSourceTrigger=PropertyChanged}" />
+                   gif:ImageBehavior.RepeatBehavior="{Binding Path=RepeatAnimation, UpdateSourceTrigger=PropertyChanged}"/>
         </Button>
         <controls:NumberBox Grid.Column="2" x:Name="TimeElapsedBox"
                             Number="{Binding Path=TimeElapsed, UpdateSourceTrigger=PropertyChanged}"
-                            HorizontalAlignment="Right" />
+                            HorizontalAlignment="Right"/>
     </Grid>
 </UserControl>

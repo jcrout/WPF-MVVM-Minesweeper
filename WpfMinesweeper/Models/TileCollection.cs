@@ -34,14 +34,12 @@
     /// </summary>
     public class TileCollection : ITileCollection
     {
-        private readonly int height;
         private readonly Tile[][] tiles;
-        private readonly int width;
 
         protected TileCollection(int width, int height)
         {
-            this.width = width;
-            this.height = height;
+            this.Width = width;
+            this.Height = height;
             this.tiles = new Tile[height][];
 
             for (var c = 0; c < height; c++)
@@ -50,21 +48,9 @@
             }
         }
 
-        public int Height
-        {
-            get
-            {
-                return this.height;
-            }
-        }
+        public int Height { get; }
 
-        public int Width
-        {
-            get
-            {
-                return this.width;
-            }
-        }
+        public int Width { get; }
 
         public Tile this[int x, int y]
         {
@@ -96,7 +82,7 @@
 
         public object Clone()
         {
-            var newCollection = new TileCollection(this.width, this.height);
+            var newCollection = new TileCollection(this.Width, this.Height);
             for (var r = 0; r < this.Width; r++)
             {
                 for (var c = 0; c < this.Height; c++)

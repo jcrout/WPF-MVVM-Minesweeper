@@ -6,10 +6,6 @@
     /// </summary>
     public class StatDisplay
     {
-        private readonly string description;
-        private readonly string label;
-        private readonly string value;
-
         /// <summary>
         ///     Initializes a new instance of the StatDisplay class.
         /// </summary>
@@ -18,42 +14,24 @@
         /// <param name="description">Optional. A description of the stat.</param>
         public StatDisplay(string label, string value, string description = "")
         {
-            this.label = label;
-            this.value = value;
-            this.description = description;
+            this.Label = label;
+            this.Value = value;
+            this.Description = description;
         }
 
         /// <summary>
         ///     Gets the stat description.
         /// </summary>
-        public string Description
-        {
-            get
-            {
-                return this.description;
-            }
-        }
+        public string Description { get; }
 
         /// <summary>
         ///     Gets the stat display text.
         /// </summary>
-        public string Label
-        {
-            get
-            {
-                return this.label;
-            }
-        }
+        public string Label { get; }
 
         /// <summary>
-        ///     Gets the <see cref="WpfMinesweeper.Models.StatDisplay.value" /> for the specific stat.
+        ///     Gets the <see cref="Value" /> for the specific stat.
         /// </summary>
-        public string Value
-        {
-            get
-            {
-                return this.value;
-            }
-        }
+        public string Value { get; }
     }
 }

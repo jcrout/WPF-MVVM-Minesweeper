@@ -22,12 +22,6 @@
             this.PositionWindow();
         }
 
-        protected override void OnMediatorChanged()
-        {
-            base.OnMediatorChanged();
-            Mediator.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized());
-        }
-
         public double Height
         {
             get
@@ -169,10 +163,16 @@
                 if (this.windowState != value)
                 {
                     this.windowState = value;
-                    Mediator.Notify(ViewModelMessages.GameWindowStateChanged, value);
+                    this.Mediator.Notify(ViewModelMessages.GameWindowStateChanged, value);
                     this.OnPropertyChanged();
                 }
             }
+        }
+
+        protected override void OnMediatorChanged()
+        {
+            base.OnMediatorChanged();
+            this.Mediator.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized());
         }
 
         private void CenterWindow()
@@ -184,7 +184,7 @@
         private void OnTileBoardInitialized()
         {
             // GUI code in the ViewModel; consider replacing if a better solution involving binding can be used, one that does not involve sizing to content and back to manual;
-            var window = App.Current.MainWindow;
+            var window = Application.Current.MainWindow;
             window.Measure(new Size(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height));
             window.Arrange(new Rect(0, 0, window.DesiredSize.Width, window.DesiredSize.Height));
             window.UpdateLayout();

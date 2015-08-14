@@ -1,49 +1,49 @@
 ﻿<UserControl x:Class="WpfMinesweeper.Controls.GradientPicker"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WpfMinesweeper.Controls"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="15">
         <StackPanel Orientation="Vertical">
             <Border x:Name="ImageBorder">
-                <Grid x:Name="ImageGrid" 
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top" 
-                   Height="112" 
-                   Width="264"
-                   Margin="0,10,0,0"
-                   Background="{Binding SelectedBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <Grid x:Name="ImageGrid"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      Height="112"
+                      Width="264"
+                      Margin="0,10,0,0"
+                      Background="{Binding SelectedBrush, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
             </Border>
             <StackPanel Orientation="Horizontal">
-                <ItemsControl 
-                Margin="0,10,0,0"
-                ItemsSource="{Binding GradientStops, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
+                <ItemsControl
+                    Margin="0,10,0,0"
+                    ItemsSource="{Binding GradientStops, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Color"/>
-                                <xctk:ColorPicker Margin="5,0,0,2" 
-                                              Width="100"
-                                              SelectedColor="{Binding .Color, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                                <TextBlock Margin="5,0,0,0" 
-                                       Text="Offset"/>
-                                <Slider  Margin="5,0,0,0" 
-                                     Minimum="0"
-                                     Maximum="1"
-                                     Width="100"
-                                     Value="{Binding .Offset, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <xctk:ColorPicker Margin="5,0,0,2"
+                                                  Width="100"
+                                                  SelectedColor="{Binding .Color, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <TextBlock Margin="5,0,0,0"
+                                           Text="Offset"/>
+                                <Slider Margin="5,0,0,0"
+                                        Minimum="0"
+                                        Maximum="1"
+                                        Width="100"
+                                        Value="{Binding .Offset, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 <StackPanel Orientation="Vertical">
-                    <RadioButton Content="Linear" 
+                    <RadioButton Content="Linear"
                                  GroupName="BrushGroup"
                                  IsChecked="{Binding IsLinear, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                     <RadioButton Content="Radial"
@@ -52,19 +52,19 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Button Content="Remove" 
-                    Margin="0,10,0,0"
-                    Width="70" 
-                    Height="22" 
-                    HorizontalAlignment="Left"
-                    Command="{Binding RemoveGradientStopCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <Button Content="Remove"
+                        Margin="0,10,0,0"
+                        Width="70"
+                        Height="22"
+                        HorizontalAlignment="Left"
+                        Command="{Binding RemoveGradientStopCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
 
-                <Button Content="Add" 
-                    Margin="5,10,0,0"
-                    Width="70" 
-                    Height="22" 
-                    HorizontalAlignment="Left"
-                    Command="{Binding AddGradientStopCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+                <Button Content="Add"
+                        Margin="5,10,0,0"
+                        Width="70"
+                        Height="22"
+                        HorizontalAlignment="Left"
+                        Command="{Binding AddGradientStopCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
             </StackPanel>
         </StackPanel>
 

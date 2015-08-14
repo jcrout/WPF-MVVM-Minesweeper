@@ -57,7 +57,6 @@
         private readonly object statisticsSyncLock = new object();
         private readonly Settings userSettings = new Settings();
         private bool saveAllModules;
-        private Brush tileBrush;
         private ObservableCollection<IStatisticsModule> statistics = new ObservableCollection<IStatisticsModule>();
 
         private SettingsProvider()
@@ -65,43 +64,6 @@
             this.LoadTileBrush();
             this.statistics.CollectionChanged += this.statistics_CollectionChanged;
             this.LoadStatistics();
-        }
-
-        private void LoadTileBrush()
-        {
-            var tileBrushText = this.userSettings.TileBrush;
-            if (string.IsNullOrWhiteSpace(tileBrushText))
-            {
-                return;
-            }
-
-            var parts = tileBrushText.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-            if (parts[0] == "SCB")
-            {
-                var color = WpfExtensionMethods.GetColorFromText(parts[1]);
-                this.tileBrush = new SolidColorBrush(color);
-                return;
-            }
-            
-            var stopCollection = new GradientStopCollection();
-            for (int i = 1; i < parts.Length; i += 2)
-            {
-                var colorText = parts[i];
-                var offsetText = parts[i + 1];
-                var color = WpfExtensionMethods.GetColorFromText(parts[i]);
-                var offset = double.Parse(offsetText);
-                stopCollection.Add(new GradientStop(color, offset));
-            }
-
-            switch (parts[0])
-            {
-                case "LGB":
-                    this.tileBrush = new LinearGradientBrush(stopCollection);
-                    return;
-                case "RGB":
-                    this.tileBrush = new RadialGradientBrush(stopCollection);
-                    return;
-            }
         }
 
         public static ISettingsProvider Instance
@@ -170,53 +132,8 @@
                 }
             }
         }
-        
-        public Brush TileBrush
-        {
-            get
-            {
-                return this.tileBrush;
-            }
-            set
-            {
-                this.tileBrush = value;
-            }
-        }
 
-        private void SaveTileBrush()
-        {
-            if (this.tileBrush == null)
-            {
-                this.userSettings.TileBrush = string.Empty;
-                return;
-            }
-
-            var brushType = this.tileBrush.GetType();
-            if (brushType == typeof(SolidColorBrush))
-            {
-                var scb = (SolidColorBrush)this.tileBrush;
-                this.userSettings.TileBrush = "SCB;" + scb.Color.ToString();
-                return;
-            }
-
-            if (!typeof(GradientBrush).IsAssignableFrom(brushType))
-            {
-                return;
-            }
-
-            var gradientBrush = (GradientBrush)this.tileBrush;
-            var builder = new StringBuilder(brushType == typeof(LinearGradientBrush) ? "LGB" : "RGB");
-            foreach (var gradientStop in gradientBrush.GradientStops)
-            {
-                builder.Append(';');
-                builder.Append(gradientStop.Color.ToString());
-                builder.Append(';');
-                builder.Append(gradientStop.Offset);
-            }
-
-            this.userSettings.TileBrush = builder.ToString();
-        }
-
+        public Brush TileBrush { get; set; }
 
         public async void Save()
         {
@@ -328,6 +245,43 @@
             }
         }
 
+        private void LoadTileBrush()
+        {
+            var tileBrushText = this.userSettings.TileBrush;
+            if (string.IsNullOrWhiteSpace(tileBrushText))
+            {
+                return;
+            }
+
+            var parts = tileBrushText.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            if (parts[0] == "SCB")
+            {
+                var color = WpfExtensionMethods.GetColorFromText(parts[1]);
+                this.TileBrush = new SolidColorBrush(color);
+                return;
+            }
+
+            var stopCollection = new GradientStopCollection();
+            for (int i = 1; i < parts.Length; i += 2)
+            {
+                var colorText = parts[i];
+                var offsetText = parts[i + 1];
+                var color = WpfExtensionMethods.GetColorFromText(parts[i]);
+                var offset = double.Parse(offsetText);
+                stopCollection.Add(new GradientStop(color, offset));
+            }
+
+            switch (parts[0])
+            {
+                case "LGB":
+                    this.TileBrush = new LinearGradientBrush(stopCollection);
+                    return;
+                case "RGB":
+                    this.TileBrush = new RadialGradientBrush(stopCollection);
+                    return;
+            }
+        }
+
         private void SaveStatistics()
         {
             lock (this.statisticsSyncLock)
@@ -367,6 +321,40 @@
                 this.saveAllModules = false;
                 this.newModules.Clear();
             }
+        }
+
+        private void SaveTileBrush()
+        {
+            if (this.TileBrush == null)
+            {
+                this.userSettings.TileBrush = string.Empty;
+                return;
+            }
+
+            var brushType = this.TileBrush.GetType();
+            if (brushType == typeof(SolidColorBrush))
+            {
+                var scb = (SolidColorBrush)this.TileBrush;
+                this.userSettings.TileBrush = "SCB;" + scb.Color;
+                return;
+            }
+
+            if (!typeof(GradientBrush).IsAssignableFrom(brushType))
+            {
+                return;
+            }
+
+            var gradientBrush = (GradientBrush)this.TileBrush;
+            var builder = new StringBuilder(brushType == typeof(LinearGradientBrush) ? "LGB" : "RGB");
+            foreach (var gradientStop in gradientBrush.GradientStops)
+            {
+                builder.Append(';');
+                builder.Append(gradientStop.Color);
+                builder.Append(';');
+                builder.Append(gradientStop.Offset);
+            }
+
+            this.userSettings.TileBrush = builder.ToString();
         }
 
         private void statistics_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -21,12 +21,12 @@
     [TypeConverter(typeof(MessageButtonConverter)), ContentProperty("Button")]
     public class MessageButton
     {
-        private int rightToLeftIndex = -1;
-
         /// <summary>
         ///     Gets or sets the Button.
         /// </summary>
         public Button Button { get; set; }
+
+        public bool CloseOnClick { get; set; } = true;
 
         /// <summary>
         ///     Gets or sets the object Result that is returned.
@@ -51,19 +51,7 @@
         ///         <para>container is rendered.</para>
         ///     </para>
         /// </summary>
-        public int RightToLeftIndex
-        {
-            get
-            {
-                return this.rightToLeftIndex;
-            }
-            set
-            {
-                this.rightToLeftIndex = value;
-            }
-        }
-
-        public bool CloseOnClick { get; set; } = true;
+        public int RightToLeftIndex { get; set; } = -1;
 
         public override string ToString()
         {
@@ -118,13 +106,13 @@
             if (valueType == typeof(Button))
             {
                 var button = (Button)value;
-                return new MessageButton {Button = button };
+                return new MessageButton {Button = button};
             }
             if (valueType == typeof(string))
             {
                 var textFragments = value.ToString().Split(';');
                 var button = new Button {Content = textFragments[0]};
-                var mbutton = new MessageButton { Button = button };
+                var mbutton = new MessageButton {Button = button};
 
                 button.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
                 button.Width = Math.Max(80, button.DesiredSize.Width);

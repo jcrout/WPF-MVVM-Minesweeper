@@ -4,34 +4,32 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
     using Controls;
-    using Models;
     using JonUtility;
+    using Models;
 
     public class TileBoardViewModel : TileBoardViewModelBase
     {
         private static readonly Brush mineClickBrush = new SolidColorBrush(Color.FromArgb(80, 255, 0, 0));
         private static readonly Random randomGenerator = new Random();
-
         private readonly bool areQuestionMarksEnabled = true;
         private readonly int maxSafeSpotsAroundFirstClick = 5;
         private readonly int maxStackSize = 2000;
         private readonly int minSafeSpotsAroundFirstClick = 1;
-        private bool boardInitialized;
+        private readonly object syncLock = new object();
         private int boardHeight;
+        private bool boardInitialized;
+        private ITileCollection boardTiles;
         private int boardWidth;
-        private int maxYCoordinate;
-        private int maxXCoordinate;
         private bool leftAndRightMouseDown;
         private bool leftMouseDown;
+        private int maxXCoordinate;
+        private int maxYCoordinate;
         private int revealedSpaces;
         private Func<List<Point<int>>, Task> revealSurroundingTiles;
-        private ITileCollection boardTiles;
         private int targetSpaceCount;
-        private object syncLock = new object();
 
         public TileBoardViewModel()
         {
@@ -43,7 +41,7 @@
                 this.CanInteractWithBoard);
             this.BoardInitializedCommand = new Command(this.OnTileBoardInitialized);
 
-            Mediator.Notify(ViewModelMessages.TileColorsChanged, this.TileBrush);
+            this.Mediator.Notify(ViewModelMessages.TileColorsChanged, this.TileBrush);
         }
 
         protected override void OnMediatorChanged()
@@ -60,7 +58,7 @@
         protected override void OnMinesweeperChanged()
         {
             this.targetSpaceCount = (this.Minesweeper.Tiles.Width * this.Minesweeper.Tiles.Height) -
-                                     this.Minesweeper.MineCount;
+                                    this.Minesweeper.MineCount;
             this.boardTiles = this.Minesweeper.Tiles;
             this.boardInitialized = false;
             this.revealedSpaces = 0;
@@ -83,7 +81,7 @@
         {
             var surroundingTiles = this.GetSurroundingTiles(e.X, e.Y);
             var flaggedTiles = (from tilePoint in surroundingTiles
-                                let tile = this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y]
+                                let tile = this.Minesweeper.Tiles[tilePoint.X, tilePoint.Y]
                                 where (!tile.Shown) && (tile.ExtraTileData == ExtraTileData.Flag)
                                 select tilePoint).ToList();
 
@@ -93,7 +91,7 @@
             {
                 foreach (var tile in flaggedTiles)
                 {
-                    if (this.Minesweeper.Tiles[(int)tile.X, (int)tile.Y].Type != TileType.Mine)
+                    if (this.Minesweeper.Tiles[tile.X, tile.Y].Type != TileType.Mine)
                     {
                         this.GameOver(e.X, e.Y);
                         return;
@@ -103,7 +101,7 @@
                 var tilesToCheck = new List<Point<int>>();
                 foreach (var tilePoint in surroundingTiles)
                 {
-                    var tile = this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y];
+                    var tile = this.Minesweeper.Tiles[tilePoint.X, tilePoint.Y];
 
                     if (tile.Type == TileType.Unset && !tile.Shown && tile.ExtraTileData != ExtraTileData.Flag)
                     {
@@ -187,7 +185,8 @@
         }
 
         /// <summary>
-        ///     Returns a list of surrounding <paramref name="tilesToUpdate" /> needing to be <see langword="checked" /> while adding to
+        ///     Returns a list of surrounding <paramref name="tilesToUpdate" /> needing to be <see langword="checked" /> while
+        ///     adding to
         ///     the list of <paramref name="tilesToUpdate" /> needing updated.
         /// </summary>
         /// <remarks>
@@ -199,7 +198,8 @@
         /// <param name="x">The X coordinate of the tile.</param>
         /// <param name="y">The Y coordinate of the tile.</param>
         /// <returns>
-        ///     This method then returns the list of <paramref name="tilesToUpdate" /> that need checked. An empty list is returned if
+        ///     This method then returns the list of <paramref name="tilesToUpdate" /> that need checked. An empty list is returned
+        ///     if
         ///     the current tile is a number. If the tile is an empty space, then it returns a list of surrounding
         ///     <paramref name="tilesToUpdate" /> that are not yet defined that haven't already been added to the cumulative list.
         /// </returns>
@@ -211,7 +211,6 @@
             if (count > 0)
             {
                 this.SetTile(tilePoint, new Tile(TileType.Number(count), true));
-                yield break;
             }
             else
             {
@@ -260,19 +259,19 @@
                 // mine was clicked, causing game over
                 if (tile.Type == TileType.Mine)
                 {
-                    this.SelectedTiles = AnimatedTilesCollection.Create(new List<Point<int>>(1) { new Point<int>(clickX, clickY) });
+                    this.SelectedTiles = AnimatedTilesCollection.Create(new List<Point<int>>(1) {new Point<int>(clickX, clickY)});
                 }
                 else
                 {
                     var mineTiles = (from tilePoint in this.GetSurroundingTiles(clickX, clickY)
-                                     let surroundingTile = this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y]
+                                     let surroundingTile = this.Minesweeper.Tiles[tilePoint.X, tilePoint.Y]
                                      where (surroundingTile.Type == TileType.Mine)
                                      select tilePoint).ToList();
                     this.SelectedTiles = AnimatedTilesCollection.Create(mineTiles);
                 }
             }
 
-            Mediator.Notify(ViewModelMessages.GameOver);
+            this.Mediator.Notify(ViewModelMessages.GameOver);
         }
 
         /// <summary>
@@ -280,7 +279,8 @@
         /// </summary>
         /// <remarks>
         ///     This method randomly determines the location of each mine on the board. The first tile clicked is excluded. An
-        ///     additional set of tilesToUpdate may be added to the exclusion list depending on the minimum/maximum number of safe spots
+        ///     additional set of tilesToUpdate may be added to the exclusion list depending on the minimum/maximum number of safe
+        ///     spots
         ///     around the clicked tile and also on the number of non-mine spaces available by calling the
         ///     <see cref="TileBoardViewModel.GetSafeTileIndexes" /> method.
         /// </remarks>
@@ -317,7 +317,8 @@
         }
 
         /// <summary>
-        ///     This method calculates and returns a list of safe tilesToUpdate around the first tile clicked. Safe tilesToUpdate are those that
+        ///     This method calculates and returns a list of safe tilesToUpdate around the first tile clicked. Safe tilesToUpdate
+        ///     are those that
         ///     are not mines and are adjacent to or within a specified radial range of the first tile clicked. This is done to
         ///     increase the odds of the first click containing more than just a single number and decrease the odds of the first
         ///     click being a high number like 8.
@@ -341,10 +342,10 @@
             safeSpotCount = Math.Min(safeSpotCount, nonMineCount - 1);
             if (safeSpotCount == 0)
             {
-                return new List<int>(1) { (clickY * this.Minesweeper.Tiles.Width) + clickX };
+                return new List<int>(1) {(clickY * this.Minesweeper.Tiles.Width) + clickX};
             }
 
-            var safeList = new List<int>(safeSpotCount) { (clickY * this.Minesweeper.Tiles.Width) + clickX };
+            var safeList = new List<int>(safeSpotCount) {(clickY * this.Minesweeper.Tiles.Width) + clickX};
             var surroundingTiles = this.GetSurroundingTiles(clickX, clickY, 1);
             var surroundingTileCount = surroundingTiles.Count - 1;
             for (var i = 0; i < safeSpotCount; i++)
@@ -353,7 +354,7 @@
                 var tilePoint = surroundingTiles[randomIndex];
                 surroundingTiles.RemoveAt(randomIndex);
 
-                safeList.Add((int)((tilePoint.Y * this.Minesweeper.Tiles.Width) + tilePoint.X));
+                safeList.Add((tilePoint.Y * this.Minesweeper.Tiles.Width) + tilePoint.X);
 
                 if (i == surroundingTileCount)
                 {
@@ -363,6 +364,28 @@
 
             safeList.Sort();
             return safeList;
+        }
+
+        private List<Point<int>> GetSurroundingTiles(int x, int y, int distance = 1)
+        {
+            var list = new List<Point<int>>();
+            var left = x >= distance ? x - distance : x;
+            var right = x < this.Minesweeper.Tiles.Width - distance ? x + distance : x;
+            var top = y >= distance ? y - distance : y;
+            var bottom = y < this.Minesweeper.Tiles.Height - distance ? y + distance : y;
+
+            for (var r = left; r <= right; r++)
+            {
+                for (var c = top; c <= bottom; c++)
+                {
+                    if (r != x || c != y)
+                    {
+                        list.Add(new Point<int>(r, c));
+                    }
+                }
+            }
+
+            return list;
         }
 
         private IEnumerable<Point<int>> GetSurroundingTilesPoints(Point<int> tilePoint)
@@ -410,28 +433,6 @@
             }
         }
 
-        private List<Point<int>> GetSurroundingTiles(int x, int y, int distance = 1)
-        {
-            var list = new List<Point<int>>();
-            var left = x >= distance ? x - distance : x;
-            var right = x < this.Minesweeper.Tiles.Width - distance ? x + distance : x;
-            var top = y >= distance ? y - distance : y;
-            var bottom = y < this.Minesweeper.Tiles.Height - distance ? y + distance : y;
-
-            for (var r = left; r <= right; r++)
-            {
-                for (var c = top; c <= bottom; c++)
-                {
-                    if (r != x || c != y)
-                    {
-                        list.Add(new Point<int>(r, c));
-                    }
-                }
-            }
-
-            return list;
-        }
-
         private Tile GetTile(Point<int> tilePoint)
         {
             return this.boardTiles[tilePoint.X, tilePoint.Y];
@@ -463,12 +464,12 @@
             if (this.Minesweeper.Tiles.Width != this.boardWidth ||
                 this.Minesweeper.Tiles.Height != this.boardHeight)
             {
-                Mediator.Notify(ViewModelMessages.TileBoardSizeChanged, parameter);
+                this.Mediator.Notify(ViewModelMessages.TileBoardSizeChanged, parameter);
 
                 this.boardWidth = this.boardTiles.Width;
                 this.boardHeight = this.boardTiles.Height;
-                this.maxXCoordinate = boardWidth - 1;
-                this.maxYCoordinate = boardHeight - 1;
+                this.maxXCoordinate = this.boardWidth - 1;
+                this.maxYCoordinate = this.boardHeight - 1;
             }
         }
 
@@ -568,9 +569,7 @@
             await Task.Run(() =>
             {
                 // this.CheckSurroundingTiles(updateTileList, x, y)).
-
             }).ConfigureAwait(true);
-
 
             this.UpdateTileListAndCheckForVictory(updateTileList);
         }
@@ -579,21 +578,21 @@
         {
             var updateTileList = new List<Point<int>>();
             await Task.Run(() =>
+            {
+                var tilesToCheck = tilePoints;
+                do
                 {
-                    var tilesToCheck = tilePoints;
-                    do
+                    var newList = new List<Point<int>>();
+                    foreach (var point in tilesToCheck)
                     {
-                        var newList = new List<Point<int>>();
-                        foreach (var point in tilesToCheck)
-                        {
-                            updateTileList.Add(new Point<int>(point.X, point.Y));
-                            var newTilesToCheck = this.CheckSurroundingTiles_NonRecursive(point);
-                            newList.AddRange(newTilesToCheck);
-                        }
+                        updateTileList.Add(new Point<int>(point.X, point.Y));
+                        var newTilesToCheck = this.CheckSurroundingTiles_NonRecursive(point);
+                        newList.AddRange(newTilesToCheck);
+                    }
 
-                        tilesToCheck = newList;
-                    } while (tilesToCheck.Count > 0);
-                }).ConfigureAwait(true);
+                    tilesToCheck = newList;
+                } while (tilesToCheck.Count > 0);
+            }).ConfigureAwait(true);
 
             this.UpdateTileListAndCheckForVictory(updateTileList);
         }
@@ -601,7 +600,7 @@
         private void SelectSurroundingTiles(TileEventArgs e)
         {
             var tiles = (from tilePoint in this.GetSurroundingTiles(e.X, e.Y)
-                         let tile = this.Minesweeper.Tiles[(int)tilePoint.X, (int)tilePoint.Y]
+                         let tile = this.Minesweeper.Tiles[tilePoint.X, tilePoint.Y]
                          where (!tile.Shown) && (tile.ExtraTileData == ExtraTileData.None)
                          select tilePoint).ToList();
 
@@ -610,7 +609,8 @@
 
         /// <summary>
         ///     Sets the <see cref="WpfMinesweeper.ViewModels.TileBoardViewModel.revealSurroundingTiles" /> delegate, depending on
-        ///     the board size. If a stackoverflow exception is a possiblity due to a large number of tilesToUpdate, then a non-recursive
+        ///     the board size. If a stackoverflow exception is a possiblity due to a large number of tilesToUpdate, then a
+        ///     non-recursive
         ///     method is used. If it is not a possibility, then the faster recursive method is used.
         /// </summary>
         private void SetRevealTileMethod()
@@ -683,15 +683,14 @@
             }
             else
             {
-
-                this.revealSurroundingTiles(new List<Point<int>>(1) { new Point<int>(e.X, e.Y) });
+                this.revealSurroundingTiles(new List<Point<int>>(1) {new Point<int>(e.X, e.Y)});
                 this.HoverTile = TileBoardViewModelBase.EmptyPoint;
             }
 
             if (!this.boardInitialized && this.CanInteractWithBoard())
             {
                 this.boardInitialized = true;
-                Mediator.Notify(ViewModelMessages.GameStarted);
+                this.Mediator.Notify(ViewModelMessages.GameStarted);
             }
         }
 
@@ -727,7 +726,7 @@
                     this.SetTile(e.X, e.Y, new Tile(e.Tile.Type, e.Tile.Shown, ExtraTileData.None));
                 }
 
-                this.TilesToUpdate = AnimatedTilesCollection.Create(new List<Point<int>>(1) { new Point<int>(e.X, e.Y) });
+                this.TilesToUpdate = AnimatedTilesCollection.Create(new List<Point<int>>(1) {new Point<int>(e.X, e.Y)});
             }
         }
 
@@ -780,7 +779,7 @@
             }
 
             this.IsVictory = true;
-            Mediator.Notify(ViewModelMessages.Victory);
+            this.Mediator.Notify(ViewModelMessages.Victory);
         }
     }
 }

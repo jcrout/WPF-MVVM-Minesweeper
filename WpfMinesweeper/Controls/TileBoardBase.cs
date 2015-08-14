@@ -2,17 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using JonUtility;
     using Models;
 
     /// <summary>
-    ///     The base class used for TileBoard controls which contains the necessary binding properties.
+    ///     The base class used for TileBoard controls which contains the
+    ///     necessary binding properties.
     /// </summary>
     public abstract class TileBoardBase : FrameworkElement
     {
@@ -24,11 +23,11 @@
         private static readonly Size defaultTileSize = new Size(16d, 16d);
         private static readonly BitmapSource defaultTileUnsetImage;
         private static readonly BitmapSource flagImage;
-        private static readonly Dictionary<TileType, BitmapSource> tileTypeImages;
         private static readonly BitmapSource questionMarkImage;
+        private static readonly Dictionary<TileType, BitmapSource> tileTypeImages;
 
         /// <summary>
-        /// Identifies the <see cref="Minesweeper"/> dependency property.
+        ///     Identifies the <see cref="Minesweeper" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty MinesweeperProperty = DependencyProperty.Register(
             "Minesweeper",
@@ -38,24 +37,27 @@
                 null,
                 TileBoardBase.MinesweeperChanged,
                 TileBoardBase.CoerceMinesweeper));
+
         /// <summary>
-        /// Identifies the <see cref="TileSize"/> dependency property.
+        ///     Identifies the <see cref="TileSize" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty TileSizeProperty = DependencyProperty.Register(
             "TileSize",
             typeof(Size),
             typeof(TileBoardBase),
             new FrameworkPropertyMetadata(TileBoardBase.defaultTileSize, TileBoardBase.TileSizeChanged));
+
         /// <summary>
-        /// Identifies the <see cref="HoverTile"/> dependency property.
+        ///     Identifies the <see cref="HoverTile" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HoverTileProperty = DependencyProperty.Register(
             "HoverTile",
             typeof(Point<int>),
             typeof(TileBoardBase),
             new FrameworkPropertyMetadata(new Point<int>(-1, -1), TileBoardBase.HoverTileChanged));
+
         /// <summary>
-        /// Identifies the <see cref="DrawPressedTile"/> dependency property.
+        ///     Identifies the <see cref="DrawPressedTile" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty DrawPressedTileProperty =
             DependencyProperty.Register(
@@ -63,8 +65,9 @@
                 typeof(bool),
                 typeof(TileBoardBase),
                 new FrameworkPropertyMetadata(false, TileBoardBase.DrawPressedTileChanged));
+
         /// <summary>
-        /// Identifies the <see cref="TileBrush"/> dependency property.
+        ///     Identifies the <see cref="TileBrush" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty TileBrushProperty = DependencyProperty.Register(
             "TileBrush",
@@ -74,8 +77,9 @@
                 TileBoardBase.defaultTileBrush,
                 TileBoardBase.TileBrushChanged,
                 TileBoardBase.CoerceTileBrush));
+
         /// <summary>
-        /// Identifies the <see cref="HoverBrush"/> dependency property.
+        ///     Identifies the <see cref="HoverBrush" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty HoverBrushProperty = DependencyProperty.Register(
             "HoverBrush",
@@ -85,8 +89,9 @@
                 TileBoardBase.defaultHoverBrush,
                 TileBoardBase.HoverBrushChanged,
                 TileBoardBase.CoerceHoverBrush));
+
         /// <summary>
-        /// Identifies the <see cref="SelectionBrush"/> dependency property.
+        ///     Identifies the <see cref="SelectionBrush" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty SelectionBrushProperty = DependencyProperty.Register(
             "SelectionBrush",
@@ -96,33 +101,38 @@
                 TileBoardBase.defaultSelectionBrush,
                 TileBoardBase.SelectionBrushChanged,
                 TileBoardBase.CoerceSelectionBrush));
+
         /// <summary>
-        /// Identifies the <see cref="BoardInitializedCommand"/> dependency property.
+        ///     Identifies the <see cref="BoardInitializedCommand" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty BoardInitializedCommandProperty =
             DependencyProperty.Register("BoardInitializedCommand", typeof(ICommand), typeof(TileBoardBase));
+
         /// <summary>
-        /// Identifies the <see cref="TileHoverCommand"/> dependency property.
+        ///     Identifies the <see cref="TileHoverCommand" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty TileHoverCommandProperty =
             DependencyProperty.Register("TileHoverCommand", typeof(ICommand), typeof(TileBoardBase));
+
         /// <summary>
-        /// Identifies the <see cref="TilePressCommand"/> dependency property.
+        ///     Identifies the <see cref="TilePressCommand" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty TilePressCommandProperty = DependencyProperty.Register(
             "TilePressCommand",
             typeof(ICommand),
             typeof(TileBoardBase));
+
         /// <summary>
-        /// Identifies the <see cref="TilesToUpdate"/> dependency property.
+        ///     Identifies the <see cref="TilesToUpdate" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty TilesToUpdateProperty = DependencyProperty.Register(
             "TilesToUpdate",
             typeof(AnimatedTilesCollection),
             typeof(TileBoardBase),
             new PropertyMetadata(null, TileBoardBase.TilesToUpdateChanged));
+
         /// <summary>
-        /// Identifies the <see cref="SelectedTiles"/> dependency property.
+        ///     Identifies the <see cref="SelectedTiles" /> dependency property.
         /// </summary>
         public static readonly DependencyProperty SelectedTilesProperty = DependencyProperty.Register(
             "SelectedTiles",
@@ -166,10 +176,11 @@
                         "pack://application:,,,/WpfMinesweeper;component/Resources/Images/QuestionMark.png",
                         UriKind.Absolute));
         }
+
         /// <summary>
-        /// Gets or sets the <see cref="ICommand"/> to invoke when the <see cref="TileBoardBase"/> is initialized.
+        ///     Gets or sets the <see cref="ICommand" /> to invoke when the <see cref="TileBoardBase" /> is initialized.
         /// </summary>
-        /// <value>A command to invoke when the <see cref="TileBoardBase"/> is initialized. The default value is null.</value>
+        /// <value>A command to invoke when the <see cref="TileBoardBase" /> is initialized. The default value is null.</value>
         public ICommand BoardInitializedCommand
         {
             get
@@ -183,9 +194,12 @@
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether to draw a pressed tile as the hover <see cref="Tile"/> image.
+        ///     Gets or sets a value indicating whether to draw a pressed tile as the hover <see cref="Tile" /> image.
         /// </summary>
-        /// <value><c>true</c> if true, draws the pressed tile image instead of applying hover <see cref="Tile"/> brush; otherwise, uses the hover <see cref="Tile"/> brush..</value>
+        /// <value>
+        ///     <c>true</c> if true, draws the pressed tile image instead of applying hover <see cref="Tile" /> brush;
+        ///     otherwise, uses the hover <see cref="Tile" /> brush..
+        /// </value>
         public bool DrawPressedTile
         {
             get
@@ -199,9 +213,9 @@
         }
 
         /// <summary>
-        ///     Gets or sets the hover <see cref="Brush"/>.
+        ///     Gets or sets the hover <see cref="Brush" />.
         /// </summary>
-        /// <value>The <see cref="Brush"/> applied to the <see cref="Tile"/> that the input device is currently hovering over.</value>
+        /// <value>The <see cref="Brush" /> applied to the <see cref="Tile" /> that the input device is currently hovering over.</value>
         public Brush HoverBrush
         {
             get
@@ -215,9 +229,14 @@
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="Tile"/> at which the input device is hovering over.
+        ///     Gets or sets the <see cref="Tile" /> at which the input device is hovering over.
         /// </summary>
-        /// <value>This value is generally the same as the coordinates of the <see cref="Tile"/> that the input device is hovering over. However, this can be set to a different <see cref="TIle"/>'s coordinates if desired. This value can also be set to a point outside of the <see cref="TileBoardBase"/>'s bounds to remove the <see cref="HoverBrush"/> from the <see cref="TileBoardBase"/>. This value defaults to -1, -1.</value>
+        /// <value>
+        ///     This value is generally the same as the coordinates of the <see cref="Tile" /> that the input device is hovering
+        ///     over. However, this can be set to a different <see cref="TIle" />'s coordinates if desired. This value can also be
+        ///     set to a point outside of the <see cref="TileBoardBase" />'s bounds to remove the <see cref="HoverBrush" /> from
+        ///     the <see cref="TileBoardBase" />. This value defaults to -1, -1.
+        /// </value>
         public Point<int> HoverTile
         {
             get
@@ -231,9 +250,12 @@
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="IMinesweeper"/> instance associated with this <see cref="TileBoardBase"/>.
+        ///     Gets or sets the <see cref="IMinesweeper" /> instance associated with this <see cref="TileBoardBase" />.
         /// </summary>
-        /// <value>The <see cref="IMinesweeper"/> instance. This value defaults to a <see cref="BoardSize.Beginner"/>-sized <see cref="IMinesweeper"/> instance.</value>
+        /// <value>
+        ///     The <see cref="IMinesweeper" /> instance. This value defaults to a <see cref="BoardSize.Beginner" />-sized
+        ///     <see cref="IMinesweeper" /> instance.
+        /// </value>
         public IMinesweeper Minesweeper
         {
             get
@@ -259,9 +281,9 @@
         }
 
         /// <summary>
-        ///     Gets or sets the selection <see cref="Brush"/>.
+        ///     Gets or sets the selection <see cref="Brush" />.
         /// </summary>
-        /// <value>The brush applied to the <see cref="Tile"/>s in the <see cref="SelectedTiles"/> list.</value>
+        /// <value>The brush applied to the <see cref="Tile" />s in the <see cref="SelectedTiles" /> list.</value>
         public Brush SelectionBrush
         {
             get
@@ -275,9 +297,13 @@
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="Brush"/> used to paint the <see cref="Tile"/>s on the board.
+        ///     Gets or sets the <see cref="Brush" /> used to paint the <see cref="Tile" />s on the board.
         /// </summary>
-        /// <value>If the type of <see cref="Brush"/> is a <see cref="SolidColorBrush"/>, then each <see cref="Tile"/> is individually painted with that brush. If the type of <see cref="Brush"/> is a <see cref="GradientBrush"/>, then the <see cref="Brush"/> is applied to the entire <see cref="TileBoardBase"/>.</value>
+        /// <value>
+        ///     If the type of <see cref="Brush" /> is a <see cref="SolidColorBrush" />, then each <see cref="Tile" /> is
+        ///     individually painted with that brush. If the type of <see cref="Brush" /> is a <see cref="GradientBrush" />, then
+        ///     the <see cref="Brush" /> is applied to the entire <see cref="TileBoardBase" />.
+        /// </value>
         public Brush TileBrush
         {
             get
@@ -291,9 +317,13 @@
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="ICommand"/> to invoke when the input device hovers over a new <see cref="Tile"/> or leaves the <see cref="TileBoardBase"/>.
+        ///     Gets or sets the <see cref="ICommand" /> to invoke when the input device hovers over a new <see cref="Tile" /> or
+        ///     leaves the <see cref="TileBoardBase" />.
         /// </summary>
-        /// <value>A command to invoke when the input device hovers over a new <see cref="Tile"/> or leaves the <see cref="TileBoardBase"/>. The default value is null.</value>
+        /// <value>
+        ///     A command to invoke when the input device hovers over a new <see cref="Tile" /> or leaves the
+        ///     <see cref="TileBoardBase" />. The default value is null.
+        /// </value>
         public ICommand TileHoverCommand
         {
             get
@@ -307,9 +337,29 @@
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="Size"/> of each <see cref="Tile"/>.
+        ///     Gets or sets the <see cref="ICommand" /> to invoke when a <see cref="Tile" /> is pressed or released by the input
+        ///     device.
         /// </summary>
-        /// <value>The  <see cref="Size"/> of each <see cref="Tile"/>. The default value is 16x16.</value>
+        /// <value>
+        ///     A command to invoke when a <see cref="Tile" /> is pressed or released by the input device. The default value is
+        ///     null.
+        /// </value>
+        public ICommand TilePressCommand
+        {
+            get
+            {
+                return (ICommand)this.GetValue(TileBoardBase.TilePressCommandProperty);
+            }
+            set
+            {
+                this.SetValue(TileBoardBase.TilePressCommandProperty, value);
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the <see cref="Size" /> of each <see cref="Tile" />.
+        /// </summary>
+        /// <value>The  <see cref="Size" /> of each <see cref="Tile" />. The default value is 16x16.</value>
         public Size TileSize
         {
             get
@@ -323,9 +373,9 @@
         }
 
         /// <summary>
-        ///     Gets or sets the collection of <see cref="Tile"/>'s to update.
+        ///     Gets or sets the collection of <see cref="Tile" />'s to update.
         /// </summary>
-        /// <value>The collection of <see cref="Tile"/>'s to update. The default value is <c>null</c>.</value>
+        /// <value>The collection of <see cref="Tile" />'s to update. The default value is <c>null</c>.</value>
         public AnimatedTilesCollection TilesToUpdate
         {
             get
@@ -335,22 +385,6 @@
             set
             {
                 this.SetValue(TileBoardBase.TilesToUpdateProperty, value);
-            }
-        }
-
-        /// <summary>
-        ///     Gets or sets the <see cref="ICommand"/> to invoke when a <see cref="Tile"/> is pressed or released by the input device.
-        /// </summary>
-        /// <value>A command to invoke when a <see cref="Tile"/> is pressed or released by the input device. The default value is null.</value>
-        public ICommand TilePressCommand
-        {
-            get
-            {
-                return (ICommand)this.GetValue(TileBoardBase.TilePressCommandProperty);
-            }
-            set
-            {
-                this.SetValue(TileBoardBase.TilePressCommandProperty, value);
             }
         }
 
@@ -366,9 +400,9 @@
 
         protected static BitmapSource FlagImage => TileBoardBase.flagImage;
 
-        protected static Dictionary<TileType, BitmapSource> TileTypeImages => TileBoardBase.tileTypeImages;
-
         protected static BitmapSource QuestionMarkImage => TileBoardBase.questionMarkImage;
+
+        protected static Dictionary<TileType, BitmapSource> TileTypeImages => TileBoardBase.tileTypeImages;
 
         protected override int VisualChildrenCount => this.Visuals.Count;
 
@@ -477,6 +511,10 @@
             this.BoardInitializedCommand.ExecuteIfAbleTo(new Size(this.Width, this.Height));
         }
 
+        protected virtual void OnSelectionBrushChanged()
+        {
+        }
+
         protected virtual void OnTileBrushChanged()
         {
         }
@@ -486,10 +524,6 @@
         }
 
         protected virtual void OnTileSizeChanged()
-        {
-        }
-
-        protected virtual void OnSelectionBrushChanged()
         {
         }
 
@@ -576,7 +610,7 @@
         private static void MinesweeperChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var board = (TileBoardBase)d;
-            if (e.OldValue == null && e.NewValue == defaultMinesweeper)
+            if (e.OldValue == null && e.NewValue == TileBoardBase.defaultMinesweeper)
             {
                 return;
             }

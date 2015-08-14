@@ -14,6 +14,6 @@
         WindowState="{Binding Path=WindowState, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 
     <Grid x:Name="MainGrid">
-        <vw:MinesweeperView DataContext="{Binding Path=ViewModel}" />
+        <vw:MinesweeperView DataContext="{Binding Path=ViewModel}"/>
     </Grid>
 </Window>

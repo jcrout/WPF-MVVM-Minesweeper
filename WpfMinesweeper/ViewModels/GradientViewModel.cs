@@ -1,26 +1,22 @@
-﻿
-namespace WpfMinesweeper.ViewModels
+﻿namespace WpfMinesweeper.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows.Input;
     using System.Windows.Media;
     using JonUtility;
+    using Models;
 
     public class GradientViewModel : MinesweeperComponentViewModel
     {
-        private ObservableCollection<GradientStopProxy> gradientStops = new ObservableCollection<GradientStopProxy>();
-        private GradientBrush selectedBrush;
         private ICommand addGradientStopCommand;
-        private ICommand removeGradientStopCommand;
+        private bool bothTypeOptionsUpdated;
+        private ObservableCollection<GradientStopProxy> gradientStops = new ObservableCollection<GradientStopProxy>();
         private bool isLinear = true;
-        private bool isRadial = false;
-        private bool bothTypeOptionsUpdated = false;
+        private bool isRadial;
+        private ICommand removeGradientStopCommand;
+        private GradientBrush selectedBrush;
 
         public GradientViewModel()
         {
@@ -28,62 +24,23 @@ namespace WpfMinesweeper.ViewModels
             this.AddStop(Colors.Black, 1d);
             this.AddGradientStopCommand = new Command(this.OnAddGradientStop);
             this.RemoveGradientStopCommand = new Command(this.OnRemoveGradientStop, () => this.gradientStops.Count > 1);
-            this.SelectedBrush = GetNewBrush();
+            this.SelectedBrush = this.GetNewBrush();
         }
 
-        private GradientBrush GetNewBrush()
+        public ICommand AddGradientStopCommand
         {
-            var stops = this.gradientStops.Select(gs => new GradientStop(gs.Color.WithAlpha(150), gs.Offset));
-            var collection = new GradientStopCollection(stops);
-            GradientBrush brush;
-
-            if (this.IsLinear)
+            get
             {
-                brush = new LinearGradientBrush(collection);
+                return this.addGradientStopCommand;
             }
-            else if (this.isRadial)
+            set
             {
-                brush = new RadialGradientBrush(collection);
+                if (this.addGradientStopCommand != value)
+                {
+                    this.addGradientStopCommand = value;
+                    this.OnPropertyChanged();
+                }
             }
-            else
-            {
-                return null;
-            }
-
-            brush.Freeze();
-            return brush;
-        }
-
-        private void OnAddGradientStop()
-        {
-            this.AddStop(Colors.White, 1d);
-            this.UpdateBrushes();
-        }
-
-        private void OnRemoveGradientStop()
-        {
-            var gradientStop = this.gradientStops[this.gradientStops.Count - 1];
-            gradientStop.PropertyChanged -= GradientStop_PropertyChanged;
-            this.gradientStops.Remove(gradientStop);
-            this.UpdateBrushes();
-        }
-
-        private void AddStop(Color color, double offset)
-        {
-            var gradientStop = new GradientStopProxy(color, offset);
-            gradientStop.PropertyChanged += GradientStop_PropertyChanged;
-            this.gradientStops.Add(gradientStop);
-        }
-
-        private void GradientStop_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            this.UpdateBrushes();
-        }
-
-        private void UpdateBrushes()
-        {
-            this.SelectedBrush = GetNewBrush();
-            this.Mediator.Notify(Models.ViewModelMessages.TileColorsChanged, this.GetNewBrush());
         }
 
         public ObservableCollection<GradientStopProxy> GradientStops
@@ -136,16 +93,20 @@ namespace WpfMinesweeper.ViewModels
             }
         }
 
-        private void BrushTypeChanged()
+        public ICommand RemoveGradientStopCommand
         {
-            if (!this.bothTypeOptionsUpdated)
+            get
             {
-                this.bothTypeOptionsUpdated = true;
-                return;
+                return this.removeGradientStopCommand;
             }
-
-            this.UpdateBrushes();
-            this.bothTypeOptionsUpdated = false;
+            set
+            {
+                if (this.removeGradientStopCommand != value)
+                {
+                    this.removeGradientStopCommand = value;
+                    this.OnPropertyChanged();
+                }
+            }
         }
 
         public GradientBrush SelectedBrush
@@ -164,69 +125,110 @@ namespace WpfMinesweeper.ViewModels
             }
         }
 
-        public ICommand RemoveGradientStopCommand
+        private void AddStop(Color color, double offset)
         {
-            get
-            {
-                return this.removeGradientStopCommand;
-            }
-            set
-            {
-                if (this.removeGradientStopCommand != value)
-                {
-                    this.removeGradientStopCommand = value;
-                    this.OnPropertyChanged();
-                }
-            }
+            var gradientStop = new GradientStopProxy(color, offset);
+            gradientStop.PropertyChanged += this.GradientStop_PropertyChanged;
+            this.gradientStops.Add(gradientStop);
         }
 
-        public ICommand AddGradientStopCommand
+        private void BrushTypeChanged()
         {
-            get
+            if (!this.bothTypeOptionsUpdated)
             {
-                return this.addGradientStopCommand;
+                this.bothTypeOptionsUpdated = true;
+                return;
             }
-            set
+
+            this.UpdateBrushes();
+            this.bothTypeOptionsUpdated = false;
+        }
+
+        private GradientBrush GetNewBrush()
+        {
+            var stops = this.gradientStops.Select(gs => new GradientStop(gs.Color.WithAlpha(150), gs.Offset));
+            var collection = new GradientStopCollection(stops);
+            GradientBrush brush;
+
+            if (this.IsLinear)
             {
-                if (this.addGradientStopCommand != value)
-                {
-                    this.addGradientStopCommand = value;
-                    this.OnPropertyChanged();
-                }
+                brush = new LinearGradientBrush(collection);
             }
+            else if (this.isRadial)
+            {
+                brush = new RadialGradientBrush(collection);
+            }
+            else
+            {
+                return null;
+            }
+
+            brush.Freeze();
+            return brush;
+        }
+
+        private void GradientStop_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            this.UpdateBrushes();
+        }
+
+        private void OnAddGradientStop()
+        {
+            this.AddStop(Colors.White, 1d);
+            this.UpdateBrushes();
+        }
+
+        private void OnRemoveGradientStop()
+        {
+            var gradientStop = this.gradientStops[this.gradientStops.Count - 1];
+            gradientStop.PropertyChanged -= this.GradientStop_PropertyChanged;
+            this.gradientStops.Remove(gradientStop);
+            this.UpdateBrushes();
+        }
+
+        private void UpdateBrushes()
+        {
+            this.SelectedBrush = this.GetNewBrush();
+            this.Mediator.Notify(ViewModelMessages.TileColorsChanged, this.GetNewBrush());
         }
 
         public class GradientStopProxy : INotifyPropertyChanged
         {
-            private double offset;
             private Color color;
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public double Offset
-            {
-                get { return offset; }
-                set
-                {
-                    offset = value;
-                    this.PropertyChanged.SafeRaise(this, new PropertyChangedEventArgs(nameof(this.Offset)));
-                }
-            }
-
-            public Color Color
-            {
-                get { return color; }
-                set
-                {
-                    color = value;
-                    this.PropertyChanged.SafeRaise(this, new PropertyChangedEventArgs(nameof(this.Color)));
-                }
-            }
+            private double offset;
 
             public GradientStopProxy(Color color, double offset)
             {
                 this.color = color;
                 this.offset = offset;
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public Color Color
+            {
+                get
+                {
+                    return this.color;
+                }
+                set
+                {
+                    this.color = value;
+                    this.PropertyChanged.SafeRaise(this, new PropertyChangedEventArgs(nameof(this.Color)));
+                }
+            }
+
+            public double Offset
+            {
+                get
+                {
+                    return this.offset;
+                }
+                set
+                {
+                    this.offset = value;
+                    this.PropertyChanged.SafeRaise(this, new PropertyChangedEventArgs(nameof(this.Offset)));
+                }
             }
         }
     }

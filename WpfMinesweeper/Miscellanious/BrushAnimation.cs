@@ -12,9 +12,7 @@ namespace WpfMinesweeper.Miscellanious
     public class BrushAnimation : AnimationTimeline
     {
         public static readonly DependencyProperty FromProperty = DependencyProperty.Register("From", typeof(Brush), typeof(BrushAnimation));
-
         public static readonly DependencyProperty ToProperty = DependencyProperty.Register("To", typeof(Brush), typeof(BrushAnimation));
-
         //we must define From and To, AnimationTimeline does not have this properties
         public Brush From
         {

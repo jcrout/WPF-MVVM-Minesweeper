@@ -17,7 +17,7 @@
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
                     <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -43,7 +43,7 @@
                     <Button Content="OK"
                             Width="80"
                             Height="22"
-                            Command="{Binding Path=SaveCustomBoardCommand}" />
+                            Command="{Binding Path=SaveCustomBoardCommand}"/>
                 </controls:MessageButton>
             </controls:PromptBox.OKButton>
 
@@ -52,19 +52,19 @@
                             VerticalAlignment="Top"
                             Orientation="Horizontal"
                             Margin="15">
-                    <Label Content="Width:" />
+                    <Label Content="Width:"/>
                     <TextBox Name="TxtWidth"
                              Width="35"
-                             Text="{Binding Path=Width,ValidatesOnDataErrors=True}" />
-                    <Label Content="Height:" />
+                             Text="{Binding Path=Width,ValidatesOnDataErrors=True}"/>
+                    <Label Content="Height:"/>
                     <TextBox
                         Name="TxtHeight"
                         Width="35"
-                        Text="{Binding Path=Height,ValidatesOnDataErrors=True}" />
-                    <Label Content="Mines:" />
+                        Text="{Binding Path=Height,ValidatesOnDataErrors=True}"/>
+                    <Label Content="Mines:"/>
                     <TextBox Name="TxtMines"
                              Width="35"
-                             Text="{Binding Path=Mines,ValidatesOnDataErrors=True}" />
+                             Text="{Binding Path=Mines,ValidatesOnDataErrors=True}"/>
                 </StackPanel>
             </Grid>
         </controls:PromptBox>
@@ -77,36 +77,38 @@
                             ResultOtherCommand="{Binding Path=StatisticsPromptCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
             <controls:PromptBox.OtherButtons>
                 <controls:MessageButton Result="Clear" CloseOnClick="False">
-                    <Button Content="Clear" Width="80" Height="22" />
+                    <Button Content="Clear" Width="80" Height="22"/>
                 </controls:MessageButton>
                 <controls:MessageButton Result="Close">
-                    <Button Content="Close" Width="80" Height="22" />
+                    <Button Content="Close" Width="80" Height="22"/>
                 </controls:MessageButton>
             </controls:PromptBox.OtherButtons>
-            <vw:StatisticsView DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+            <vw:StatisticsView
+                DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
         </controls:PromptBox>
 
         <controls:PromptBox x:Name="GradientWindow"
                             IsModal="False"
                             ResultCancelCommand="{Binding GradientCanceled, Mode=OneWay}">
-            <controls:GradientPicker DataContext="{Binding Path=GradientViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+            <controls:GradientPicker
+                DataContext="{Binding Path=GradientViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
         </controls:PromptBox>
-        
+
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
             <MenuItem Header="_Game" HorizontalAlignment="Stretch">
-                <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*" />
+                <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*"/>
                 <MenuItem Header="_Difficulty">
                     <MenuItem Header="_Beginner" Command="{Binding Path=BoardSizeCommand}"
-                              CommandParameter="{Binding Source={x:Static models:BoardSize.Beginner}}" />
+                              CommandParameter="{Binding Source={x:Static models:BoardSize.Beginner}}"/>
                     <MenuItem Header="_Intermediate" Command="{Binding Path=BoardSizeCommand}"
-                              CommandParameter="{Binding Source={x:Static models:BoardSize.Intermediate}}" />
+                              CommandParameter="{Binding Source={x:Static models:BoardSize.Intermediate}}"/>
                     <MenuItem Header="_Expert" Command="{Binding Path=BoardSizeCommand}"
-                              CommandParameter="{Binding Source={x:Static models:BoardSize.Expert}}" />
+                              CommandParameter="{Binding Source={x:Static models:BoardSize.Expert}}"/>
                     <MenuItem Header="_Custom">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <ei:CallMethodAction TargetObject="{Binding ElementName=CustomBoardWindow}"
-                                                     MethodName="Show" />
+                                                     MethodName="Show"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </MenuItem>
@@ -115,7 +117,7 @@
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <ei:CallMethodAction MethodName="Close"
-                                                 TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
+                                                 TargetObject="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>
@@ -125,12 +127,12 @@
                     <xctk:ColorPicker Name="ColorPicker"
                                       Width="80"
                                       UsingAlphaChannel="False"
-                                      SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}" />
+                                      SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}"/>
                     <MenuItem Header="New Gradient">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <ei:CallMethodAction TargetObject="{Binding ElementName=GradientWindow}"
-                                                 MethodName="Show" />
+                                                     MethodName="Show"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </MenuItem>
@@ -141,7 +143,7 @@
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <ei:CallMethodAction TargetObject="{Binding ElementName=StatisticsWindow}"
-                                                 MethodName="Show" />
+                                                 MethodName="Show"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>

@@ -10,12 +10,12 @@
 
     <Grid Name="MainGrid" Background="AliceBlue">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" VerticalAlignment="Top">
-            <vw:MenuView DataContext="{Binding Path=MenuViewModel, UpdateSourceTrigger=PropertyChanged}" />
+            <vw:MenuView DataContext="{Binding Path=MenuViewModel, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Grid Grid.Row="1">
             <Border Name="Lolz"
@@ -28,7 +28,7 @@
                         BorderBrush="LightGray">
                     <vw:DisplayPanelView
                         DataContext="{Binding Path=DisplayViewModel}"
-                        Margin="2" />
+                        Margin="2"/>
                 </Border>
             </Border>
         </Grid>
@@ -42,7 +42,7 @@
                                           Stretch="Fill"
                                           StretchDirection="Both">
                     <vw:TileBoardView x:Name="BoardView" Grid.Row="0" Grid.Column="0"
-                                      DataContext="{Binding Path=TileBoardViewModel}" />
+                                      DataContext="{Binding Path=TileBoardViewModel}"/>
                 </controls:ViewBoxAutosize>
             </Border>
         </Grid>

@@ -1,6 +1,7 @@
 ﻿namespace WpfMinesweeper.Controls
 {
     using System;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -14,6 +15,7 @@
                 new PropertyMetadata(false));
 
         private FrameworkElement child;
+        private Size oldParentSize = new Size(123456, 123456);
         private FrameworkElement parent;
         private bool updatedSize;
 
@@ -76,8 +78,6 @@
             }
         }
 
-        private Size oldParentSize = new Size(123456, 123456);
-
         private async void child_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var newWidth = this.Width != e.NewSize.Width;
@@ -111,7 +111,7 @@
                 {
                     // allow time for the parent to update size in accordance to this control changing
                     this.parent.SizeChanged -= this.parent_SizeChanged;
-                    await System.Threading.Tasks.Task.Delay(5);
+                    await Task.Delay(5);
                     this.parent.SizeChanged += this.parent_SizeChanged;
 
                     this.updatedSize = false;

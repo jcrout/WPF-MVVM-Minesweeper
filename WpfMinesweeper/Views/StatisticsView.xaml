@@ -20,7 +20,7 @@
                                    SelectedItemsBinding="{Binding Path=StatisticNameSelectedItems, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="Margin" Value="0,0,2,0" />
+                            <Setter Property="Margin" Value="0,0,2,0"/>
                         </Style>
                     </ListBox.ItemContainerStyle>
                 </controls:ListBox2>
@@ -36,7 +36,7 @@
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock x:Name="HeaderTextBlock"
-                                       Text="{Binding Path=Name}" />
+                                       Text="{Binding Path=Name}"/>
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
@@ -49,7 +49,7 @@
                                          HorizontalAlignment="Left"
                                          VerticalAlignment="Top"
                                          ItemsSource="{Binding Path=StatisticValues, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-                                         SelectedItem="{Binding Path=SelectedValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                         SelectedItem="{Binding Path=SelectedValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                             </Grid>
                         </DataTemplate>
                     </TabControl.ContentTemplate>
@@ -61,7 +61,7 @@
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="ToolTip"
-                                Value="{Binding .Description}" />
+                                Value="{Binding .Description}"/>
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.View>
@@ -71,7 +71,7 @@
                             Width="{Binding Path=ColumnWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding .Label}" />
+                                    <TextBlock Text="{Binding .Label}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
@@ -80,7 +80,7 @@
                             Width="{Binding Path=ColumnWidth, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding .Value}" />
+                                    <TextBlock Text="{Binding .Value}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

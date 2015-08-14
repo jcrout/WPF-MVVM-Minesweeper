@@ -9,30 +9,15 @@
 
     public class AnimatedTilesCollection
     {
-        private readonly TileAnimation frames;
-        private readonly List<Point<int>> tilesToUpdate;
-
         private AnimatedTilesCollection(List<Point<int>> tilesToUpdate, TileAnimation frames = null)
         {
-            this.tilesToUpdate = tilesToUpdate;
-            this.frames = frames;
+            this.Tiles = tilesToUpdate;
+            this.Frames = frames;
         }
 
-        public TileAnimation Frames
-        {
-            get
-            {
-                return this.frames;
-            }
-        }
+        public TileAnimation Frames { get; }
 
-        public List<Point<int>> Tiles
-        {
-            get
-            {
-                return this.tilesToUpdate;
-            }
-        }
+        public List<Point<int>> Tiles { get; }
 
         public static AnimatedTilesCollection Create(List<Point<int>> tilesToUpdate, TileAnimation frames = null)
         {

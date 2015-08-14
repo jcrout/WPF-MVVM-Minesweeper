@@ -29,18 +29,6 @@
             this.BoardSizeCommand = new Command(this.OnBorderSizeCommand);
         }
 
-        protected override void OnMediatorChanged()
-        {
-            var mediator = this.Mediator;
-            if (mediator == null)
-            {
-                return;
-            }
-
-            Mediator.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
-            Mediator.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateSmileyBackgroundImage((Brush)o));
-        }
-
         public ICommand BoardSizeCommand
         {
             get
@@ -137,6 +125,18 @@
             }
         }
 
+        protected override void OnMediatorChanged()
+        {
+            var mediator = this.Mediator;
+            if (mediator == null)
+            {
+                return;
+            }
+
+            this.Mediator.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
+            this.Mediator.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateSmileyBackgroundImage((Brush)o));
+        }
+
         protected override void OnMinesweeperChanged()
         {
             this.Minesweeper.PropertyChanged += this.minesweeper_PropertyChanged;
@@ -159,7 +159,7 @@
 
         private void OnBorderSizeCommand()
         {
-            Mediator.Notify(ViewModelMessages.CreateNewBoard);
+            this.Mediator.Notify(ViewModelMessages.CreateNewBoard);
         }
 
         private void OnUpdateSmileyIndex(SmileyState newState)

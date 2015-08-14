@@ -14,12 +14,12 @@
                     VerticalAlignment="Top">
             <Grid x:Name="ContentGrid"
                   Background="Transparent"
-                  MinWidth="132" />
+                  MinWidth="132"/>
             <Border x:Name="ButtonPanelBorder">
                 <WrapPanel x:Name="ButtonPanel"
                            Orientation="Horizontal"
                            HorizontalAlignment="Right"
-                           VerticalAlignment="Bottom" />
+                           VerticalAlignment="Bottom"/>
             </Border>
         </StackPanel>
     </Grid>

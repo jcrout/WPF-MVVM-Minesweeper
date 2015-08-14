@@ -22,7 +22,7 @@
         int MinesRemaining { get; set; }
 
         /// <summary>
-        ///     Gets the collection of <see cref="Tile"/>s that make up the board.
+        ///     Gets the collection of <see cref="Tile" />s that make up the board.
         /// </summary>
         ITileCollection Tiles { get; }
 
@@ -38,22 +38,19 @@
     public class Minesweeper : IMinesweeper
     {
         private int mineCount;
-
         private int minesLeft;
-
         private ITileCollection tiles;
-
         private int timeElapsed;
 
         /// <summary>
-        ///     Prevents a default instance of the <see cref="Minesweeper"/> class from being created.
+        ///     Prevents a default instance of the <see cref="Minesweeper" /> class from being created.
         /// </summary>
         private Minesweeper()
         {
         }
 
         /// <summary>
-        /// Occurs when a property value changes.
+        ///     Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -96,7 +93,7 @@
         }
 
         /// <summary>
-        ///     Gets the collection of <see cref="Tile"/>s that make up the board.
+        ///     Gets the collection of <see cref="Tile" />s that make up the board.
         /// </summary>
         public ITileCollection Tiles
         {
@@ -149,7 +146,7 @@
             {
                 throw new ArgumentException(validationResult);
             }
-        
+
             var minesweeper = new Minesweeper
             {
                 tiles = TileCollection.Create(width, height),

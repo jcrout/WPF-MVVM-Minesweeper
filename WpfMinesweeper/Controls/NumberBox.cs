@@ -6,8 +6,8 @@
     using System.Windows.Media.Imaging;
 
     /// <summary>
-    ///     Represents a box control that displays number images based on the current Number value and with the number of
-    ///     Digits specified.
+    ///     Represents a box control that displays number images based on the
+    ///     current Number value and with the number of Digits specified.
     /// </summary>
     public class NumberBox : FrameworkElement
     {
@@ -101,7 +101,7 @@
                 this.SetValue(NumberBox.NumberProperty, value);
             }
         }
-        
+
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
@@ -168,7 +168,8 @@
         }
 
         /// <summary>
-        ///     Deferred graphical initialization that occurs when the digits property is set, thus enabling the rendering of the Number property with the specified number of digits.
+        ///     Deferred graphical initialization that occurs when the digits property is set, thus enabling the rendering of the
+        ///     Number property with the specified number of digits.
         /// </summary>
         private void InitializeNumberBox()
         {

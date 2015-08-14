@@ -15,9 +15,6 @@
         private static BoardSize beginner = new BoardSize(9, 9, 10);
         private static BoardSize expert = new BoardSize(30, 16, 99);
         private static BoardSize intermediate = new BoardSize(16, 16, 40);
-        private readonly int height;
-        private readonly int mineCount;
-        private readonly int width;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BoardSize" /> struct.
@@ -27,9 +24,9 @@
         /// <param name="mineCount">The total number of mines on the board.</param>
         public BoardSize(int width, int height, int mineCount)
         {
-            this.width = width;
-            this.height = height;
-            this.mineCount = mineCount;
+            this.Width = width;
+            this.Height = height;
+            this.MineCount = mineCount;
         }
 
         /// <summary>
@@ -74,42 +71,24 @@
         {
             get
             {
-                return string.Format(@"{0}x{1}, {2} mines", this.width, this.height, this.mineCount);
+                return string.Format(@"{0}x{1}, {2} mines", this.Width, this.Height, this.MineCount);
             }
         }
 
         /// <summary>
         ///     Gets the number of tiles per column.
         /// </summary>
-        public int Height
-        {
-            get
-            {
-                return this.height;
-            }
-        }
+        public int Height { get; }
 
         /// <summary>
         ///     Gets the total number of mines on the board.
         /// </summary>
-        public int MineCount
-        {
-            get
-            {
-                return this.mineCount;
-            }
-        }
+        public int MineCount { get; }
 
         /// <summary>
         ///     Gets the number of tiles per row.
         /// </summary>
-        public int Width
-        {
-            get
-            {
-                return this.width;
-            }
-        }
+        public int Width { get; }
 
         /// <summary>
         ///     Converts the string representation of a BoardSize into a new BoardSize instance.
@@ -168,7 +147,7 @@
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(BoardSize bs1, BoardSize bs2)
         {
-            return bs1.width == bs2.width && bs1.height == bs2.height && bs1.mineCount == bs2.mineCount;
+            return bs1.Width == bs2.Width && bs1.Height == bs2.Height && bs1.MineCount == bs2.MineCount;
         }
 
         /// <summary>
@@ -179,7 +158,7 @@
         /// <returns>The result of the operator.</returns>
         public static bool operator !=(BoardSize bs1, BoardSize bs2)
         {
-            return bs1.width != bs2.width || bs1.height != bs2.height || bs1.mineCount != bs2.mineCount;
+            return bs1.Width != bs2.Width || bs1.Height != bs2.Height || bs1.MineCount != bs2.MineCount;
         }
 
         /// <summary>
@@ -194,12 +173,12 @@
         /// </returns>
         public int CompareTo(BoardSize other)
         {
-            var thisTotal = this.width * this.height;
-            var otherTotal = other.width * other.height;
+            var thisTotal = this.Width * this.Height;
+            var otherTotal = other.Width * other.Height;
 
             if (thisTotal == otherTotal)
             {
-                return this.mineCount > other.mineCount ? 1 : this.mineCount < other.mineCount ? -1 : 0;
+                return this.MineCount > other.MineCount ? 1 : this.MineCount < other.MineCount ? -1 : 0;
             }
 
             return thisTotal > otherTotal ? 1 : -1;

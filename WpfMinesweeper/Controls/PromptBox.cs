@@ -11,14 +11,17 @@
     using System.Windows.Media;
 
     /// <summary>
-    ///     Represents a bindable Window that can be created in and modified in XAML.
+    ///     Represents a bindable Window that can be created in and modified in
+    ///     XAML.
     /// </summary>
     /// <remarks>
-    ///     This class is useful in XAML coding because it can be bound to the content of a Control or to a content container like a
-    ///     Grid.
-    ///     To display the window, call the <see cref="Show"/> or <see cref="ShowDialog"/> method from a trigger action, such
-    ///     as an <see cref="EventTrigger" /> that uses a
-    ///     <see cref="Microsoft.Expression.Interactivity.Core.CallMethodAction"/>.
+    ///     This class is useful in XAML coding because it can be bound to the
+    ///     content of a Control or to a content container like a Grid. To
+    ///     display the window, call the <see cref="Show" /> or
+    ///     <see cref="ShowDialog" /> method from a trigger action, such as an
+    ///     <see cref="EventTrigger" /> that uses a
+    ///     <see cref="Microsoft.Expression.Interactivity.Core.CallMethodAction" />
+    ///     .
     /// </remarks>
     [ContentProperty("Content"), DefaultProperty("Content"),
      Localizability(LocalizationCategory.None, Readability = Readability.Unreadable)]

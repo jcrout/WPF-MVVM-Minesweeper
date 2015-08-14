@@ -2,21 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Forms;
-    using System.Windows.Input;
     using System.Windows.Media;
     using JonUtility;
     using Models;
-    using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
     public class TileBoardOld : TileBoardInputBase
     {
         private readonly bool applyShadingToRevealedTiles = false;
-
         private int boardHeight;
         private int boardWidth;
         private DrawingVisual mouseHoverVisual;
@@ -105,14 +100,14 @@
             this.HoverTile = new Point<int>(-1, -1);
             base.OnInitializeBoard();
         }
-        
+
         protected override void OnTileBrushChanged()
         {
             if (this.TileBrush is GradientBrush)
             {
                 this.useTilerShader = true;
-                this.tileUnsetImage = DefaultTileUnsetImage;
-                this.tileSetImage = DefaultTileSetImage;
+                this.tileUnsetImage = TileBoardBase.DefaultTileUnsetImage;
+                this.tileSetImage = TileBoardBase.DefaultTileSetImage;
             }
             else
             {
@@ -246,7 +241,7 @@
         {
             foreach (var tilePoint in tileList)
             {
-                var index = (int)(this.Minesweeper.Tiles.Height * tilePoint.X + tilePoint.Y);
+                var index = this.Minesweeper.Tiles.Height * tilePoint.X + tilePoint.Y;
                 var tile = this.Minesweeper.Tiles[tilePoint.X, tilePoint.Y];
                 var tileVisual = (DrawingVisual)this.Visuals[index];
                 var tileRect = this.GetTileRectangleFromTilePoint(tilePoint);

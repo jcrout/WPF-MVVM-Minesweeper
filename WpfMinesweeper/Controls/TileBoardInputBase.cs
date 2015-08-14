@@ -1,14 +1,10 @@
 ﻿namespace WpfMinesweeper.Controls
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Forms;
     using System.Windows.Input;
-    using System.Windows.Media;
     using JonUtility;
     using Models;
     using MouseEventArgs = System.Windows.Input.MouseEventArgs;
@@ -17,7 +13,8 @@
     public abstract class TileBoardInputBase : TileBoardBase
     {
         private static readonly long doubleClickInterval = SystemInformation.DoubleClickTime *
-                                                   Stopwatch.Frequency / 1000;
+                                                           Stopwatch.Frequency / 1000;
+
         private long lastClickTime = -1;
 
         protected override void OnMouseLeave(MouseEventArgs e)
@@ -87,20 +84,6 @@
             this.RaiseTileTap(e.GetPosition(this), InputButtons.Right, false, false, e);
         }
 
-        private void RaiseTileTap(Point tapPoint, InputButtons button, bool pressedDown, bool doubleClicked,
-            MouseButtonEventArgs e)
-        {
-            var allButtons = e != null ? this.GetStateOfAllMouseButtons(e) : InputButtons.None;
-
-            this.TilePressCommand.ExecuteIfAbleTo(
-                new TileTapEventArgs(
-                    this.GetTileEventArgsFromBoardPoint(tapPoint),
-                    button,
-                    doubleClicked,
-                    pressedDown,
-                    allButtons));
-        }
-
         private InputButtons GetStateOfAllMouseButtons(MouseButtonEventArgs e)
         {
             var allButtons = InputButtons.None;
@@ -156,6 +139,20 @@
             var y = (int)tilePoint.Y;
 
             return new TileEventArgs(this.Minesweeper.Tiles[x, y], x, y);
+        }
+
+        private void RaiseTileTap(Point tapPoint, InputButtons button, bool pressedDown, bool doubleClicked,
+            MouseButtonEventArgs e)
+        {
+            var allButtons = e != null ? this.GetStateOfAllMouseButtons(e) : InputButtons.None;
+
+            this.TilePressCommand.ExecuteIfAbleTo(
+                new TileTapEventArgs(
+                    this.GetTileEventArgsFromBoardPoint(tapPoint),
+                    button,
+                    doubleClicked,
+                    pressedDown,
+                    allButtons));
         }
     }
 }

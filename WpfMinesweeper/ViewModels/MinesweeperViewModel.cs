@@ -98,7 +98,7 @@
         private void OnGameOver(object parameter)
         {
             this.EndGame(GameResult.GameOver);
-            Mediator.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
+            this.Mediator.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.GameOver);
         }
 
         private void OnGameStarted(object parameter)
@@ -110,7 +110,7 @@
         private void OnVictory(object parameter)
         {
             this.EndGame(GameResult.Victory);
-            Mediator.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
+            this.Mediator.Notify(ViewModelMessages.UpdateSmileyIndex, SmileyState.Victory);
         }
 
         private void OnWindowStateChanged(WindowState state)
@@ -144,7 +144,7 @@
             this.Minesweeper.TimeElapsed++;
             //if (this.Minesweeper.TimeElapsed % 3 == 0)
             //{
-              
+
             //    Mediator.Notify(
             //        ViewModelMessages.TileColorsChanged,
             //        new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.DarkBlue));

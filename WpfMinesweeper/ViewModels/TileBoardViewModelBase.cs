@@ -1,6 +1,5 @@
 ﻿namespace WpfMinesweeper.ViewModels
 {
-    using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
     using Controls;
@@ -8,13 +7,14 @@
     using Models;
 
     /// <summary>
-    ///     Provides a base view model for a TileBoardView, containing all of the basic binding properties.
+    ///     Provides a base view model for a TileBoardView, containing all of
+    ///     the basic binding properties.
     /// </summary>
     public abstract class TileBoardViewModelBase : MinesweeperComponentViewModel
     {
         private static readonly Brush defaultHoverBrush = new SolidColorBrush(Color.FromArgb(110, 255, 255, 255));
         private static readonly Brush defaultSelectionBrush = new SolidColorBrush(Color.FromArgb(150, 150, 150, 150));
-        private static readonly Brush defaultTileBrush = DefaultSettings.TileBrush;
+        private static readonly Brush defaultTileBrush = ViewModelBase.DefaultSettings.TileBrush;
         private static readonly Point<int> emptyPoint = new Point<int>(-1, -1);
         private ICommand boardInitializedCommand;
         private Brush hoverBrush = TileBoardViewModelBase.defaultHoverBrush;
@@ -109,7 +109,7 @@
                 if (this.isTilePressed != value)
                 {
                     this.isTilePressed = value;
-                    Mediator.Notify(
+                    this.Mediator.Notify(
                         ViewModelMessages.UpdateSmileyIndex,
                         value ? SmileyState.TapDown : SmileyState.Default);
                     this.OnPropertyChanged();

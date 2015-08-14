@@ -163,7 +163,6 @@
                 //this.boardBitmap.Unlock();
                 //this.boardTop.Unlock();
                 ////this.InvalidateVisual();
-
             }
         }
 

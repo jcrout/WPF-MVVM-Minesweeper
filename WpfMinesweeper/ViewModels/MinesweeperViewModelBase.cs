@@ -53,6 +53,5 @@ namespace WpfMinesweeper.ViewModels
                 }
             }
         }
-
     }
 }

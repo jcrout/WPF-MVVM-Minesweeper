@@ -13,36 +13,36 @@
     <UserControl.Resources>
         <Storyboard x:Key="VictoryAnimation" BeginTime="0" RepeatBehavior="1x">
             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BoardCanvas" Storyboard.TargetProperty="Visibility">
-                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Visible}" KeyTime="0" />
+                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Visible}" KeyTime="0"/>
             </ObjectAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)"
                 Storyboard.TargetName="VictoryTopRectangle">
-                <EasingDoubleKeyFrame KeyTime="0:0:02" Value="1" />
+                <EasingDoubleKeyFrame KeyTime="0:0:02" Value="1"/>
             </DoubleAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetProperty="(Shape.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Offset)"
                 Storyboard.TargetName="VictoryBottomRectangle">
-                <EasingDoubleKeyFrame KeyTime="0:0:02" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:02" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
             <StringAnimationUsingKeyFrames Storyboard.TargetProperty="Text" Storyboard.TargetName="VictoryTextBlock">
-                <DiscreteStringKeyFrame Value="V" KeyTime="0" />
-                <DiscreteStringKeyFrame Value="Vi" KeyTime="0:0:00.25" />
-                <DiscreteStringKeyFrame Value="Vic" KeyTime="0:0:00.5" />
-                <DiscreteStringKeyFrame Value="Vict" KeyTime="0:0:00.75" />
-                <DiscreteStringKeyFrame Value="Victo" KeyTime="0:0:01" />
-                <DiscreteStringKeyFrame Value="Victor" KeyTime="0:0:01.25" />
-                <DiscreteStringKeyFrame Value="Victory" KeyTime="0:0:01.5" />
+                <DiscreteStringKeyFrame Value="V" KeyTime="0"/>
+                <DiscreteStringKeyFrame Value="Vi" KeyTime="0:0:00.25"/>
+                <DiscreteStringKeyFrame Value="Vic" KeyTime="0:0:00.5"/>
+                <DiscreteStringKeyFrame Value="Vict" KeyTime="0:0:00.75"/>
+                <DiscreteStringKeyFrame Value="Victo" KeyTime="0:0:01"/>
+                <DiscreteStringKeyFrame Value="Victor" KeyTime="0:0:01.25"/>
+                <DiscreteStringKeyFrame Value="Victory" KeyTime="0:0:01.5"/>
             </StringAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
                                            Storyboard.TargetName="BoardCanvas">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
-                <EasingDoubleKeyFrame KeyTime="0:0:01.5" Value="1" />
-                <EasingDoubleKeyFrame KeyTime="0:0:03" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:01.5" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:03" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                            Storyboard.TargetName="BoardCanvas">
-                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Hidden}" KeyTime="0:0:03" />
+                <DiscreteObjectKeyFrame Value="{x:Static Visibility.Hidden}" KeyTime="0:0:03"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
 
@@ -50,23 +50,23 @@
             <PointAnimation
                 Storyboard.TargetName="Board"
                 Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)"
-                From="0.5,0.5" To="0.5,0.5" Duration="0" />
+                From="0.5,0.5" To="0.5,0.5" Duration="0"/>
             <DoubleAnimationUsingKeyFrames
                 Storyboard.TargetName="Board"
                 Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)">
-                <LinearDoubleKeyFrame Value="25" KeyTime="0:0:00.071" />
-                <LinearDoubleKeyFrame Value="-20.8" KeyTime="0:0:00.214" />
-                <LinearDoubleKeyFrame Value="16.66" KeyTime="0:0:00.357" />
-                <LinearDoubleKeyFrame Value="-12.5" KeyTime="0:0:00.500" />
-                <LinearDoubleKeyFrame Value="8.33" KeyTime="0:0:00.643" />
-                <LinearDoubleKeyFrame Value="-4.16" KeyTime="0:0:00.786" />
-                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:00.929" />
+                <LinearDoubleKeyFrame Value="25" KeyTime="0:0:00.071"/>
+                <LinearDoubleKeyFrame Value="-20.8" KeyTime="0:0:00.214"/>
+                <LinearDoubleKeyFrame Value="16.66" KeyTime="0:0:00.357"/>
+                <LinearDoubleKeyFrame Value="-12.5" KeyTime="0:0:00.500"/>
+                <LinearDoubleKeyFrame Value="8.33" KeyTime="0:0:00.643"/>
+                <LinearDoubleKeyFrame Value="-4.16" KeyTime="0:0:00.786"/>
+                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:00.929"/>
             </DoubleAnimationUsingKeyFrames>
             <miscellanious:BrushAnimation
                 Storyboard.TargetName="MainGrid"
                 Storyboard.TargetProperty="(Grid.Background)"
                 From="DarkRed" To="PaleTurquoise"
-                Duration="00:00:01" />
+                Duration="00:00:01"/>
         </Storyboard>
     </UserControl.Resources>
 
@@ -87,19 +87,19 @@
             HorizontalAlignment="Left">
 
             <controls:TileBoard.RenderTransform>
-                <RotateTransform Angle="0" />
+                <RotateTransform Angle="0"/>
             </controls:TileBoard.RenderTransform>
 
             <i:Interaction.Triggers>
                 <ei:DataTrigger Binding="{Binding IsGameOver}" Value="true">
                     <ei2:ControlStoryboardAction x:Name="StartGameOverAnimationTrigger"
                                                  Storyboard="{StaticResource GameOverAnimation}"
-                                                 ControlStoryboardOption="Play" />
+                                                 ControlStoryboardOption="Play"/>
                 </ei:DataTrigger>
                 <ei:DataTrigger Binding="{Binding IsGameOver}" Value="false">
                     <ei2:ControlStoryboardAction x:Name="StopGameOverAnimationTrigger"
                                                  Storyboard="{StaticResource GameOverAnimation}"
-                                                 ControlStoryboardOption="Stop" />
+                                                 ControlStoryboardOption="Stop"/>
                 </ei:DataTrigger>
             </i:Interaction.Triggers>
         </controls:TileBoard>
@@ -121,8 +121,8 @@
                                    VerticalAlignment="Top">
                             <Rectangle.Fill>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="Black" Offset="0.0" />
-                                    <GradientStop Color="White" Offset="0.25" />
+                                    <GradientStop Color="Black" Offset="0.0"/>
+                                    <GradientStop Color="White" Offset="0.25"/>
                                 </LinearGradientBrush>
                             </Rectangle.Fill>
                         </Rectangle>
@@ -133,8 +133,8 @@
                                    VerticalAlignment="Bottom">
                             <Rectangle.Fill>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="Black" Offset="1" />
-                                    <GradientStop Color="White" Offset="0.75" />
+                                    <GradientStop Color="Black" Offset="1"/>
+                                    <GradientStop Color="White" Offset="0.75"/>
                                 </LinearGradientBrush>
                             </Rectangle.Fill>
                         </Rectangle>
@@ -144,7 +144,7 @@
                                    HorizontalAlignment="Center"
                                    FontSize="20"
                                    FontFamily="Comic Sans MS"
-                                   Foreground="Black" />
+                                   Foreground="Black"/>
                     </Grid>
                 </Border>
             </Border>
@@ -153,12 +153,12 @@
                 <ei:DataTrigger Binding="{Binding IsVictory}" Value="true">
                     <ei2:ControlStoryboardAction x:Name="StartVictoryAnimationTrigger"
                                                  Storyboard="{StaticResource VictoryAnimation}"
-                                                 ControlStoryboardOption="Play" />
+                                                 ControlStoryboardOption="Play"/>
                 </ei:DataTrigger>
                 <ei:DataTrigger Binding="{Binding IsVictory}" Value="false">
                     <ei2:ControlStoryboardAction x:Name="StopVictoryAnimationTrigger"
                                                  Storyboard="{StaticResource VictoryAnimation}"
-                                                 ControlStoryboardOption="Stop" />
+                                                 ControlStoryboardOption="Stop"/>
                 </ei:DataTrigger>
             </i:Interaction.Triggers>
         </Canvas>

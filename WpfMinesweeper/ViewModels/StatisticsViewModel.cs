@@ -9,8 +9,8 @@
 
     public class StatisticsViewModel : MinesweeperComponentViewModel
     {
-        private const string NoValuesToDisplay = "No values to display.";
         private const string DefaultStatText = "-None-";
+        private const string NoValuesToDisplay = "No values to display.";
         private static readonly StatValueViewModel emptyPage;
         private double columnWidth = double.NaN;
         private IEnumerable<object> dropDownStatisticsList;
@@ -25,7 +25,7 @@
         {
             StatisticsViewModel.emptyPage = new StatValueViewModel(StatisticsViewModel.DefaultStatText)
             {
-                StatisticValues = new List<object>(1) { NoValuesToDisplay }
+                StatisticValues = new List<object>(1) {StatisticsViewModel.NoValuesToDisplay}
             };
         }
 
@@ -38,17 +38,6 @@
             this.sortByList = new List<Statistic>();
             this.StatisticNameList = statList;
             this.StatisticNameSelectedItems = new List<object> {statList[0]};
-        }
-
-        protected override void OnMediatorChanged()
-        {
-            var mediator = this.Mediator;
-            if (mediator == null)
-            {
-                return;
-            }
-
-            Mediator.Register(ViewModelMessages.StatisticsLoaded, o => this.StatisticsLoaded());
         }
 
         public double ColumnWidth
@@ -169,6 +158,17 @@
                     this.OnPropertyChanged();
                 }
             }
+        }
+
+        protected override void OnMediatorChanged()
+        {
+            var mediator = this.Mediator;
+            if (mediator == null)
+            {
+                return;
+            }
+
+            this.Mediator.Register(ViewModelMessages.StatisticsLoaded, o => this.StatisticsLoaded());
         }
 
         private string GetAverageValue(IEnumerable<IStatisticsModule> modules, Statistic stat)
@@ -297,8 +297,8 @@
             if (moduleList.Length == 0)
             {
                 var statDisplay = new StatDisplay(
-                    StatisticHelper.GetDisplayText(Statistic.MatchCount), 
-                    "0", 
+                    StatisticHelper.GetDisplayText(Statistic.MatchCount),
+                    "0",
                     StatisticHelper.GetDescription(Statistic.MatchCount));
                 statList.Add(statDisplay);
             }
@@ -308,7 +308,7 @@
                 {
                     var statDisplay = new StatDisplay(
                         StatisticHelper.GetDisplayText(stat),
-                        this.GetAverageValue(moduleList, stat), 
+                        this.GetAverageValue(moduleList, stat),
                         StatisticHelper.GetDescription(stat));
                     statList.Add(statDisplay);
                 }
