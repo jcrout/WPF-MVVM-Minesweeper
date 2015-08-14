@@ -141,7 +141,7 @@
         /// <param name="mineCount">The mine count.</param>
         /// <returns>Minesweeper.</returns>
         /// <exception cref="System.ArgumentException"></exception>
-        public static IMinesweeper Create(int width, int height, int mineCount)
+        public static Minesweeper Create(int width, int height, int mineCount)
         {
             var validationResult = MinesweeperBoardValidator.Create().ValidateBoard(width, height, mineCount);
 

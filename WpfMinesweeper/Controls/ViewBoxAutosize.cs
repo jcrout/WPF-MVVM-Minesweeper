@@ -76,9 +76,17 @@
             }
         }
 
-        private void child_SizeChanged(object sender, SizeChangedEventArgs e)
+        private Size oldParentSize = new Size(123456, 123456);
+
+        private async void child_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            this.updatedSize = true;
+            var newWidth = this.Width != e.NewSize.Width;
+            var newHeight = this.Height != e.NewSize.Height;
+            if (this.parent != null && (double.IsNaN(this.parent.Width) || double.IsNaN(this.parent.Height)) && (newWidth || newHeight))
+            {
+                this.updatedSize = true;
+            }
+
             if (this.KeepExpandedRatio && !double.IsNaN(this.Width) && !double.IsNaN(this.Height))
             {
                 var widthRatio = Math.Max(1d, this.Width / e.PreviousSize.Width);
@@ -88,24 +96,31 @@
             }
             else
             {
-                this.Width = e.NewSize.Width;
-                this.Height = e.NewSize.Height;
+                this.oldParentSize = new Size(this.parent.ActualWidth, this.parent.ActualHeight);
+                if (newWidth)
+                {
+                    this.Width = e.NewSize.Width;
+                }
+
+                if (newHeight)
+                {
+                    this.Height = e.NewSize.Height;
+                }
+
+                if (this.updatedSize)
+                {
+                    // allow time for the parent to update size in accordance to this control changing
+                    this.parent.SizeChanged -= this.parent_SizeChanged;
+                    await System.Threading.Tasks.Task.Delay(5);
+                    this.parent.SizeChanged += this.parent_SizeChanged;
+
+                    this.updatedSize = false;
+                }
             }
         }
 
         private void parent_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (this.updatedSize)
-            {
-                this.updatedSize = false;
-                return;
-            }
-
-            if (this.Width == e.NewSize.Width && this.Height == e.NewSize.Height)
-            {
-                return;
-            }
-
             this.Width = Math.Max(0, this.Width + e.NewSize.Width - e.PreviousSize.Width);
             this.Height = Math.Max(0, this.Height + e.NewSize.Height - e.PreviousSize.Height);
         }

@@ -35,7 +35,7 @@
             typeof(IMinesweeper),
             typeof(TileBoardBase),
             new FrameworkPropertyMetadata(
-                TileBoardBase.defaultMinesweeper,
+                null,
                 TileBoardBase.MinesweeperChanged,
                 TileBoardBase.CoerceMinesweeper));
         /// <summary>
@@ -182,6 +182,10 @@
             }
         }
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether to draw a pressed tile as the hover <see cref="Tile"/> image.
+        /// </summary>
+        /// <value><c>true</c> if true, draws the pressed tile image instead of applying hover <see cref="Tile"/> brush; otherwise, uses the hover <see cref="Tile"/> brush..</value>
         public bool DrawPressedTile
         {
             get
@@ -433,20 +437,21 @@
 
             var tileSetTarget = new RenderTargetBitmap((int)tileWidth, (int)tileHeight, 96, 96, PixelFormats.Pbgra32);
             var tileSetVisual = new DrawingVisual();
-            //lightPen = new Pen(new SolidColorBrush(Color.FromArgb(255, 35, 35, 35)), 1.0);
 
+            //lightPen = new Pen(new SolidColorBrush(Color.FromArgb(255, 35, 35, 35)), 1.0);
+            //var transPen = new Pen(new SolidColorBrush(Colors.Orange), 1d);
             using (var drawingContext = tileSetVisual.RenderOpen())
             {
+                //drawingContext.DrawLine(lightPen, new Point(0, 0.5), new Point(actualWidth + 1.5, 0.5));
+                //drawingContext.DrawLine(lightPen, new Point(0.5, 0.5), new Point(0.5, actualHeight + 1.5));
                 drawingContext.DrawRectangle(
                     new SolidColorBrush(Color.FromArgb(255, 200, 213, 232)),
                     null,
-                    new Rect(0, 0, tileWidth, tileHeight));
+                    new Rect(1.5, 1.5, tileWidth - 1.5, tileHeight - 1.5));
                 drawingContext.DrawRectangle(
                     null,
                     new Pen(new SolidColorBrush(Color.FromArgb(255, 223, 230, 235)), 1d),
                     new Rect(1.5, 1.5, tileWidth - 2, tileHeight - 2));
-                drawingContext.DrawLine(darkPen, new Point(0.5, 0.5), new Point(actualWidth + 1.5, 0.5));
-                drawingContext.DrawLine(darkPen, new Point(0.5, 0.5), new Point(0.5, actualHeight + 1.5));
             }
 
             tileUnsetTarget.Render(tileUnsetVisual);
@@ -571,6 +576,11 @@
         private static void MinesweeperChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var board = (TileBoardBase)d;
+            if (e.OldValue == null && e.NewValue == defaultMinesweeper)
+            {
+                return;
+            }
+
             board.OnInitializeBoard();
         }
 

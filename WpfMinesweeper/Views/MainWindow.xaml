@@ -10,7 +10,7 @@
         Height="{Binding Path=Height, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
         MinWidth="{Binding Path=MinWidth, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
         MinHeight="{Binding Path=MinHeight, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-        SizeToContent="{Binding Path=SizeToContentMode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+        SizeToContent="Manual"
         WindowState="{Binding Path=WindowState, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 
     <Grid x:Name="MainGrid">

@@ -18,13 +18,14 @@
 
         public MainWindowViewModel()
         {
-            Mediator.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized());
-
-            this.minWidth = this.Settings.LastWindowMinSize.Width;
-            this.width = this.minWidth;
             this.ViewModel = new MinesweeperViewModel();
-
             this.PositionWindow();
+        }
+
+        protected override void OnMediatorChanged()
+        {
+            base.OnMediatorChanged();
+            Mediator.Register(ViewModelMessages.TileBoardSizeChanged, o => this.OnTileBoardInitialized());
         }
 
         public double Height
@@ -182,23 +183,17 @@
 
         private void OnTileBoardInitialized()
         {
-            if (!this.initialized)
-            {
-                this.initialized = true;
-                this.MinWidth = this.Settings.LastWindowMinSize.Width;
-                this.MinHeight = this.Settings.LastWindowMinSize.Height;
-                this.SizeToContentMode = SizeToContent.Manual;
-                return;
-            }
+            // GUI code in the ViewModel; consider replacing if a better solution involving binding can be used, one that does not involve sizing to content and back to manual;
+            var window = App.Current.MainWindow;
+            window.Measure(new Size(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height));
+            window.Arrange(new Rect(0, 0, window.DesiredSize.Width, window.DesiredSize.Height));
+            window.UpdateLayout();
 
-            this.MinWidth = 0;
-            this.MinHeight = 0;
-            this.SizeToContentMode = SizeToContent.WidthAndHeight;
-            this.MinWidth = this.width;
-            this.MinHeight = this.height;
-            this.SizeToContentMode = SizeToContent.Manual;
-
-            this.Settings.LastWindowMinSize = new Size(this.width, this.height);
+            var desiredSize = window.DesiredSize;
+            this.MinWidth = desiredSize.Width;
+            this.MinHeight = desiredSize.Height;
+            this.Width = this.minWidth;
+            this.Height = this.minHeight;
         }
 
         private void PositionWindow()

@@ -11,6 +11,7 @@
         private ViewModelBase customBoardViewModel;
         private Color selectedColor;
         private ViewModelBase statisticsViewModel;
+        private ViewModelBase gradientViewModel;
         private ICommand tileColorCommand;
         private ICommand statisticsPromptCommand;
 
@@ -18,9 +19,12 @@
         {
             this.BoardSizeCommand = new Command(this.OnBoardSizeSelected);
             this.StatisticsPromptCommand = new Command<string>(this.OnStatisticsPromptCommand);
-            this.selectedColor = this.Settings.TileColor;
+            this.selectedColor = this.Settings.TileBrush.GetType() == typeof(SolidColorBrush) ? 
+                ((SolidColorBrush)this.Settings.TileBrush).Color 
+                : Colors.Maroon;
             this.CustomBoardViewModel = new CustomBoardViewModel();
             this.StatisticsViewModel = new StatisticsViewModel();
+            this.GradientViewModel = new GradientViewModel();
         }
 
         public ICommand BoardSizeCommand
@@ -70,6 +74,22 @@
             }
         }
 
+        public ViewModelBase GradientViewModel
+        {
+            get
+            {
+                return this.gradientViewModel;
+            }
+            set
+            {
+                if (this.gradientViewModel != value)
+                {
+                    this.gradientViewModel = value;
+                    this.OnPropertyChanged();
+                }
+            }
+        }
+
         public Color SelectedTileColor
         {
             get
@@ -81,7 +101,6 @@
                 if (this.selectedColor != value)
                 {
                     this.selectedColor = value;
-                    this.Settings.TileColor = value;
                     var brush = new SolidColorBrush(value);
                     Mediator.Notify(ViewModelMessages.TileColorsChanged, brush);
                     this.OnPropertyChanged();

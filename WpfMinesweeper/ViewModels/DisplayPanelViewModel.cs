@@ -13,7 +13,7 @@
     {
         private static readonly Dictionary<SmileyState, ImageSource> smileyImages;
         private static Brush defaultSmileyBorderBrush = Brushes.White;
-        private ICommand borderSizeCommand;
+        private ICommand boardSizeCommand;
         private string repeatAnimation;
         private ImageSource smileyBackground;
         private Brush smileyBorderBrush;
@@ -26,23 +26,32 @@
 
         public DisplayPanelViewModel()
         {
+            this.BoardSizeCommand = new Command(this.OnBorderSizeCommand);
+        }
+
+        protected override void OnMediatorChanged()
+        {
+            var mediator = this.Mediator;
+            if (mediator == null)
+            {
+                return;
+            }
+
             Mediator.Register(ViewModelMessages.UpdateSmileyIndex, o => this.OnUpdateSmileyIndex((SmileyState)o));
             Mediator.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateSmileyBackgroundImage((Brush)o));
-
-            this.borderSizeCommand = new Command(this.OnBorderSizeCommand);
         }
 
         public ICommand BoardSizeCommand
         {
             get
             {
-                return this.borderSizeCommand;
+                return this.boardSizeCommand;
             }
             set
             {
-                if (this.borderSizeCommand != value)
+                if (this.boardSizeCommand != value)
                 {
-                    this.borderSizeCommand = value;
+                    this.boardSizeCommand = value;
                     this.OnPropertyChanged();
                 }
             }

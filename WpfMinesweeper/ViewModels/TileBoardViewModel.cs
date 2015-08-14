@@ -43,18 +43,18 @@
                 this.CanInteractWithBoard);
             this.BoardInitializedCommand = new Command(this.OnTileBoardInitialized);
 
-            var testGradientBrush = new LinearGradientBrush();
-            testGradientBrush.GradientStops = new GradientStopCollection();
-            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 135, 50, 160), 0d));
-            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 170, 120, 20), .25d));
-            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(120, 0, 230, 23), .5d));
-            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 120, 170, 250), .75d));
-            testGradientBrush.GradientStops.Add(new GradientStop(Color.FromArgb(150, 20, 20, 70), 1d));
-
-            this.TileBrush = testGradientBrush;
-
             Mediator.Notify(ViewModelMessages.TileColorsChanged, this.TileBrush);
-            Mediator.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateTileBrush((Brush)o));
+        }
+
+        protected override void OnMediatorChanged()
+        {
+            var mediator = this.Mediator;
+            if (mediator == null)
+            {
+                return;
+            }
+
+            mediator.Register(ViewModelMessages.TileColorsChanged, o => this.UpdateTileBrush((Brush)o));
         }
 
         protected override void OnMinesweeperChanged()

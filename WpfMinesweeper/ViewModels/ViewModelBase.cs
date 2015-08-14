@@ -8,21 +8,58 @@
 
     public abstract class ViewModelBase : IDisposable, INotifyPropertyChanged
     {
-        protected internal static ISettingsProvider DefaultSettings { get; } = SettingsProvider.Instance;
-        protected internal static IMediator DefaultMediator { get; } = WpfMinesweeper.Models.Mediator.Instance;
-
         private bool disposed;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        internal IMediator Mediator { get; } = ViewModelBase.DefaultMediator;
-
-        internal ISettingsProvider Settings { get; } = ViewModelBase.DefaultSettings;
+        private IMediator mediator;
+        private ISettingsProvider settings;
 
         protected ViewModelBase()
         {
-            
+            this.Mediator = ViewModelBase.DefaultMediator;
+            this.Settings = ViewModelBase.DefaultSettings;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        internal IMediator Mediator
+        {
+            get
+            {
+                return this.mediator;
+            }
+            set
+            {
+                if (this.mediator != value)
+                {
+                    if (this.mediator != null)
+                    {
+                        this.mediator.Unregister(this);
+                    }
+
+                    this.mediator = value;
+                    this.OnMediatorChanged();
+                }
+            }
+        }
+
+        internal ISettingsProvider Settings
+        {
+            get
+            {
+                return this.settings;
+            }
+            set
+            {
+                if (this.settings != value)
+                {
+                    this.settings = value;
+                    this.OnSettingsChanged();
+                }
+            }
+        }
+
+        protected internal static IMediator DefaultMediator { get; } = Models.Mediator.Instance;
+
+        protected internal static ISettingsProvider DefaultSettings { get; } = SettingsProvider.Instance;
 
         public void Dispose()
         {
@@ -37,6 +74,14 @@
         }
 
         protected virtual void OnDispose(bool disposing)
+        {
+        }
+
+        protected virtual void OnMediatorChanged()
+        {
+        }
+
+        protected virtual void OnSettingsChanged()
         {
         }
 

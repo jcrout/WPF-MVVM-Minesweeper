@@ -86,6 +86,12 @@
             <vw:StatisticsView DataContext="{Binding Path=StatisticsViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
         </controls:PromptBox>
 
+        <controls:PromptBox x:Name="GradientWindow"
+                            IsModal="False"
+                            ResultCancelCommand="{Binding GradientCanceled, Mode=OneWay}">
+            <controls:GradientPicker DataContext="{Binding Path=GradientViewModel, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/>
+        </controls:PromptBox>
+        
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
             <MenuItem Header="_Game" HorizontalAlignment="Stretch">
                 <MenuItem Header="_New Game" Command="{Binding Path=BoardSizeCommand}" CommandParameter="*,*,*" />
@@ -120,6 +126,14 @@
                                       Width="80"
                                       UsingAlphaChannel="False"
                                       SelectedColor="{Binding SelectedTileColor, Mode=TwoWay}" />
+                    <MenuItem Header="New Gradient">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <ei:CallMethodAction TargetObject="{Binding ElementName=GradientWindow}"
+                                                 MethodName="Show" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </MenuItem>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_View">

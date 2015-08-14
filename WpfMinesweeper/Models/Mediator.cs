@@ -24,6 +24,8 @@
         void Notify(ViewModelMessages message, object parameter = null);
 
         void Register(ViewModelMessages message, Action<object> callback);
+
+        void Unregister(object objectToUnregister);
     }
 
     public sealed class Mediator : IMediator
@@ -57,7 +59,7 @@
                 return;
             }
 
-            foreach (var callback in this.callbacks[message])
+            foreach (var callback in this.callbacks[message].ToArray())
             {
                 callback(parameter);
             }
@@ -72,6 +74,20 @@
             else
             {
                 this.callbacks[message].Add(callback);
+            }
+        }
+
+        public void Unregister(object objectToUnregister)
+        {
+            foreach (var kvp in this.callbacks)
+            {
+                foreach (var callback in kvp.Value.ToArray())
+                {
+                    if (object.ReferenceEquals(callback.Target, objectToUnregister))
+                    {
+                        kvp.Value.Remove(callback);
+                    }
+                }
             }
         }
     }

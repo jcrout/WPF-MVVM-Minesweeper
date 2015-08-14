@@ -6,6 +6,7 @@
     using System.Collections.Specialized;
     using System.IO;
     using System.IO.IsolatedStorage;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Media;
@@ -32,8 +33,7 @@
         Size LastWindowMinSize { get; set; }
 
         /// <summary>
-        ///     Gets or sets the list of individual game statistics. Additionally, the user can directly modify the list itself
-        ///     using standard operations such as Add and Remove.
+        ///     Gets or sets the list of individual game statistics.
         /// </summary>
         ObservableCollection<IStatisticsModule> Statistics { get; set; }
 
@@ -41,11 +41,6 @@
         ///     Gets or sets the brush used to paint the tiles on a Minesweeper tile board.
         /// </summary>
         Brush TileBrush { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the color of the tiles on a Minesweeper tile board.
-        /// </summary>
-        Color TileColor { get; set; }
 
         /// <summary>
         ///     Saves all settings.
@@ -62,12 +57,51 @@
         private readonly object statisticsSyncLock = new object();
         private readonly Settings userSettings = new Settings();
         private bool saveAllModules;
+        private Brush tileBrush;
         private ObservableCollection<IStatisticsModule> statistics = new ObservableCollection<IStatisticsModule>();
 
         private SettingsProvider()
         {
+            this.LoadTileBrush();
             this.statistics.CollectionChanged += this.statistics_CollectionChanged;
             this.LoadStatistics();
+        }
+
+        private void LoadTileBrush()
+        {
+            var tileBrushText = this.userSettings.TileBrush;
+            if (string.IsNullOrWhiteSpace(tileBrushText))
+            {
+                return;
+            }
+
+            var parts = tileBrushText.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            if (parts[0] == "SCB")
+            {
+                var color = WpfExtensionMethods.GetColorFromText(parts[1]);
+                this.tileBrush = new SolidColorBrush(color);
+                return;
+            }
+            
+            var stopCollection = new GradientStopCollection();
+            for (int i = 1; i < parts.Length; i += 2)
+            {
+                var colorText = parts[i];
+                var offsetText = parts[i + 1];
+                var color = WpfExtensionMethods.GetColorFromText(parts[i]);
+                var offset = double.Parse(offsetText);
+                stopCollection.Add(new GradientStop(color, offset));
+            }
+
+            switch (parts[0])
+            {
+                case "LGB":
+                    this.tileBrush = new LinearGradientBrush(stopCollection);
+                    return;
+                case "RGB":
+                    this.tileBrush = new RadialGradientBrush(stopCollection);
+                    return;
+            }
         }
 
         public static ISettingsProvider Instance
@@ -136,48 +170,62 @@
                 }
             }
         }
-
-        // valid property name/type, but implements a temporary method; later, use serialization and store it myself.
+        
         public Brush TileBrush
         {
             get
             {
-                if (this.userSettings.TileBrushSolid != null)
-                {
-                    return this.userSettings.TileBrushSolid;
-                }
-                return this.userSettings.TileBrushGradient;
+                return this.tileBrush;
             }
             set
             {
-                var brushType = value.GetType();
-                if (brushType.IsAssignableFrom(typeof(SolidColorBrush)))
-                {
-                    this.userSettings.TileBrushSolid = value as SolidColorBrush;
-                }
-                else if (brushType.IsAssignableFrom(typeof(LinearGradientBrush)))
-                {
-                    this.userSettings.TileBrushGradient = value as LinearGradientBrush;
-                }
+                this.tileBrush = value;
             }
         }
 
-        public Color TileColor
+        private void SaveTileBrush()
         {
-            get
+            if (this.tileBrush == null)
             {
-                return this.userSettings.TileColor;
+                this.userSettings.TileBrush = string.Empty;
+                return;
             }
-            set
+
+            var brushType = this.tileBrush.GetType();
+            if (brushType == typeof(SolidColorBrush))
             {
-                this.userSettings.TileColor = value;
+                var scb = (SolidColorBrush)this.tileBrush;
+                this.userSettings.TileBrush = "SCB;" + scb.Color.ToString();
+                return;
             }
+
+            if (!typeof(GradientBrush).IsAssignableFrom(brushType))
+            {
+                return;
+            }
+
+            var gradientBrush = (GradientBrush)this.tileBrush;
+            var builder = new StringBuilder(brushType == typeof(LinearGradientBrush) ? "LGB" : "RGB");
+            foreach (var gradientStop in gradientBrush.GradientStops)
+            {
+                builder.Append(';');
+                builder.Append(gradientStop.Color.ToString());
+                builder.Append(';');
+                builder.Append(gradientStop.Offset);
+            }
+
+            this.userSettings.TileBrush = builder.ToString();
         }
+
 
         public async void Save()
         {
+            var task = Task.Run(() => this.SaveStatistics());
+
+            this.SaveTileBrush();
             this.userSettings.Save();
-            await Task.Run(() => this.SaveStatistics()).ConfigureAwait(false);
+
+            await task.ConfigureAwait(false);
         }
 
         private IEnumerable<IStatisticsModule> GetStatModulesToSave()

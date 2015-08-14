@@ -13,12 +13,6 @@
 
         public MinesweeperViewModel()
         {
-            Mediator.Register(ViewModelMessages.GameWindowStateChanged, o => this.OnWindowStateChanged((WindowState)o));
-            Mediator.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
-            Mediator.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
-            Mediator.Register(ViewModelMessages.GameOver, this.OnGameOver);
-            Mediator.Register(ViewModelMessages.Victory, this.OnVictory);
-
             this.gameTimer = new WinTimer(this.TimerProc, 1000);
 
             this.MenuViewModel = new MenuViewModel();
@@ -26,6 +20,21 @@
             this.TileBoardViewModel = new TileBoardViewModel();
 
             this.Minesweeper = MinesweeperFactory.GetFromSettings();
+        }
+
+        protected override void OnMediatorChanged()
+        {
+            var mediator = this.Mediator;
+            if (mediator == null)
+            {
+                return;
+            }
+
+            mediator.Register(ViewModelMessages.GameWindowStateChanged, o => this.OnWindowStateChanged((WindowState)o));
+            mediator.Register(ViewModelMessages.CreateNewBoard, this.OnCreateNewBoard);
+            mediator.Register(ViewModelMessages.GameStarted, this.OnGameStarted);
+            mediator.Register(ViewModelMessages.GameOver, this.OnGameOver);
+            mediator.Register(ViewModelMessages.Victory, this.OnVictory);
         }
 
         protected override void OnMinesweeperChanged()

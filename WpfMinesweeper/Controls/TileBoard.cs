@@ -1,6 +1,7 @@
 ﻿namespace WpfMinesweeper.Controls
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -133,15 +134,37 @@
                     this.InitBoard();
                     return;
                 }
+
+                this.DrawBoard();
             }
             else
             {
                 this.tileUnsetData = TileBoard.defaultTileUnsetData;
                 this.tileSetData = TileBoard.defaultTileSetData;
                 this.tileSetBrush = new ImageBrush(TileBoardBase.DefaultTileSetImage);
-            }
 
-            this.DrawBoard();
+                this.InitBoard();
+
+                //this.OnInitializeBoard();
+
+                //Size theTargetSize = new Size(this.Width, this.Height);
+                //this.Measure(theTargetSize);
+                //this.Arrange(new Rect(theTargetSize));
+                //// to affect the changes in the UI, you must call this method at the end to apply the new changes
+                //this.UpdateLayout();
+                //this.Width = this.Width;
+                //this.UpdateLayout();
+                //this.boardBitmap.Lock();
+                //this.boardTop.Lock();
+                //for (int r = 0; r < this.boardTiles.Width; r++)
+                //{
+                //    this.DrawTile(r, 0, true);
+                //}
+                //this.boardBitmap.Unlock();
+                //this.boardTop.Unlock();
+                ////this.InvalidateVisual();
+
+            }
         }
 
         private void AddVisuals()
@@ -226,7 +249,7 @@
             }
         }
 
-        private void ApplyShaderAndUpdateRemainingTiles(List<Point<int>> tilesToDrawAfterShading)
+        private void ApplyShaderAndUpdateRemainingTiles(ConcurrentStack<Point<int>> tilesToDrawAfterShading)
         {
             this.boardTop = new WriteableBitmap(this.boardBitmap.PixelWidth, this.boardBitmap.PixelHeight, this.boardBitmap.DpiX, this.boardBitmap.DpiY, this.boardBitmap.Format, this.boardBitmap.Palette);
             this.proxy = new WpfExtensionMethods.WriteableBitmapProxy(this.boardTop);
@@ -251,7 +274,7 @@
             }
 
             Action<int, int, bool, WpfExtensionMethods.ImageDrawingMode> drawMethod;
-            List<Point<int>> tilesToDraw = null;
+            ConcurrentStack<Point<int>> tilesToDraw = null;
 
             this.boardBitmap.Lock();
 
@@ -261,7 +284,7 @@
             }
             else
             {
-                tilesToDraw = new List<Point<int>>();
+                tilesToDraw = new ConcurrentStack<Point<int>>();
                 drawMethod = (int r, int c, bool b, WpfExtensionMethods.ImageDrawingMode mode) =>
                 {
                     var tile = this.boardTiles[r, c];
@@ -272,12 +295,12 @@
                     {
                         if (tile.ExtraTileData != ExtraTileData.None)
                         {
-                            tilesToDraw.Add(new Point<int>(r, c));
+                            tilesToDraw.Push(new Point<int>(r, c));
                         }
                     }
                     else
                     {
-                        tilesToDraw.Add(new Point<int>(r, c));
+                        tilesToDraw.Push(new Point<int>(r, c));
                     }
                 };
             }
@@ -409,14 +432,22 @@
             }
             else
             {
-                this.proxy.DrawImagePixels(this.tileSetData, tilePoint.X, tilePoint.Y, mode);
+                if (!this.useTileShader)
+                {
+                    this.proxy.DrawImagePixels(this.tileUnsetData, tilePoint.X, tilePoint.Y, WpfExtensionMethods.ImageDrawingMode.IgnoreAlpha);
+                    this.proxy.DrawImagePixels(this.tileSetData, tilePoint.X, tilePoint.Y, WpfExtensionMethods.ImageDrawingMode.IgnoreAlpha);
+                }
+                else
+                {
+                    this.proxy.DrawImagePixels(this.tileSetData, tilePoint.X, tilePoint.Y, mode);
+                }
             }
 
             if (tile.Type != TileType.EmptySpace)
             {
                 if (tile.Type != TileType.Unset && tile.Shown)
                 {
-                    this.DrawImageWithOffsets(TileBoard.tileTypeImageData[tile.Type], tilePoint, tileIsMine ? false : true);
+                    this.DrawImageWithOffsets(TileBoard.tileTypeImageData[tile.Type], tilePoint, tile.Type == TileType.Mine ? false : true);
                 }
 
                 if (tile.ExtraTileData == ExtraTileData.Flag)

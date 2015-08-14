@@ -9,6 +9,7 @@
 
     public class StatisticsViewModel : MinesweeperComponentViewModel
     {
+        private const string NoValuesToDisplay = "No values to display.";
         private const string DefaultStatText = "-None-";
         private static readonly StatValueViewModel emptyPage;
         private double columnWidth = double.NaN;
@@ -24,14 +25,12 @@
         {
             StatisticsViewModel.emptyPage = new StatValueViewModel(StatisticsViewModel.DefaultStatText)
             {
-                StatisticValues = new List<object>(1) {"No values to display."}
+                StatisticValues = new List<object>(1) { NoValuesToDisplay }
             };
         }
 
         public StatisticsViewModel()
         {
-            Mediator.Register(ViewModelMessages.StatisticsLoaded, o => this.StatisticsLoaded());
-
             var statList = StatisticHelper.GetGameStatistics().Select(StatisticHelper.GetDisplayText).OrderBy(s => s).ToList();
             statList.Insert(0, StatisticsViewModel.DefaultStatText);
 
@@ -39,6 +38,17 @@
             this.sortByList = new List<Statistic>();
             this.StatisticNameList = statList;
             this.StatisticNameSelectedItems = new List<object> {statList[0]};
+        }
+
+        protected override void OnMediatorChanged()
+        {
+            var mediator = this.Mediator;
+            if (mediator == null)
+            {
+                return;
+            }
+
+            Mediator.Register(ViewModelMessages.StatisticsLoaded, o => this.StatisticsLoaded());
         }
 
         public double ColumnWidth
