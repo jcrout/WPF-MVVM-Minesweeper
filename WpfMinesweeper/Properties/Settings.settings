@@ -1,8 +1,6 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"
-              GeneratedClassNamespace="WpfMinesweeper.Properties" GeneratedClassName="Settings">
-  <Profiles/>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WpfMinesweeper.Properties" GeneratedClassName="Settings">
+  <Profiles />
   <Settings>
     <Setting Name="LastLocation" Type="System.Windows.Point" Scope="User">
       <Value Profile="(Default)"> -300,-300 </Value>
@@ -17,7 +15,7 @@
       <Value Profile="(Default)"> 261,170 </Value>
     </Setting>
     <Setting Name="TileBrush" Type="System.String" Scope="User">
-      <Value Profile="(Default)"> SCB;#FF5F9EA0 </Value>
+      <Value Profile="(Default)">SCB;#FF5F9EA0 </Value>
     </Setting>
   </Settings>
 </SettingsFile>

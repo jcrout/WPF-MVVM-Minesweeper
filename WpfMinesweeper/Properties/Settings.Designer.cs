@@ -73,7 +73,7 @@ namespace WpfMinesweeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SCB;#FF5F9EA0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("SCB;#FF5F9EA0 ")]
         public string TileBrush {
             get {
                 return ((string)(this["TileBrush"]));

@@ -220,7 +220,12 @@
                 return;
             }
 
-            var parts = tileBrushText.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            var parts = tileBrushText.Replace(" ", "").Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length < 2)
+            {
+                throw new Exception("Error loading tile brush: string is not in proper format.");
+            }
+
             if (parts[0] == "SCB")
             {
                 var color = parts[1].ToColorARGB();
@@ -229,12 +234,17 @@
             }
 
             var stopCollection = new GradientStopCollection();
+            double offset;
             for (int i = 1; i < parts.Length; i += 2)
             {
                 var colorText = parts[i];
                 var offsetText = parts[i + 1];
                 var color = parts[i].ToColorARGB();
-                var offset = double.Parse(offsetText);
+                if (!double.TryParse(offsetText, out offset))
+                {
+                    throw new Exception("Error loading tile brush: Offset string is not in numeric format.");
+                }
+
                 stopCollection.Add(new GradientStop(color, offset));
             }
 
