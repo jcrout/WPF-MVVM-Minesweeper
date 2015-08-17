@@ -106,12 +106,12 @@
         {
             get
             {
-                if (columnName == "Width")
+                if (columnName == "PixelWidth")
                 {
                     return this.validator.ValidateWidth(this.width);
                 }
 
-                if (columnName == "Height")
+                if (columnName == "PixelHeight")
                 {
                     return this.validator.ValidateHeight(this.height);
                 }

@@ -7,6 +7,7 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using JonUtility;
+    using JonUtility.WPF;
     using Models;
 
     /// <summary>
@@ -419,8 +420,8 @@
             var tileHeight = tileSize.Height;
             var actualWidth = tileWidth - 1d;
             var actualHeight = tileHeight - 1d;
-            var horizontalThickness = (int)Math.Floor(tileWidth / tileWidth) + 1;
-            var verticalThickness = (int)Math.Floor(tileHeight / tileHeight) + 1;
+            var horizontalThickness = (int)Math.Floor(tileWidth / 16d) + 1;
+            var verticalThickness = (int)Math.Floor(tileHeight / 16d) + 1;
 
             Pen lightPen;
             Pen darkPen;
@@ -439,33 +440,37 @@
             }
 
             var tileUnsetTarget = new RenderTargetBitmap((int)tileWidth, (int)tileHeight, 96, 96, PixelFormats.Pbgra32);
-            var tileUnsetVisual = new DrawingVisual();
+            var tileUnsetVisual = new MyDrawingVisual();
 
             using (var drawingContext = tileUnsetVisual.RenderOpen())
             {
                 drawingContext.DrawRectangle(tileBrush, null, new Rect(0, 0, tileWidth, tileHeight));
+
                 for (var i = 0; i < horizontalThickness; i++)
                 {
                     drawingContext.DrawLine(
-                        lightPen,
-                        new Point(i + 0.5, i + 0.5),
-                        new Point(actualWidth - (i * 2) + 0.5, i + 0.5));
-                    drawingContext.DrawLine(
                         darkPen,
-                        new Point(i + 0.5, actualHeight - i + 0.5),
-                        new Point(actualWidth - i + 0.5, actualHeight - i + 0.5));
+                        new Point(i + 1, tileHeight - i),
+                        new Point(tileWidth - i, tileHeight - i));
+
+                    drawingContext.DrawLine(
+                        lightPen,
+                        new Point(i + 0.5d, i + 0.5d),
+                        new Point(tileWidth - i, i + 0.5d));
                 }
 
                 for (var i = 0; i < verticalThickness; i++)
                 {
+                    Console.WriteLine(i);
                     drawingContext.DrawLine(
                         lightPen,
-                        new Point(i + 0.5, i + 0.5),
-                        new Point(i + 0.5, actualHeight - (i * 2) + 0.5));
+                        new Point(i + 0.5d, i + 0.5d),
+                        new Point(i + 0.5d, tileHeight - i));
+
                     drawingContext.DrawLine(
                         darkPen,
-                        new Point(actualWidth - i + 0.5, i + 0.5),
-                        new Point(actualWidth - i + 0.5, actualHeight - i + 0.5));
+                        new Point(tileWidth - i, i + 1),
+                        new Point(tileWidth - i, tileHeight - i));
                 }
             }
 
@@ -481,11 +486,11 @@
                 drawingContext.DrawRectangle(
                     new SolidColorBrush(Color.FromArgb(255, 200, 213, 232)),
                     null,
-                    new Rect(1.5, 1.5, tileWidth - 1.5, tileHeight - 1.5));
-                drawingContext.DrawRectangle(
-                    null,
-                    new Pen(new SolidColorBrush(Color.FromArgb(255, 223, 230, 235)), 1d),
-                    new Rect(1.5, 1.5, tileWidth - 2, tileHeight - 2));
+                    new Rect(0.5, 0.5, tileWidth - 0.5, tileHeight - 0.5));
+                //drawingContext.DrawRectangle(
+                //    null,
+                //    new Pen(new SolidColorBrush(Color.FromArgb(255, 223, 230, 235)), 1d),
+                //    new Rect(1.5, 1.5, tileWidth - 2, tileHeight - 2));
             }
 
             tileUnsetTarget.Render(tileUnsetVisual);
@@ -646,6 +651,14 @@
         {
             var board = (TileBoardBase)d;
             board.OnDrawTilesToUpdate();
+        }
+
+        private class MyDrawingVisual : DrawingVisual
+        {
+            public MyDrawingVisual()
+            {
+                this.VisualEdgeMode = EdgeMode.Aliased;
+            }
         }
     }
 }

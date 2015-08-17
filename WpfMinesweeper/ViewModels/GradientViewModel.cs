@@ -6,6 +6,7 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using JonUtility;
+    using JonUtility.WPF;
     using Models;
 
     public class GradientViewModel : MinesweeperComponentViewModel
@@ -146,7 +147,7 @@
 
         private GradientBrush GetNewBrush()
         {
-            var stops = this.gradientStops.Select(gs => new GradientStop(gs.Color.WithAlpha(150), gs.Offset));
+            var stops = this.gradientStops.Select(gs => new GradientStop(gs.Color.WithAlpha(155), gs.Offset));
             var collection = new GradientStopCollection(stops);
             GradientBrush brush;
 

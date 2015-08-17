@@ -71,7 +71,7 @@
             "OtherButtons",
             typeof(ObservableCollection<MessageButton>),
             typeof(PromptBox),
-            new PropertyMetadata(new ObservableCollection<MessageButton>(), PromptBox.OtherButtonsChanged));
+            new PropertyMetadata(null, PromptBox.OtherButtonsChanged));
 
         /// <summary>
         ///     Identifies the <see cref="IsModal" /> dependency property.
@@ -157,6 +157,7 @@
         /// </summary>
         public PromptBox()
         {
+            this.OtherButtons = new ObservableCollection<MessageButton>();
             this.OKButton = this.GetDefaultOKButton();
             this.CancelButton = this.GetDefaultCancelButton();
             this.OtherButtons.CollectionChanged += this.OtherButtons_CollectionChanged;

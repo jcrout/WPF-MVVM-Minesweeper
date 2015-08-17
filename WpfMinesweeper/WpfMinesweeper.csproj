@@ -91,20 +91,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="App.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="Controls\AnimatedTiles.cs" />
-    <Compile Include="Controls\AutosizeWindow.xaml.cs">
+    <Compile Include="CommandExtensionMethods.cs" />
+    <Compile Include="Controls\AnimatedTilesCollection.cs" />
+    <Compile Include="Controls\AnimationFrame.cs" />
+    <Compile Include="Controls\AutosizeWindow.cs">
       <DependentUpon>AutosizeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GradientPicker.xaml.cs">
+    <Compile Include="Controls\GradientPicker.cs">
       <DependentUpon>GradientPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ListBox2.cs" />
-    <Compile Include="Controls\MessagePanel.xaml.cs">
+    <Compile Include="Controls\MessageButtonConverter.cs" />
+    <Compile Include="Controls\MessagePanel.cs" />
+    <Compile Include="Controls\MessageButton.cs">
       <DependentUpon>MessagePanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MessageResult.cs" />
+    <Compile Include="Controls\MessageResultEventArgs.cs" />
     <Compile Include="Controls\NumberBox.cs" />
     <Compile Include="Controls\PromptBox.cs" />
+    <Compile Include="Controls\TileAnimation.cs" />
     <Compile Include="Controls\TileBoardOld.cs" />
     <Compile Include="Controls\TileBoard.cs" />
     <Compile Include="Controls\TileBoardBase.cs" />
@@ -113,19 +121,34 @@
     <Compile Include="Controls\TileEventArgs.cs" />
     <Compile Include="Controls\TileTapEventArgs.cs" />
     <Compile Include="Controls\ViewBoxAutosize.cs" />
+    <Compile Include="Models\ISettingsProvider.cs" />
+    <Compile Include="Models\BoardSizeConverter.cs" />
+    <Compile Include="Models\ExtraTileData.cs" />
+    <Compile Include="Models\IEnumerable2D.cs" />
+    <Compile Include="Models\IMediator.cs" />
+    <Compile Include="Models\IMinesweeper.cs" />
+    <Compile Include="Models\IMinesweeperBoardValidator.cs" />
+    <Compile Include="Models\IStatisticsModule.cs" />
+    <Compile Include="Models\ITileCollection.cs" />
     <Compile Include="Models\Mediator.cs" />
     <Compile Include="Miscellanious\BrushAnimation.cs" />
-    <Compile Include="Miscellanious\SettingsProvider.cs" />
+    <Compile Include="Models\SettingsProvider.cs" />
     <Compile Include="Miscellanious\ThicknessBindingConverter.cs" />
     <Compile Include="Models\BoardSize.cs" />
     <Compile Include="Models\GameResult.cs" />
     <Compile Include="Models\Minesweeper.cs" />
     <Compile Include="Models\MinesweeperBoardValidator.cs" />
+    <Compile Include="Models\MinesweeperFactory.cs" />
     <Compile Include="Models\SmileyState.cs" />
     <Compile Include="Models\StatDisplay.cs" />
-    <Compile Include="Models\StatisticModule.cs" />
-    <Compile Include="Models\Statistics.cs" />
+    <Compile Include="Models\Statistic.cs" />
+    <Compile Include="Models\StatisticHelper.cs" />
+    <Compile Include="Models\StatisticsModule.cs" />
+    <Compile Include="Models\StatisticComparer.cs" />
+    <Compile Include="Models\StatisticsAttribute.cs" />
     <Compile Include="Models\TileCollection.cs" />
+    <Compile Include="Models\TileType.cs" />
+    <Compile Include="Models\ViewModelMessages.cs" />
     <Compile Include="ViewModels\CustomBoardViewModel.cs" />
     <Compile Include="ViewModels\DisplayPanelViewModel.cs" />
     <Compile Include="ViewModels\GradientViewModel.cs" />
@@ -135,25 +158,26 @@
     <Compile Include="ViewModels\MinesweeperViewModel.cs" />
     <Compile Include="ViewModels\MinesweeperViewModelBase.cs" />
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
+    <Compile Include="ViewModels\StatValueViewModel.cs" />
     <Compile Include="ViewModels\TileBoardViewModel.cs" />
     <Compile Include="ViewModels\TileBoardViewModelBase.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Views\DisplayPanelView.xaml.cs">
+    <Compile Include="Views\DisplayPanelView.cs">
       <DependentUpon>DisplayPanelView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow.xaml.cs">
+    <Compile Include="Views\MainWindow.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MenuView.xaml.cs">
+    <Compile Include="Views\MenuView.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MinesweeperView.xaml.cs">
+    <Compile Include="Views\MinesweeperView.cs">
       <DependentUpon>MinesweeperView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\StatisticsView.xaml.cs">
+    <Compile Include="Views\StatisticsView.cs">
       <DependentUpon>StatisticsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TileBoardView.xaml.cs">
+    <Compile Include="Views\TileBoardView.cs">
       <DependentUpon>TileBoardView.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\AutosizeWindow.xaml">
@@ -168,7 +192,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="Settings.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -293,13 +317,13 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\JonUtility\JonUtility\JonUtility.csproj">
       <Project>{afcf9d3a-f066-40d7-8518-f57a4b4600bf}</Project>
       <Name>JonUtility</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.28.3\build\Fody.targets" Condition="Exists('..\packages\Fody.1.28.3\build\Fody.targets')" />

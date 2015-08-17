@@ -3,31 +3,6 @@
     using System;
     using System.Collections.Generic;
 
-    public enum ViewModelMessages
-    {
-        TileBoardSizeChanged,
-        CreateNewBoard,
-        GameStarted,
-        GameOver,
-        Victory,
-        UpdateSmileyIndex,
-        LeftMouseUp,
-        RightMouseUp,
-        TileColorsChanged,
-        TileSizeChanged,
-        GameWindowStateChanged,
-        StatisticsLoaded
-    }
-
-    public interface IMediator
-    {
-        void Notify(ViewModelMessages message, object parameter = null);
-
-        void Register(ViewModelMessages message, Action<object> callback);
-
-        void Unregister(object objectToUnregister);
-    }
-
     public sealed class Mediator : IMediator
     {
         private static readonly Mediator instance = new Mediator();

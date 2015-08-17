@@ -111,7 +111,7 @@
                 {
                     // allow time for the parent to update size in accordance to this control changing
                     this.parent.SizeChanged -= this.parent_SizeChanged;
-                    await Task.Delay(5);
+                    await Task.Delay(1);
                     this.parent.SizeChanged += this.parent_SizeChanged;
 
                     this.updatedSize = false;

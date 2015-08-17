@@ -18,7 +18,7 @@
             <vw:MenuView DataContext="{Binding Path=MenuViewModel, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
         <Grid Grid.Row="1">
-            <Border Name="Lolz"
+            <Border Name="DisplayBorder"
                     Margin="5,5,5,5"
                     BorderThickness="1"
                     BorderBrush="DarkGray">

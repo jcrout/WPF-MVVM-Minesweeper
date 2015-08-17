@@ -1,42 +1,10 @@
-﻿namespace WpfMinesweeper.Controls
+namespace WpfMinesweeper.Controls
 {
     using System.Collections;
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using JonUtility;
-
-    public class AnimatedTilesCollection
-    {
-        private AnimatedTilesCollection(List<Point<int>> tilesToUpdate, TileAnimation frames = null)
-        {
-            this.Tiles = tilesToUpdate;
-            this.Frames = frames;
-        }
-
-        public TileAnimation Frames { get; }
-
-        public List<Point<int>> Tiles { get; }
-
-        public static AnimatedTilesCollection Create(List<Point<int>> tilesToUpdate, TileAnimation frames = null)
-        {
-            return new AnimatedTilesCollection(tilesToUpdate, frames);
-        }
-    }
-
-    public class AnimationFrame
-    {
-        public AnimationFrame(ImageSource image, long interval)
-        {
-            this.Interval = interval;
-            this.Image = image;
-        }
-
-        public ImageSource Image { get; set; }
-
-        public long Interval { get; set; } // milliseconds
-    }
 
     public class TileAnimation : IEnumerable<AnimationFrame>
     {

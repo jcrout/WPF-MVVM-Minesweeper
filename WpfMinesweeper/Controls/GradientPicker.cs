@@ -9,12 +9,12 @@
     /// </summary>
     public partial class GradientPicker : UserControl
     {
-        // Using a DependencyProperty as the backing store for SelectedBrush.  This enables animation, styling, binding, etc...
         private static readonly GradientBrush defaultGradientBrush = new LinearGradientBrush(Colors.Red, Colors.Black, new Point(0, 0), new Point(1, 1));
 
         public static readonly DependencyProperty SelectedBrushProperty =
             DependencyProperty.Register("SelectedBrush", typeof(GradientBrush), typeof(GradientPicker), new PropertyMetadata(GradientPicker.defaultGradientBrush));
 
+        // Using a DependencyProperty as the backing store for SelectedBrush.  This enables animation, styling, binding, etc...
         public GradientPicker()
         {
             this.InitializeComponent();

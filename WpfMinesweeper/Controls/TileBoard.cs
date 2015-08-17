@@ -10,15 +10,16 @@
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using JonUtility;
+    using JonUtility.WPF;
     using Models;
 
     public class TileBoard : TileBoardInputBase
     {
-        private static WpfExtensionMethods.PixelData defaultTileSetData;
-        private static WpfExtensionMethods.PixelData defaultTileUnsetData;
-        private static WpfExtensionMethods.PixelData flagImageData;
-        private static WpfExtensionMethods.PixelData questionMarkImageData;
-        private static Dictionary<TileType, WpfExtensionMethods.PixelData> tileTypeImageData;
+        private static PixelData defaultTileSetData;
+        private static PixelData defaultTileUnsetData;
+        private static PixelData flagImageData;
+        private static PixelData questionMarkImageData;
+        private static Dictionary<TileType, PixelData> tileTypeImageData;
         private readonly int tileHeight;
         private readonly int tileWidth;
         private WriteableBitmap boardBitmap;
@@ -27,11 +28,11 @@
         private DrawingVisual boardTopVisual;
         private DrawingVisual boardVisual;
         private DrawingVisual mouseHoverVisual;
-        private WpfExtensionMethods.WriteableBitmapProxy proxy;
+        private WriteableBitmapProxy proxy;
         private DrawingVisual selectionVisual;
         private ImageBrush tileSetBrush = new ImageBrush(TileBoardBase.DefaultTileSetImage);
-        private WpfExtensionMethods.PixelData tileSetData;
-        private WpfExtensionMethods.PixelData tileUnsetData;
+        private PixelData tileSetData;
+        private PixelData tileUnsetData;
         private bool useTileShader;
 
         static TileBoard()
@@ -39,7 +40,7 @@
             TileBoard.defaultTileSetData = TileBoardBase.DefaultTileSetImage.GetPixelData();
             TileBoard.defaultTileUnsetData = TileBoardBase.DefaultTileUnsetImage.GetPixelData();
 
-            TileBoard.tileTypeImageData = new Dictionary<TileType, WpfExtensionMethods.PixelData>();
+            TileBoard.tileTypeImageData = new Dictionary<TileType, PixelData>();
             var imageFormat = TileBoardBase.DefaultTileUnsetImage.Format;
 
             foreach (var keyPair in TileBoardBase.TileTypeImages)
@@ -130,7 +131,7 @@
                 this.tileSetBrush = new ImageBrush(tileImages.Item2);
                 if (this.boardTopVisual != null)
                 {
-                    this.proxy = new WpfExtensionMethods.WriteableBitmapProxy(this.boardBitmap);
+                    this.proxy = new WriteableBitmapProxy(this.boardBitmap);
                     this.InitBoard();
                     return;
                 }
@@ -147,16 +148,16 @@
 
                 //this.OnInitializeBoard();
 
-                //Size theTargetSize = new Size(this.Width, this.Height);
+                //Size theTargetSize = new Size(this.PixelWidth, this.PixelHeight);
                 //this.Measure(theTargetSize);
                 //this.Arrange(new Rect(theTargetSize));
                 //// to affect the changes in the UI, you must call this method at the end to apply the new changes
                 //this.UpdateLayout();
-                //this.Width = this.Width;
+                //this.PixelWidth = this.PixelWidth;
                 //this.UpdateLayout();
                 //this.boardBitmap.Lock();
                 //this.boardTop.Lock();
-                //for (int r = 0; r < this.boardTiles.Width; r++)
+                //for (int r = 0; r < this.boardTiles.PixelWidth; r++)
                 //{
                 //    this.DrawTile(r, 0, true);
                 //}
@@ -251,7 +252,7 @@
         private void ApplyShaderAndUpdateRemainingTiles(ConcurrentStack<Point<int>> tilesToDrawAfterShading)
         {
             this.boardTop = new WriteableBitmap(this.boardBitmap.PixelWidth, this.boardBitmap.PixelHeight, this.boardBitmap.DpiX, this.boardBitmap.DpiY, this.boardBitmap.Format, this.boardBitmap.Palette);
-            this.proxy = new WpfExtensionMethods.WriteableBitmapProxy(this.boardTop);
+            this.proxy = new WriteableBitmapProxy(this.boardTop);
 
             if (tilesToDrawAfterShading.Count > 0)
             {
@@ -272,9 +273,8 @@
                 return;
             }
 
-            Action<int, int, bool, WpfExtensionMethods.ImageDrawingMode> drawMethod;
+            Action<int, int, bool, ImageDrawingMode> drawMethod;
             ConcurrentStack<Point<int>> tilesToDraw = null;
-
             this.boardBitmap.Lock();
 
             if (!this.useTileShader)
@@ -284,7 +284,7 @@
             else
             {
                 tilesToDraw = new ConcurrentStack<Point<int>>();
-                drawMethod = (int r, int c, bool b, WpfExtensionMethods.ImageDrawingMode mode) =>
+                drawMethod = (int r, int c, bool b, ImageDrawingMode mode) =>
                 {
                     var tile = this.boardTiles[r, c];
                     var tilePoint = this.GetBoardCoordinatesFromTilePoint(r, c);
@@ -314,7 +314,7 @@
             }
         }
 
-        private void DrawBoardBase(Action<int, int, bool, WpfExtensionMethods.ImageDrawingMode> drawMethod)
+        private void DrawBoardBase(Action<int, int, bool, ImageDrawingMode> drawMethod)
         {
             int totalTiles = this.boardTiles.Width * this.boardTiles.Height;
             int procCount = Environment.ProcessorCount;
@@ -325,7 +325,7 @@
                 {
                     for (var c = 0; c < this.boardTiles.Height; c++)
                     {
-                        drawMethod(r, c, false, WpfExtensionMethods.ImageDrawingMode.ExactCopy);
+                        drawMethod(r, c, false, ImageDrawingMode.ExactCopy);
                     }
                 }
             }
@@ -345,7 +345,7 @@
                         {
                             for (var r = 0; r < this.boardTiles.Width; r++)
                             {
-                                drawMethod(r, c, false, WpfExtensionMethods.ImageDrawingMode.ExactCopy);
+                                drawMethod(r, c, false, ImageDrawingMode.ExactCopy);
                             }
                         }
                     };
@@ -355,19 +355,19 @@
             }
         }
 
-        private void DrawImageWithOffsets(WpfExtensionMethods.PixelData pixelsToDraw, Point<int> tilePoint, bool roundUp = true)
+        private void DrawImageWithOffsets(PixelData pixelsToDraw, Point<int> tilePoint, bool roundUp = true)
         {
             if (roundUp)
             {
-                var offsetX = tilePoint.X + (int)Math.Max(0, Math.Ceiling((double)(this.tileWidth - pixelsToDraw.Width) / 2));
-                var offsetY = tilePoint.Y + (int)Math.Max(0, Math.Ceiling((double)(this.tileHeight - pixelsToDraw.Height) / 2));
+                var offsetX = tilePoint.X + (int)Math.Max(0, Math.Ceiling((double)(this.tileWidth - pixelsToDraw.PixelWidth) / 2));
+                var offsetY = tilePoint.Y + (int)Math.Max(0, Math.Ceiling((double)(this.tileHeight - pixelsToDraw.PixelHeight) / 2));
 
                 this.proxy.DrawImagePixels(pixelsToDraw, offsetX, offsetY);
             }
             else
             {
-                var offsetX = tilePoint.X + (int)Math.Max(0, Math.Floor((double)(this.tileWidth - pixelsToDraw.Width) / 2));
-                var offsetY = tilePoint.Y + (int)Math.Max(0, Math.Floor((double)(this.tileHeight - pixelsToDraw.Height) / 2));
+                var offsetX = tilePoint.X + (int)Math.Max(0, Math.Floor((double)(this.tileWidth - pixelsToDraw.PixelWidth) / 2));
+                var offsetY = tilePoint.Y + (int)Math.Max(0, Math.Floor((double)(this.tileHeight - pixelsToDraw.PixelHeight) / 2));
 
                 this.proxy.DrawImagePixels(pixelsToDraw, offsetX, offsetY);
             }
@@ -412,7 +412,7 @@
             }
         }
 
-        private void DrawTile(int x, int y, bool addDirtyRect = true, WpfExtensionMethods.ImageDrawingMode mode = WpfExtensionMethods.ImageDrawingMode.IgnoreAlpha)
+        private void DrawTile(int x, int y, bool addDirtyRect = true, ImageDrawingMode mode = ImageDrawingMode.IgnoreAlpha)
         {
             var tile = this.boardTiles[x, y];
             var tilePoint = this.GetBoardCoordinatesFromTilePoint(x, y);
@@ -433,8 +433,8 @@
             {
                 if (!this.useTileShader)
                 {
-                    this.proxy.DrawImagePixels(this.tileUnsetData, tilePoint.X, tilePoint.Y, WpfExtensionMethods.ImageDrawingMode.IgnoreAlpha);
-                    this.proxy.DrawImagePixels(this.tileSetData, tilePoint.X, tilePoint.Y, WpfExtensionMethods.ImageDrawingMode.IgnoreAlpha);
+                    this.proxy.DrawImagePixels(this.tileUnsetData, tilePoint.X, tilePoint.Y, ImageDrawingMode.IgnoreAlpha);
+                    this.proxy.DrawImagePixels(this.tileSetData, tilePoint.X, tilePoint.Y, ImageDrawingMode.IgnoreAlpha);
                 }
                 else
                 {
@@ -509,7 +509,7 @@
             if (this.boardBitmap == null || resizeControl)
             {
                 this.boardBitmap = new WriteableBitmap((int)this.Width, (int)this.Height, 96d, 96d, PixelFormats.Bgra32, null);
-                this.proxy = new WpfExtensionMethods.WriteableBitmapProxy(this.boardBitmap);
+                this.proxy = new WriteableBitmapProxy(this.boardBitmap);
             }
 
             this.Visuals.ForEach(this.RemoveVisualChild);

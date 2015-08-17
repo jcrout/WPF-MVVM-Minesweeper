@@ -1,4 +1,4 @@
-﻿namespace WpfMinesweeper.Miscellanious
+﻿namespace WpfMinesweeper.Models
 {
     using System;
     using System.Collections.Generic;
@@ -11,42 +11,9 @@
     using System.Windows;
     using System.Windows.Media;
     using JonUtility;
-    using Models;
+    using JonUtility.WPF;
     using Newtonsoft.Json;
     using Properties;
-
-    public interface ISettingsProvider
-    {
-        /// <summary>
-        ///     Gets or sets the most recent board size used.
-        /// </summary>
-        BoardSize LastBoardSize { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the last main window location.
-        /// </summary>
-        Point LastLocation { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the last main window size.
-        /// </summary>
-        Size LastWindowMinSize { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the list of individual game statistics.
-        /// </summary>
-        ObservableCollection<IStatisticsModule> Statistics { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the brush used to paint the tiles on a Minesweeper tile board.
-        /// </summary>
-        Brush TileBrush { get; set; }
-
-        /// <summary>
-        ///     Saves all settings.
-        /// </summary>
-        void Save();
-    }
 
     public sealed class SettingsProvider : ISettingsProvider
     {
@@ -256,7 +223,7 @@
             var parts = tileBrushText.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
             if (parts[0] == "SCB")
             {
-                var color = WpfExtensionMethods.GetColorFromText(parts[1]);
+                var color = parts[1].ToColorARGB();
                 this.TileBrush = new SolidColorBrush(color);
                 return;
             }
@@ -266,7 +233,7 @@
             {
                 var colorText = parts[i];
                 var offsetText = parts[i + 1];
-                var color = WpfExtensionMethods.GetColorFromText(parts[i]);
+                var color = parts[i].ToColorARGB();
                 var offset = double.Parse(offsetText);
                 stopCollection.Add(new GradientStop(color, offset));
             }

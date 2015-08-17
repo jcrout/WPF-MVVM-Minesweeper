@@ -183,6 +183,9 @@
 
         private void OnTileBoardInitialized()
         {
+            this.MinWidth = 0;
+            this.MinHeight = 0;
+
             // GUI code in the ViewModel; consider replacing if a better solution involving binding can be used, one that does not involve sizing to content and back to manual;
             var window = Application.Current.MainWindow;
             window.Measure(new Size(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height));
