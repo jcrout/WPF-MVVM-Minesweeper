@@ -14,7 +14,7 @@
         }
 
         /// <summary>
-        ///     Gets the current Mediator instance.  
+        ///     Gets the current Mediator instance.   
         /// </summary>
         /// <value>
         ///     The instance.

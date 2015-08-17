@@ -10,12 +10,10 @@
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
-![Rr]elease/WpfMinesweeper.exe
 x64/
 build/
 bld/
 [Bb]in/
-![Bb]in/[Rr]elease/WpfMinesweeper.exe
 [Oo]bj/
 
 # Roslyn cache directories
