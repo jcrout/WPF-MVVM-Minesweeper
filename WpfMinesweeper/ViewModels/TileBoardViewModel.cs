@@ -8,6 +8,7 @@
     using System.Windows.Media;
     using Controls;
     using JonUtility;
+    using JonUtility.WPF;
     using Models;
 
     public class TileBoardViewModel : TileBoardViewModelBase

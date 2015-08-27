@@ -7,6 +7,7 @@
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using JonUtility.WPF;
     using Models;
 
     public class DisplayPanelViewModel : MinesweeperComponentViewModel

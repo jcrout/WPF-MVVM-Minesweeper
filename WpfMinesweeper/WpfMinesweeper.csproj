@@ -92,8 +92,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="App.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="CommandExtensionMethods.cs" />
     <Compile Include="Controls\AnimatedTilesCollection.cs" />
     <Compile Include="Controls\AnimationFrame.cs" />
     <Compile Include="Controls\AutosizeWindow.cs">

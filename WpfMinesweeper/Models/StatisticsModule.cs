@@ -14,7 +14,7 @@
         ///     The collection of stat/value pairs for the module.
         /// </summary>
         [DataMember(Name = "Stats")]
-        private Dictionary<Statistic, object> stats;
+        private readonly Dictionary<Statistic, object> stats;
 
         /// <summary>
         ///     Initializes a new instance of the StatisticsModule class.

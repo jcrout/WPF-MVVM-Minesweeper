@@ -2,6 +2,7 @@
 {
     using System.ComponentModel;
     using System.Windows.Input;
+    using JonUtility.WPF;
     using Models;
 
     public class CustomBoardViewModel : ViewModelBase, IDataErrorInfo

@@ -9,6 +9,7 @@
     using System.Windows.Input;
     using System.Windows.Markup;
     using System.Windows.Media;
+    using JonUtility.WPF;
 
     /// <summary>
     ///     Represents a bindable Window that can be created in and modified in

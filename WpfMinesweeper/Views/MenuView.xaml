@@ -68,13 +68,13 @@
                             ResultOtherCommand="{Binding Path=StatisticsPromptCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
             <controls:PromptBox.OtherButtons>
                 <controls:MessageButton Result="Clear" CloseOnClick="False">
-                    <Button Content="Clear" 
-                            Width="80" 
+                    <Button Content="Clear"
+                            Width="80"
                             Height="22"
                             ToolTip="Clear all recorded statistics. This operation cannot be undone."/>
                 </controls:MessageButton>
                 <controls:MessageButton Result="Close">
-                    <Button Content="Close" 
+                    <Button Content="Close"
                             Width="80"
                             Height="22"
                             ToolTip="Close this window."/>
@@ -93,17 +93,17 @@
 
         <Menu Height="23" VerticalAlignment="Top" KeyboardNavigation.TabNavigation="Cycle">
             <MenuItem Header="_Game" HorizontalAlignment="Stretch">
-                <MenuItem Header="_New Game" 
-                          Command="{Binding Path=BoardSizeCommand}" 
+                <MenuItem Header="_New Game"
+                          Command="{Binding Path=BoardSizeCommand}"
                           CommandParameter="*,*,*"/>
                 <MenuItem Header="_Difficulty">
-                    <MenuItem Header="_Beginner" 
+                    <MenuItem Header="_Beginner"
                               Command="{Binding Path=BoardSizeCommand}"
                               CommandParameter="{Binding Source={x:Static models:BoardSize.Beginner}}"/>
-                    <MenuItem Header="_Intermediate" 
+                    <MenuItem Header="_Intermediate"
                               Command="{Binding Path=BoardSizeCommand}"
                               CommandParameter="{Binding Source={x:Static models:BoardSize.Intermediate}}"/>
-                    <MenuItem Header="_Expert" 
+                    <MenuItem Header="_Expert"
                               Command="{Binding Path=BoardSizeCommand}"
                               CommandParameter="{Binding Source={x:Static models:BoardSize.Expert}}"/>
                     <MenuItem Header="_Custom">

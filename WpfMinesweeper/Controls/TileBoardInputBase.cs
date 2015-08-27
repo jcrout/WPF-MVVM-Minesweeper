@@ -6,12 +6,13 @@
     using System.Windows.Forms;
     using System.Windows.Input;
     using JonUtility;
+    using JonUtility.WPF;
     using Models;
     using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
     /// <summary>
-    ///     Base class that extends <see cref="TileBoardBase" /> to include input
-    ///     functionality.
+    ///     Base class that extends <see cref="TileBoardBase" /> to include
+    ///     input functionality.
     /// </summary>
     [DebuggerStepThrough]
     public abstract class TileBoardInputBase : TileBoardBase
