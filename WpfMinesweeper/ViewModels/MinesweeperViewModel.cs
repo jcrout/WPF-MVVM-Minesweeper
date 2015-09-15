@@ -86,8 +86,17 @@
             }
             else if (parameter is string)
             {
-                var boardSize = BoardSize.Parse(parameter.ToString());
-                this.Minesweeper = MinesweeperFactory.Create(boardSize);
+                var text = (string)parameter;
+                if (text.StartsWith("*"))
+                {
+                    var boardSize = new BoardSize(this.Minesweeper.Tiles.Width, this.Minesweeper.Tiles.Height, this.Minesweeper.MineCount);
+                    this.Minesweeper = MinesweeperFactory.Create(boardSize);
+                }
+                else
+                {
+                    var boardSize = BoardSize.Parse(parameter.ToString());
+                    this.Minesweeper = MinesweeperFactory.Create(boardSize);
+                }
             }
             else
             {
