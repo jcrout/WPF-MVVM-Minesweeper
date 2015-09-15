@@ -126,8 +126,7 @@
         /// <remarks>
         ///     This method checks each of the un-flipped surrounding
         ///     <paramref name="tiles" /> centered on the <paramref name="x" />
-        ///     and
-        ///     <paramref name="y" /> coordinate parameters. Each call adds the
+        ///     and <paramref name="y" /> coordinate parameters. Each call adds the
         ///     tile point to the list. If there are zero mines surrounding this
         ///     coordinate, an empty tile is set and this method is called
         ///     recursively on each of the valid surrounding tilesToUpdate.
@@ -200,8 +199,7 @@
         /// <param name="y">The Y coordinate of the tile.</param>
         /// <returns>
         ///     This method then returns the list of <paramref name="tilesToUpdate" /> that need checked. An empty list is returned
-        ///     if
-        ///     the current tile is a number. If the tile is an empty space, then it returns a list of surrounding
+        ///     if the current tile is a number. If the tile is an empty space, then it returns a list of surrounding
         ///     <paramref name="tilesToUpdate" /> that are not yet defined that haven't already been added to the cumulative list.
         /// </returns>
         private IEnumerable<Point<int>> CheckSurroundingTiles_NonRecursive(Point<int> tilePoint)
@@ -281,8 +279,7 @@
         /// <remarks>
         ///     This method randomly determines the location of each mine on the board. The first tile clicked is excluded. An
         ///     additional set of tilesToUpdate may be added to the exclusion list depending on the minimum/maximum number of safe
-        ///     spots
-        ///     around the clicked tile and also on the number of non-mine spaces available by calling the
+        ///     spots around the clicked tile and also on the number of non-mine spaces available by calling the
         ///     <see cref="TileBoardViewModel.GetSafeTileIndexes" /> method.
         /// </remarks>
         /// <param name="clickX"></param>
@@ -318,10 +315,9 @@
         }
 
         /// <summary>
-        ///     This method calculates and returns a list of safe tilesToUpdate around the first tile clicked. Safe tilesToUpdate
-        ///     are those that
-        ///     are not mines and are adjacent to or within a specified radial range of the first tile clicked. This is done to
-        ///     increase the odds of the first click containing more than just a single number and decrease the odds of the first
+        ///     This method calculates and returns a list of safe tiles to update around the first tile clicked. Safe tiles to update
+        ///     are those that are not mines and are adjacent to or within a specified radial range of the first tile clicked. This is
+        ///     done to increase the odds of the first click containing more than just a single number and decrease the odds of the first
         ///     click being a high number like 8.
         /// </summary>
         /// <param name="clickX">The X coordinate of the first tile clicked.</param>
