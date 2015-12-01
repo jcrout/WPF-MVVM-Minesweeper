@@ -45,8 +45,15 @@
                 <DiscreteObjectKeyFrame Value="{x:Static Visibility.Hidden}" KeyTime="0:0:03"/>
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
-
-        <Storyboard x:Key="GameOverAnimation" BeginTime="00:00:00.000" RepeatBehavior="1x">
+        <Storyboard  x:Key="MouseHoverAnimation" BeginTime="00:00:00.000" RepeatBehavior="1x">
+            <DoubleAnimationUsingKeyFrames 
+                Storyboard.TargetName="Board" 
+                Storyboard.TargetProperty="(UIElement.Opacity)">
+                <LinearDoubleKeyFrame Value="0" KeyTime="0:0:00.000"/>
+                <LinearDoubleKeyFrame Value="1" KeyTime="0:0:02.000"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+            <Storyboard x:Key="GameOverAnimation" BeginTime="00:00:00.000" RepeatBehavior="1x">
             <PointAnimation
                 Storyboard.TargetName="Board"
                 Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)"
@@ -84,14 +91,15 @@
             DrawPressedTile="{Binding Path=IsTilePressed, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             BoardInitializedCommand="{Binding Path=BoardInitializedCommand, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
             Minesweeper="{Binding Path=Minesweeper, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
-            HorizontalAlignment="Left">
+            HorizontalAlignment="Left"
+            MouseLeave="Board_MouseLeave">
 
-            <controls:TileBoard.RenderTransform>
+        <controls:TileBoard.RenderTransform>
                 <RotateTransform Angle="0"/>
             </controls:TileBoard.RenderTransform>
 
             <i:Interaction.Triggers>
-                <ei:DataTrigger Binding="{Binding IsGameOver}" Value="true">
+                <ei:DataTrigger Binding="{Binding IsGameOver}" Value="true">    
                     <ei2:ControlStoryboardAction x:Name="StartGameOverAnimationTrigger"
                                                  Storyboard="{StaticResource GameOverAnimation}"
                                                  ControlStoryboardOption="Play"/>
@@ -101,6 +109,11 @@
                                                  Storyboard="{StaticResource GameOverAnimation}"
                                                  ControlStoryboardOption="Stop"/>
                 </ei:DataTrigger>
+                <i:EventTrigger EventName="MouseEnter" SourceName="Board">
+                    <ei2:ControlStoryboardAction x:Name="MouseHoverAnimation"
+                                                 Storyboard="{StaticResource MouseHoverAnimation}"
+                                                 ControlStoryboardOption="Play"/>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </controls:TileBoard>
 

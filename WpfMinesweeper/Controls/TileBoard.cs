@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using JonUtility;
@@ -52,6 +53,12 @@
 
             TileBoard.flagImageData = TileBoardBase.FlagImage.GetPixelData(TileBoard.defaultTileUnsetData.Stride);
             TileBoard.questionMarkImageData = TileBoardBase.QuestionMarkImage.GetPixelData(TileBoard.defaultTileUnsetData.Stride);
+        }
+
+        protected override void OnTouchDown(TouchEventArgs e)
+        {
+            var point = e.GetTouchPoint(this);            
+
         }
 
         public TileBoard()
@@ -145,25 +152,6 @@
                 this.tileSetBrush = new ImageBrush(TileBoardBase.DefaultTileSetImage);
 
                 this.InitBoard();
-
-                //this.OnInitializeBoard();
-
-                //Size theTargetSize = new Size(this.PixelWidth, this.PixelHeight);
-                //this.Measure(theTargetSize);
-                //this.Arrange(new Rect(theTargetSize));
-                //// to affect the changes in the UI, you must call this method at the end to apply the new changes
-                //this.UpdateLayout();
-                //this.PixelWidth = this.PixelWidth;
-                //this.UpdateLayout();
-                //this.boardBitmap.Lock();
-                //this.boardTop.Lock();
-                //for (int r = 0; r < this.boardTiles.PixelWidth; r++)
-                //{
-                //    this.DrawTile(r, 0, true);
-                //}
-                //this.boardBitmap.Unlock();
-                //this.boardTop.Unlock();
-                ////this.InvalidateVisual();
             }
         }
 
